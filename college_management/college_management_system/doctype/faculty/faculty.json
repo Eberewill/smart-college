@@ -1,0 +1,14 @@
+{
+ "actions": [], "autoname": "field:faculty_code", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["faculty_code", "faculty_name", "institution", "dean", "is_active"],
+ "fields": [
+  {"fieldname": "faculty_code", "fieldtype": "Data", "in_list_view": 1, "label": "Faculty Code", "reqd": 1, "unique": 1},
+  {"fieldname": "faculty_name", "fieldtype": "Data", "in_list_view": 1, "label": "Faculty Name", "reqd": 1},
+  {"fieldname": "institution", "fieldtype": "Link", "label": "Institution", "options": "Institution", "reqd": 1},
+  {"fieldname": "dean", "fieldtype": "Link", "label": "Dean", "options": "User"},
+  {"default": "1", "fieldname": "is_active", "fieldtype": "Check", "in_list_view": 1, "label": "Active"}
+ ],
+ "links": [], "module": "College Management System", "name": "Faculty",
+ "permissions": [{"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1}],
+ "search_fields": "faculty_code,faculty_name", "sort_field": "faculty_name", "sort_order": "ASC", "states": [], "title_field": "faculty_name", "track_changes": 1
+}

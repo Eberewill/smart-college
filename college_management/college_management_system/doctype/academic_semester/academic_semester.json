@@ -1,0 +1,19 @@
+{
+ "actions": [], "autoname": "format:{academic_session}-{semester_number}", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["academic_session", "semester_name", "semester_number", "start_date", "end_date", "registration_section", "registration_start_date", "registration_end_date", "add_drop_deadline", "status"],
+ "fields": [
+  {"fieldname": "academic_session", "fieldtype": "Link", "in_list_view": 1, "label": "Academic Session", "options": "Academic Session", "reqd": 1},
+  {"fieldname": "semester_name", "fieldtype": "Data", "in_list_view": 1, "label": "Semester Name", "reqd": 1},
+  {"fieldname": "semester_number", "fieldtype": "Int", "in_list_view": 1, "label": "Semester Number", "reqd": 1},
+  {"fieldname": "start_date", "fieldtype": "Date", "label": "Start Date", "reqd": 1},
+  {"fieldname": "end_date", "fieldtype": "Date", "label": "End Date", "reqd": 1},
+  {"fieldname": "registration_section", "fieldtype": "Section Break", "label": "Registration"},
+  {"fieldname": "registration_start_date", "fieldtype": "Date", "label": "Registration Start Date"},
+  {"fieldname": "registration_end_date", "fieldtype": "Date", "label": "Registration End Date"},
+  {"fieldname": "add_drop_deadline", "fieldtype": "Date", "label": "Add/Drop Deadline"},
+  {"default": "Planned", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Planned\nOpen\nClosed\nArchived", "reqd": 1}
+ ],
+ "links": [], "module": "College Management System", "name": "Academic Semester",
+ "permissions": [{"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1}],
+ "search_fields": "academic_session,semester_name", "sort_field": "start_date", "sort_order": "DESC", "states": [], "title_field": "semester_name", "track_changes": 1
+}

@@ -1,0 +1,9 @@
+{
+ "actions": [], "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB",
+ "field_order": ["course", "prerequisite_course"],
+ "fields": [
+  {"fieldname": "course", "fieldtype": "Link", "in_list_view": 1, "label": "Course", "options": "Course", "reqd": 1},
+  {"fieldname": "prerequisite_course", "fieldtype": "Link", "in_list_view": 1, "label": "Prerequisite Course", "options": "Course", "reqd": 1}
+ ],
+ "istable": 1, "links": [], "module": "College Management System", "name": "Curriculum Prerequisite", "permissions": [], "states": []
+}

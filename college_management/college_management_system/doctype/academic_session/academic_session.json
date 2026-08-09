@@ -1,0 +1,14 @@
+{
+ "actions": [], "autoname": "field:session_code", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["session_code", "session_name", "start_date", "end_date", "status"],
+ "fields": [
+  {"fieldname": "session_code", "fieldtype": "Data", "in_list_view": 1, "label": "Session Code", "reqd": 1, "unique": 1},
+  {"fieldname": "session_name", "fieldtype": "Data", "in_list_view": 1, "label": "Session Name", "reqd": 1},
+  {"fieldname": "start_date", "fieldtype": "Date", "in_list_view": 1, "label": "Start Date", "reqd": 1},
+  {"fieldname": "end_date", "fieldtype": "Date", "in_list_view": 1, "label": "End Date", "reqd": 1},
+  {"default": "Planned", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Planned\nOpen\nClosed\nArchived", "reqd": 1}
+ ],
+ "links": [], "module": "College Management System", "name": "Academic Session",
+ "permissions": [{"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1}],
+ "search_fields": "session_code,session_name", "sort_field": "start_date", "sort_order": "DESC", "states": [], "title_field": "session_name", "track_changes": 1
+}

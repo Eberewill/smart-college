@@ -1,0 +1,16 @@
+{
+ "actions": [], "autoname": "field:campus_code", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["campus_code", "campus_name", "institution", "address", "city", "state", "is_active"],
+ "fields": [
+  {"fieldname": "campus_code", "fieldtype": "Data", "in_list_view": 1, "label": "Campus Code", "reqd": 1, "unique": 1},
+  {"fieldname": "campus_name", "fieldtype": "Data", "in_list_view": 1, "label": "Campus Name", "reqd": 1},
+  {"fieldname": "institution", "fieldtype": "Link", "in_list_view": 1, "label": "Institution", "options": "Institution", "reqd": 1},
+  {"fieldname": "address", "fieldtype": "Small Text", "label": "Address"},
+  {"fieldname": "city", "fieldtype": "Data", "label": "City"},
+  {"fieldname": "state", "fieldtype": "Data", "label": "State"},
+  {"default": "1", "fieldname": "is_active", "fieldtype": "Check", "in_list_view": 1, "label": "Active"}
+ ],
+ "links": [], "module": "College Management System", "name": "Campus",
+ "permissions": [{"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1}],
+ "search_fields": "campus_code,campus_name", "sort_field": "campus_name", "sort_order": "ASC", "states": [], "title_field": "campus_name", "track_changes": 1
+}

@@ -1,0 +1,16 @@
+{
+ "actions": [], "autoname": "field:course_code", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["course_code", "course_title", "owning_department", "default_category", "default_credit_units", "description", "is_active"],
+ "fields": [
+  {"fieldname": "course_code", "fieldtype": "Data", "in_list_view": 1, "label": "Course Code", "reqd": 1, "unique": 1},
+  {"fieldname": "course_title", "fieldtype": "Data", "in_list_view": 1, "label": "Course Title", "reqd": 1},
+  {"fieldname": "owning_department", "fieldtype": "Link", "in_list_view": 1, "label": "Owning Department", "options": "Department", "reqd": 1},
+  {"fieldname": "default_category", "fieldtype": "Link", "label": "Default Category", "options": "Course Category", "reqd": 1},
+  {"fieldname": "default_credit_units", "fieldtype": "Float", "label": "Default Credit Units", "reqd": 1},
+  {"fieldname": "description", "fieldtype": "Small Text", "label": "Description"},
+  {"default": "1", "fieldname": "is_active", "fieldtype": "Check", "in_list_view": 1, "label": "Active"}
+ ],
+ "links": [], "module": "College Management System", "name": "Course",
+ "permissions": [{"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1}],
+ "search_fields": "course_code,course_title", "sort_field": "course_code", "sort_order": "ASC", "states": [], "title_field": "course_title", "track_changes": 1
+}

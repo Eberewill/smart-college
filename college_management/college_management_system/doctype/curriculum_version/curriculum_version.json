@@ -1,0 +1,21 @@
+{
+ "actions": [], "autoname": "field:curriculum_code", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["curriculum_code", "version_label", "programme", "status", "effective_section", "effective_from_session", "effective_to_session", "courses_section", "courses", "prerequisites_section", "prerequisites", "notes"],
+ "fields": [
+  {"fieldname": "curriculum_code", "fieldtype": "Data", "in_list_view": 1, "label": "Curriculum Code", "reqd": 1, "unique": 1},
+  {"fieldname": "version_label", "fieldtype": "Data", "in_list_view": 1, "label": "Version Label", "reqd": 1},
+  {"fieldname": "programme", "fieldtype": "Link", "in_list_view": 1, "label": "Programme", "options": "Programme", "reqd": 1},
+  {"default": "Draft", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Draft\nUnder Review\nActive\nRetired", "reqd": 1},
+  {"fieldname": "effective_section", "fieldtype": "Section Break", "label": "Effective Period"},
+  {"fieldname": "effective_from_session", "fieldtype": "Link", "label": "Effective From Session", "options": "Academic Session", "reqd": 1},
+  {"fieldname": "effective_to_session", "fieldtype": "Link", "label": "Effective To Session", "options": "Academic Session"},
+  {"fieldname": "courses_section", "fieldtype": "Section Break", "label": "Courses"},
+  {"fieldname": "courses", "fieldtype": "Table", "label": "Courses", "options": "Curriculum Course"},
+  {"fieldname": "prerequisites_section", "fieldtype": "Section Break", "label": "Prerequisites"},
+  {"fieldname": "prerequisites", "fieldtype": "Table", "label": "Prerequisites", "options": "Curriculum Prerequisite"},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"}
+ ],
+ "links": [], "module": "College Management System", "name": "Curriculum Version",
+ "permissions": [{"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1}],
+ "search_fields": "curriculum_code,version_label,programme", "sort_field": "creation", "sort_order": "DESC", "states": [], "title_field": "version_label", "track_changes": 1
+}
