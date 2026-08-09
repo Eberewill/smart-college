@@ -56,3 +56,13 @@ discarded.
 - MariaDB image: `11.8`, pinned by digest in Compose
 - Redis image: `7-alpine`, pinned by digest in Compose
 - Bench image: pinned by digest in Compose
+
+## Known framework baseline warning
+
+Frappe `v16.30.0` currently registers
+`frappe.core.doctype.duckdb_sync.duckdb_sync.cleanup_old_syncs` as a scheduled method, but that
+method is absent from the tagged source. Site creation and migration emit a warning; app
+installation, migrations, workers, HTTP checks, and tests still pass.
+
+Do not patch Frappe core locally. Recheck the warning when evaluating the next stable Frappe
+release and upgrade only after the full application test suite passes.
