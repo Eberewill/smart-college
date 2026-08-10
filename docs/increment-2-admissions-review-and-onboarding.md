@@ -23,6 +23,13 @@ Frappe's native print/PDF engine renders the immutable letter record; no separat
 introduced. A custom reviewer role must also receive read access to Admission Review through Role
 Permission Manager. Server actions still require the snapshotted role and assignment.
 
+The applicant journey is configured separately through the programme's ordered Application Steps.
+Steps can collect applicant-profile details, group configured application fields, handle payment,
+or review and submit. Every field step uses a stable step key, and exactly one final review step is
+required. A payment step is also required when the programme requires payment before submission.
+If no steps are configured, the portal uses the standard details, questions, documents, payment,
+and review sequence as applicable.
+
 ## Authoritative lifecycle
 
 1. Admissions staff call `college_management.admissions.assign_review` for the next configured
@@ -45,12 +52,15 @@ Permission Manager. Server actions still require the snapshotted role and assign
 
 ## User interfaces
 
-Applicants use `/admissions`. The portal is available only to signed-in users with the Applicant
-role and resolves every record from the current user's Applicant Profile. It provides:
+Applicants use `/admissions` as their dashboard. Each application opens in its own owner-protected
+workspace at `/admissions/<application-id>`. The portal is available only to signed-in users with
+the Applicant role and resolves every record from the current user's Applicant Profile. It provides:
 
 - currently open, published programmes and their application deadlines and fees;
-- dynamic application fields from the published programme configuration;
-- private attachment upload, draft saving, and controlled submission;
+- programme-configured application steps and dynamic fields, with a safe default sequence;
+- Frappe-native date and link controls, responsive Bootstrap/Frappe layout, and keyboard-accessible
+  step navigation;
+- private attachment upload, automatic draft saving, and controlled submission;
 - a read-only submitted-application view containing the applicant's exact answers and private
   document links without exposing internal review records;
 - invoice creation, hosted Paystack checkout, and server-side payment verification when a fee is
@@ -80,15 +90,15 @@ server-governed lifecycle actions described above; they do not bypass permission
 ## Operator smoke test
 
 1. Add at least one Review Stage to a Draft Admission Programme, then publish its cycle.
-2. Sign in as an Applicant, open `/admissions`, save the configured answers, and submit the
-   application.
+2. Sign in as an Applicant, open `/admissions`, start or open the application's dedicated page,
+   verify autosave across steps, and submit the application.
 3. Open the submitted Admission Application in Desk and assign its first stage to a staff user with
    the configured role.
 4. As that reviewer, complete every check, enter a score, and submit a recommendation.
 5. As a different Admissions Officer, record an Admitted decision and issue the letter with a
    future acceptance deadline.
 6. As the Applicant, verify that internal reviews are unavailable, then read and accept the letter
-   at `/admissions`.
+   from its dedicated application page.
 7. As Registry, convert the accepted letter. Confirm one Student Profile exists and the user has the
    Student role. Repeat conversion and confirm the same Student number is returned.
 

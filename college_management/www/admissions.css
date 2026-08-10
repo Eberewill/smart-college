@@ -4,6 +4,12 @@
 .cm-identity-card {
 	min-width: 12rem;
 }
+.cm-dashboard-shell h1,
+.cm-dashboard-shell h2,
+.cm-dashboard-shell h3,
+.cm-identity-card {
+	overflow-wrap: anywhere;
+}
 @media (max-width: 575px) {
 	.cm-identity-card {
 		width: 100%;
