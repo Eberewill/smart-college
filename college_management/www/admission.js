@@ -111,6 +111,11 @@ async function run_action(button) {
 			"college_management.college_management_system.doctype.admission_application.admission_application.submit_application",
 			{ application: button.dataset.application }
 		);
+	} else if (action === "save-exit") {
+		const form = button.closest("[data-application-form]");
+		await persist_application(form);
+		window.location.assign("/admissions");
+		return;
 	} else if (action === "invoice") {
 		await call("college_management.payments.create_application_invoice", { application: button.dataset.application });
 	} else if (action === "pay") {
@@ -214,7 +219,18 @@ function show_step(form, index) {
 	steps.forEach((step, position) => (step.hidden = position !== index));
 	form.querySelectorAll("[data-step-target]").forEach((button, position) => {
 		button.setAttribute("aria-current", position === index ? "step" : "false");
+		const state = button.querySelector("[data-step-state]");
+		if (state) {
+			const complete = position < index;
+			button.dataset.stepState = complete ? "complete" : position === index ? "current" : "upcoming";
+			state.dataset.stepState = button.dataset.stepState;
+			state.textContent = complete ? __("Completed") : position === index ? __("In progress") : __("Not started");
+		}
 	});
+	const progress = form.querySelector("[data-step-progress]");
+	if (progress) progress.textContent = __("Step {0} of {1}", [index + 1, steps.length]);
+	const progressBar = form.querySelector("[data-step-progress-bar]");
+	if (progressBar) progressBar.style.width = `${((index + 1) / steps.length) * 100}%`;
 	update_review(form);
 	steps[index].querySelector("h2")?.focus({ preventScroll: true });
 }

@@ -1,5 +1,5 @@
 .cm-application-shell {
-	max-width: 54rem;
+	max-width: 76rem;
 }
 .cm-application-shell h1,
 .cm-application-shell h2,
@@ -10,6 +10,9 @@
 .cm-step-navigation {
 	position: sticky;
 	top: 1rem;
+}
+.cm-application-progress .progress {
+	height: 0.25rem;
 }
 .cm-step-navigation [aria-current="step"] {
 	background: var(--subtle-accent);
@@ -26,9 +29,25 @@
 	height: 1.75rem;
 	justify-content: center;
 }
+.cm-step-copy {
+	min-width: 0;
+}
 .cm-step-navigation [aria-current="step"] .cm-step-number {
 	background: var(--primary);
 	color: white;
+}
+.cm-step-navigation [data-step-state="complete"] .cm-step-number {
+	background: var(--green-500);
+	color: white;
+}
+.cm-step-navigation [data-step-state="complete"] .cm-step-number::after {
+	content: "✓";
+}
+.cm-step-navigation [data-step-state="complete"] .cm-step-number {
+	font-size: 0;
+}
+.cm-step-navigation [data-step-state="complete"] .cm-step-number::after {
+	font-size: 0.875rem;
 }
 .cm-wizard-step[hidden] {
 	display: none;
@@ -59,6 +78,9 @@
 	display: none;
 }
 @media (max-width: 991px) {
+	.cm-step-rail {
+		order: -1;
+	}
 	.cm-step-navigation {
 		flex-direction: row;
 		overflow-x: auto;
@@ -67,7 +89,11 @@
 	.cm-step-navigation .list-group-item {
 		border-width: 1px;
 		flex: 0 0 auto;
+		min-width: 11rem;
 		width: auto;
+	}
+	.cm-step-rail > p {
+		display: none;
 	}
 }
 @media (max-width: 575px) {
