@@ -152,6 +152,8 @@ AUDITED_DOCTYPES = (
 	"Course",
 	"Curriculum Version",
 	"Staff Profile",
+	"Admission Cycle",
+	"Admission Programme",
 )
 
 doc_events = {

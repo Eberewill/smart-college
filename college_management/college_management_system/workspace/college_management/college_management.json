@@ -1,7 +1,7 @@
 {
  "app": "college_management",
  "charts": [],
- "content": "[{\"id\":\"cm-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Foundation Setup</span>\",\"col\":12}},{\"id\":\"cm-institution\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Institution\",\"col\":4}},{\"id\":\"cm-session\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Academic Session\",\"col\":4}},{\"id\":\"cm-curriculum\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Curriculum Version\",\"col\":4}},{\"id\":\"cm-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cm-organisation\",\"type\":\"card\",\"data\":{\"card_name\":\"Organisation\",\"col\":4}},{\"id\":\"cm-calendar\",\"type\":\"card\",\"data\":{\"card_name\":\"Academic Calendar\",\"col\":4}},{\"id\":\"cm-structure\",\"type\":\"card\",\"data\":{\"card_name\":\"Academic Structure\",\"col\":4}},{\"id\":\"cm-administration\",\"type\":\"card\",\"data\":{\"card_name\":\"Administration and Audit\",\"col\":4}}]",
+ "content": "[{\"id\":\"cm-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">College Management</span>\",\"col\":12}},{\"id\":\"cm-institution\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Institution\",\"col\":3}},{\"id\":\"cm-session\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Academic Session\",\"col\":3}},{\"id\":\"cm-curriculum\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Curriculum Version\",\"col\":3}},{\"id\":\"cm-admission-cycle\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Admission Cycle\",\"col\":3}},{\"id\":\"cm-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cm-admissions\",\"type\":\"card\",\"data\":{\"card_name\":\"Admissions\",\"col\":4}},{\"id\":\"cm-organisation\",\"type\":\"card\",\"data\":{\"card_name\":\"Organisation\",\"col\":4}},{\"id\":\"cm-calendar\",\"type\":\"card\",\"data\":{\"card_name\":\"Academic Calendar\",\"col\":4}},{\"id\":\"cm-structure\",\"type\":\"card\",\"data\":{\"card_name\":\"Academic Structure\",\"col\":4}},{\"id\":\"cm-administration\",\"type\":\"card\",\"data\":{\"card_name\":\"Administration and Audit\",\"col\":4}}]",
  "creation": "2026-08-09 02:20:00.000000",
  "custom_blocks": [],
  "doctype": "Workspace",
@@ -11,6 +11,9 @@
  "is_hidden": 0,
  "label": "College Management",
  "links": [
+  {"hidden": 0, "is_query_report": 0, "label": "Admissions", "link_count": 2, "onboard": 0, "type": "Card Break"},
+  {"hidden": 0, "is_query_report": 0, "label": "Admission Cycle", "link_count": 0, "link_to": "Admission Cycle", "link_type": "DocType", "onboard": 0, "type": "Link"},
+  {"hidden": 0, "is_query_report": 0, "label": "Admission Programme", "link_count": 0, "link_to": "Admission Programme", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Organisation", "link_count": 4, "onboard": 0, "type": "Card Break"},
   {"hidden": 0, "is_query_report": 0, "label": "Institution", "link_count": 0, "link_to": "Institution", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Campus", "link_count": 0, "link_to": "Campus", "link_type": "DocType", "onboard": 0, "type": "Link"},
@@ -29,7 +32,7 @@
   {"hidden": 0, "is_query_report": 0, "label": "Staff Profile", "link_count": 0, "link_to": "Staff Profile", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Domain Audit Event", "link_count": 0, "link_to": "Domain Audit Event", "link_type": "DocType", "onboard": 0, "type": "Link"}
  ],
- "modified": "2026-08-09 02:20:00.000000",
+ "modified": "2026-08-10 12:30:00.000000",
  "modified_by": "Administrator",
  "module": "College Management System",
  "name": "College Management",
@@ -38,12 +41,13 @@
  "parent_page": "",
  "public": 1,
  "quick_lists": [],
- "roles": [{"role": "System Manager"}],
+ "roles": [{"role": "System Manager"}, {"role": "Institution Super Admin"}, {"role": "Admissions Officer"}, {"role": "Registry Officer"}, {"role": "Finance Officer"}, {"role": "Examination Officer"}, {"role": "Academic Approver"}, {"role": "Lecturer"}, {"role": "Auditor"}],
  "sequence_id": 1,
  "shortcuts": [
   {"color": "Grey", "doc_view": "List", "label": "Institution", "link_to": "Institution", "type": "DocType"},
   {"color": "Grey", "doc_view": "List", "label": "Academic Session", "link_to": "Academic Session", "type": "DocType"},
-  {"color": "Grey", "doc_view": "List", "label": "Curriculum Version", "link_to": "Curriculum Version", "type": "DocType"}
+  {"color": "Grey", "doc_view": "List", "label": "Curriculum Version", "link_to": "Curriculum Version", "type": "DocType"},
+  {"color": "Grey", "doc_view": "List", "label": "Admission Cycle", "link_to": "Admission Cycle", "type": "DocType"}
  ],
  "title": "College Management",
  "type": "Workspace"

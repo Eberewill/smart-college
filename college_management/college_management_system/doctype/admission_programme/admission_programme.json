@@ -1,0 +1,30 @@
+{
+ "actions": [], "autoname": "hash", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["admission_cycle", "programme", "campus", "is_enabled", "capacity", "window_section", "applications_open_from", "applications_close_at", "fee_section", "application_fee", "currency", "require_payment_before_submission", "form_section", "application_fields", "notes"],
+ "fields": [
+  {"fieldname": "admission_cycle", "fieldtype": "Link", "in_list_view": 1, "label": "Admission Cycle", "options": "Admission Cycle", "reqd": 1},
+  {"fieldname": "programme", "fieldtype": "Link", "in_list_view": 1, "label": "Programme", "options": "Programme", "reqd": 1},
+  {"fieldname": "campus", "fieldtype": "Link", "in_list_view": 1, "label": "Campus", "options": "Campus"},
+  {"default": "1", "fieldname": "is_enabled", "fieldtype": "Check", "in_list_view": 1, "label": "Enabled"},
+  {"fieldname": "capacity", "fieldtype": "Int", "label": "Available Places"},
+  {"fieldname": "window_section", "fieldtype": "Section Break", "label": "Programme Application Window Override"},
+  {"description": "Leave blank to use the Admission Cycle opening time.", "fieldname": "applications_open_from", "fieldtype": "Datetime", "label": "Applications Open From"},
+  {"description": "Leave blank to use the Admission Cycle closing time.", "fieldname": "applications_close_at", "fieldtype": "Datetime", "label": "Applications Close At"},
+  {"fieldname": "fee_section", "fieldtype": "Section Break", "label": "Application Fee"},
+  {"default": "0", "fieldname": "application_fee", "fieldtype": "Currency", "label": "Application Fee", "options": "currency", "reqd": 1},
+  {"default": "NGN", "fieldname": "currency", "fieldtype": "Link", "label": "Currency", "options": "Currency", "reqd": 1},
+  {"default": "0", "fieldname": "require_payment_before_submission", "fieldtype": "Check", "label": "Require Payment Before Submission"},
+  {"fieldname": "form_section", "fieldtype": "Section Break", "label": "Application Fields and Documents"},
+  {"fieldname": "application_fields", "fieldtype": "Table", "label": "Application Fields", "options": "Admission Application Field"},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"}
+ ],
+ "links": [], "module": "College Management System", "name": "Admission Programme",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Institution Super Admin", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Admissions Officer", "write": 1},
+  {"read": 1, "role": "Registry Officer"}, {"read": 1, "role": "Finance Officer"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "admission_cycle,programme,campus", "sort_field": "creation", "sort_order": "DESC", "states": [], "title_field": "programme", "track_changes": 1
+}

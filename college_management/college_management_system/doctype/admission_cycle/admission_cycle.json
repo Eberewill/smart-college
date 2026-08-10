@@ -1,0 +1,24 @@
+{
+ "actions": [], "autoname": "field:admission_cycle_code", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["admission_cycle_code", "cycle_name", "academic_session", "status", "window_section", "applications_open_from", "applications_close_at", "decision_deadline", "notes"],
+ "fields": [
+  {"fieldname": "admission_cycle_code", "fieldtype": "Data", "in_list_view": 1, "label": "Admission Cycle Code", "reqd": 1, "unique": 1},
+  {"fieldname": "cycle_name", "fieldtype": "Data", "in_list_view": 1, "label": "Cycle Name", "reqd": 1},
+  {"fieldname": "academic_session", "fieldtype": "Link", "in_list_view": 1, "label": "Academic Session", "options": "Academic Session", "reqd": 1},
+  {"default": "Draft", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Draft\nUnder Review\nPublished\nClosed\nArchived", "reqd": 1},
+  {"fieldname": "window_section", "fieldtype": "Section Break", "label": "Application Window"},
+  {"fieldname": "applications_open_from", "fieldtype": "Datetime", "label": "Applications Open From", "reqd": 1},
+  {"fieldname": "applications_close_at", "fieldtype": "Datetime", "label": "Applications Close At", "reqd": 1},
+  {"fieldname": "decision_deadline", "fieldtype": "Date", "label": "Decision Deadline"},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"}
+ ],
+ "links": [], "module": "College Management System", "name": "Admission Cycle",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Institution Super Admin", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Admissions Officer", "write": 1},
+  {"read": 1, "role": "Registry Officer"}, {"read": 1, "role": "Finance Officer"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "admission_cycle_code,cycle_name,academic_session", "sort_field": "applications_open_from", "sort_order": "DESC", "states": [], "title_field": "cycle_name", "track_changes": 1
+}
