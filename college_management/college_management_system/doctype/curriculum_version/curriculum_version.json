@@ -16,6 +16,13 @@
   {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"}
  ],
  "links": [], "module": "College Management System", "name": "Curriculum Version",
- "permissions": [{"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1}],
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Institution Super Admin", "share": 1, "write": 1},
+  {"read": 1, "role": "Admissions Officer"}, {"read": 1, "role": "Registry Officer"},
+  {"read": 1, "role": "Finance Officer"}, {"read": 1, "role": "Examination Officer"},
+  {"read": 1, "role": "Academic Approver"}, {"read": 1, "role": "Lecturer"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Auditor"}
+ ],
  "search_fields": "curriculum_code,version_label,programme", "sort_field": "creation", "sort_order": "DESC", "states": [], "title_field": "version_label", "track_changes": 1
 }

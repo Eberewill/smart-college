@@ -1,7 +1,7 @@
 {
  "app": "college_management",
  "charts": [],
- "content": "[{\"id\":\"cm-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Foundation Setup</span>\",\"col\":12}},{\"id\":\"cm-institution\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Institution\",\"col\":4}},{\"id\":\"cm-session\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Academic Session\",\"col\":4}},{\"id\":\"cm-curriculum\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Curriculum Version\",\"col\":4}},{\"id\":\"cm-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cm-organisation\",\"type\":\"card\",\"data\":{\"card_name\":\"Organisation\",\"col\":4}},{\"id\":\"cm-calendar\",\"type\":\"card\",\"data\":{\"card_name\":\"Academic Calendar\",\"col\":4}},{\"id\":\"cm-structure\",\"type\":\"card\",\"data\":{\"card_name\":\"Academic Structure\",\"col\":4}}]",
+ "content": "[{\"id\":\"cm-header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Foundation Setup</span>\",\"col\":12}},{\"id\":\"cm-institution\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Institution\",\"col\":4}},{\"id\":\"cm-session\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Academic Session\",\"col\":4}},{\"id\":\"cm-curriculum\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Curriculum Version\",\"col\":4}},{\"id\":\"cm-spacer\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"cm-organisation\",\"type\":\"card\",\"data\":{\"card_name\":\"Organisation\",\"col\":4}},{\"id\":\"cm-calendar\",\"type\":\"card\",\"data\":{\"card_name\":\"Academic Calendar\",\"col\":4}},{\"id\":\"cm-structure\",\"type\":\"card\",\"data\":{\"card_name\":\"Academic Structure\",\"col\":4}},{\"id\":\"cm-administration\",\"type\":\"card\",\"data\":{\"card_name\":\"Administration and Audit\",\"col\":4}}]",
  "creation": "2026-08-09 02:20:00.000000",
  "custom_blocks": [],
  "doctype": "Workspace",
@@ -24,7 +24,10 @@
   {"hidden": 0, "is_query_report": 0, "label": "Programme", "link_count": 0, "link_to": "Programme", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Course", "link_count": 0, "link_to": "Course", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Course Category", "link_count": 0, "link_to": "Course Category", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Curriculum Version", "link_count": 0, "link_to": "Curriculum Version", "link_type": "DocType", "onboard": 0, "type": "Link"}
+  {"hidden": 0, "is_query_report": 0, "label": "Curriculum Version", "link_count": 0, "link_to": "Curriculum Version", "link_type": "DocType", "onboard": 0, "type": "Link"},
+  {"hidden": 0, "is_query_report": 0, "label": "Administration and Audit", "link_count": 2, "onboard": 0, "type": "Card Break"},
+  {"hidden": 0, "is_query_report": 0, "label": "Staff Profile", "link_count": 0, "link_to": "Staff Profile", "link_type": "DocType", "onboard": 0, "type": "Link"},
+  {"hidden": 0, "is_query_report": 0, "label": "Domain Audit Event", "link_count": 0, "link_to": "Domain Audit Event", "link_type": "DocType", "onboard": 0, "type": "Link"}
  ],
  "modified": "2026-08-09 02:20:00.000000",
  "modified_by": "Administrator",

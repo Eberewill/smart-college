@@ -1,0 +1,35 @@
+{
+ "actions": [],
+ "autoname": "field:staff_number",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["staff_number", "user", "full_name", "institution", "employment_section", "designation", "appointment_date", "employment_status", "organisation_section", "primary_campus", "primary_faculty", "primary_department"],
+ "fields": [
+  {"fieldname": "staff_number", "fieldtype": "Data", "in_list_view": 1, "label": "Staff Number", "reqd": 1, "unique": 1},
+  {"fieldname": "user", "fieldtype": "Link", "in_list_view": 1, "label": "User", "options": "User", "reqd": 1, "unique": 1},
+  {"fetch_from": "user.full_name", "fieldname": "full_name", "fieldtype": "Data", "in_list_view": 1, "label": "Full Name", "read_only": 1},
+  {"fieldname": "institution", "fieldtype": "Link", "label": "Institution", "options": "Institution", "reqd": 1},
+  {"fieldname": "employment_section", "fieldtype": "Section Break", "label": "Employment"},
+  {"fieldname": "designation", "fieldtype": "Data", "label": "Designation", "reqd": 1},
+  {"fieldname": "appointment_date", "fieldtype": "Date", "label": "Appointment Date"},
+  {"default": "Active", "fieldname": "employment_status", "fieldtype": "Select", "in_list_view": 1, "label": "Employment Status", "options": "Active\nOn Leave\nSuspended\nSeparated\nArchived", "reqd": 1},
+  {"fieldname": "organisation_section", "fieldtype": "Section Break", "label": "Primary Organisation"},
+  {"fieldname": "primary_campus", "fieldtype": "Link", "label": "Primary Campus", "options": "Campus"},
+  {"fieldname": "primary_faculty", "fieldtype": "Link", "label": "Primary Faculty", "options": "Faculty"},
+  {"fieldname": "primary_department", "fieldtype": "Link", "label": "Primary Department", "options": "Department"}
+ ],
+ "links": [],
+ "module": "College Management System",
+ "name": "Staff Profile",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Institution Super Admin", "share": 1, "write": 1},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "staff_number,user,full_name",
+ "sort_field": "full_name",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "full_name",
+ "track_changes": 1
+}

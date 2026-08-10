@@ -42,3 +42,10 @@ def validate_date_range(document, start_field, end_field):
 				document.meta.get_label(end_field), document.meta.get_label(start_field)
 			)
 		)
+
+
+def in_schema_operation():
+	return any(
+		getattr(frappe.flags, flag, False)
+		for flag in ("in_install", "in_migrate", "in_patch", "in_uninstall")
+	)

@@ -9,6 +9,13 @@
   {"default": "Planned", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Planned\nOpen\nClosed\nArchived", "reqd": 1}
  ],
  "links": [], "module": "College Management System", "name": "Academic Session",
- "permissions": [{"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1}],
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Institution Super Admin", "share": 1, "write": 1},
+  {"read": 1, "role": "Admissions Officer"}, {"read": 1, "role": "Registry Officer"},
+  {"read": 1, "role": "Finance Officer"}, {"read": 1, "role": "Examination Officer"},
+  {"read": 1, "role": "Academic Approver"}, {"read": 1, "role": "Lecturer"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Auditor"}
+ ],
  "search_fields": "session_code,session_name", "sort_field": "start_date", "sort_order": "DESC", "states": [], "title_field": "session_name", "track_changes": 1
 }

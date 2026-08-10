@@ -86,7 +86,8 @@ app_license = "mit"
 # ------------
 
 # before_install = "college_management.install.before_install"
-# after_install = "college_management.install.after_install"
+after_install = "college_management.setup.install_roles"
+after_migrate = "college_management.setup.install_roles"
 
 # Uninstallation
 # ------------
@@ -138,13 +139,28 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+AUDITED_DOCTYPES = (
+	"Institution",
+	"Campus",
+	"Faculty",
+	"Department",
+	"Academic Session",
+	"Academic Semester",
+	"Academic Level",
+	"Course Category",
+	"Programme",
+	"Course",
+	"Curriculum Version",
+	"Staff Profile",
+)
+
+doc_events = {
+	doctype: {
+		"on_update": "college_management.audit.record_update",
+		"after_delete": "college_management.audit.record_delete",
+	}
+	for doctype in AUDITED_DOCTYPES
+}
 
 # Scheduled Tasks
 # ---------------
@@ -255,4 +271,3 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-
