@@ -85,6 +85,7 @@ def _application_card(name):
 	return frappe._dict(
 		name=application.name,
 		status=application.status,
+		submitted_at=application.submitted_at,
 		admission_programme=application.admission_programme,
 		programme=frappe.db.get_value("Programme", application.programme, "programme_name"),
 		programme_code=application.programme,

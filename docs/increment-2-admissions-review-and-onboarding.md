@@ -51,6 +51,8 @@ role and resolves every record from the current user's Applicant Profile. It pro
 - currently open, published programmes and their application deadlines and fees;
 - dynamic application fields from the published programme configuration;
 - private attachment upload, draft saving, and controlled submission;
+- a read-only submitted-application view containing the applicant's exact answers and private
+  document links without exposing internal review records;
 - invoice creation, hosted Paystack checkout, and server-side payment verification when a fee is
   required;
 - final decision and reason, admission-letter printing, acceptance or decline, and the assigned

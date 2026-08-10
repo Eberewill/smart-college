@@ -100,6 +100,26 @@
 			</form>
 			{% else %}
 			<div class="cm-timeline-item"><strong>{{ _("Application submitted") }}</strong><span>{{ _("Your submitted answers and documents are locked.") }}</span></div>
+			<details class="cm-application-details">
+				<summary class="btn btn-default">{{ _("View application") }}</summary>
+				<div class="cm-application-details-content">
+					<h4>{{ _("Submitted application") }}</h4>
+					{% if application.submitted_at %}<p class="text-muted">{{ _("Submitted") }} {{ frappe.utils.format_datetime(application.submitted_at, "medium") }}</p>{% endif %}
+					<dl class="cm-response-list">
+						{% for field in application.fields %}
+						<div>
+							<dt>{{ field.label }}</dt>
+							<dd>
+								{% if field.type == "Attachment" and field.attachment %}<a href="{{ field.attachment | e }}" target="_blank" rel="noopener">{{ _("View uploaded document") }}</a>
+								{% elif field.type == "Check" %}{{ _("Yes") if field.value == "1" else _("No") }}
+								{% elif field.value %}{{ field.value }}
+								{% else %}<span class="text-muted">{{ _("Not provided") }}</span>{% endif %}
+							</dd>
+						</div>
+						{% endfor %}
+					</dl>
+				</div>
+			</details>
 			{% endif %}
 
 			{% if application.status == "Submitted" %}

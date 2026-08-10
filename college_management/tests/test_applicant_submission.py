@@ -127,6 +127,7 @@ class TestApplicantSubmission(IntegrationTestCase):
 			first_application,
 			[{"field_key": "surname", "response_value": "Applicant"}],
 		)
+		submit_application(first_application)
 		frappe.set_user(second_user.name)
 		second_application = create_application(offering.name)["application"]
 		frappe.set_user(first_user.name)
@@ -134,6 +135,8 @@ class TestApplicantSubmission(IntegrationTestCase):
 		get_context(context)
 		self.assertEqual([item.name for item in context.applications], [first_application])
 		self.assertNotIn(second_application, [item.name for item in context.applications])
+		self.assertEqual(context.applications[0].status, "Submitted")
+		self.assertTrue(context.applications[0].submitted_at)
 		self.assertEqual(context.applications[0].fields[0].value, "Applicant")
 		self.assertFalse(context.offerings[0].can_apply)
 		frappe.set_user("Administrator")
