@@ -1,0 +1,11 @@
+{
+ "actions": [], "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB", "istable": 1,
+ "field_order": ["step_key", "step_title", "step_type", "description"],
+ "fields": [
+  {"fieldname": "step_key", "fieldtype": "Data", "in_list_view": 1, "label": "Step Key", "reqd": 1},
+  {"fieldname": "step_title", "fieldtype": "Data", "in_list_view": 1, "label": "Step Title", "reqd": 1},
+  {"fieldname": "step_type", "fieldtype": "Select", "in_list_view": 1, "label": "Step Type", "options": "Applicant Details\nApplication Fields\nPayment\nReview & Submit", "reqd": 1},
+  {"description": "Shown to applicants below the step title.", "fieldname": "description", "fieldtype": "Small Text", "label": "Description"}
+ ],
+ "links": [], "module": "College Management System", "name": "Admission Application Step", "permissions": [], "sort_field": "creation", "sort_order": "DESC", "states": []
+}

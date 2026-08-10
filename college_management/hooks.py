@@ -94,6 +94,8 @@ standard_portal_menu_items = [
 	{"title": "Student Academics", "route": "/student", "role": "Student"},
 ]
 
+website_route_rules = [{"from_route": "/admissions/<application>", "to_route": "admission"}]
+
 # Uninstallation
 # ------------
 

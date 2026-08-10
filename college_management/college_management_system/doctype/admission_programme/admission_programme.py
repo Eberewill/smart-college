@@ -17,6 +17,7 @@ class AdmissionProgramme(Document):
 		self._validate_programme_and_campus()
 		self._validate_window()
 		self._validate_fee()
+		self._validate_application_steps()
 		self._validate_application_fields()
 		self._validate_review_stages()
 		self._validate_letter_template()
@@ -72,6 +73,9 @@ class AdmissionProgramme(Document):
 
 	def _validate_application_fields(self):
 		seen = set()
+		field_steps = {
+			row.step_key for row in self.application_steps if row.step_type == "Application Fields"
+		}
 		for row in self.application_fields:
 			row.field_key = (row.field_key or "").strip().lower()
 			if not FIELD_KEY_PATTERN.fullmatch(row.field_key):
@@ -83,10 +87,41 @@ class AdmissionProgramme(Document):
 			if row.field_key in seen:
 				frappe.throw(frappe._("Application Field {0} is duplicated.").format(row.field_key))
 			seen.add(row.field_key)
+			row.application_step = (row.application_step or "").strip().lower()
+			if self.application_steps and row.application_step not in field_steps:
+				frappe.throw(
+					frappe._("Application Field {0} must use an Application Fields step.").format(
+						row.field_key
+					)
+				)
 			if row.field_type == "Select" and not (row.options or "").strip():
 				frappe.throw(frappe._("Select field {0} requires options.").format(row.field_key))
 			if row.field_type == "Attachment":
 				self._validate_attachment_field(row)
+
+	def _validate_application_steps(self):
+		seen = set()
+		types = []
+		for row in self.application_steps:
+			row.step_key = (row.step_key or "").strip().lower()
+			if not FIELD_KEY_PATTERN.fullmatch(row.step_key):
+				frappe.throw(
+					frappe._("Application Step Key must use lowercase letters, numbers, and underscores.")
+				)
+			if row.step_key in seen:
+				frappe.throw(frappe._("Application Step {0} is duplicated.").format(row.step_key))
+			seen.add(row.step_key)
+			types.append(row.step_type)
+		if not self.application_steps:
+			return
+		if types.count("Review & Submit") != 1:
+			frappe.throw(frappe._("A configured application flow requires one Review & Submit step."))
+		if types[-1] != "Review & Submit":
+			frappe.throw(frappe._("Review & Submit must be the final application step."))
+		if self.require_payment_before_submission and types.count("Payment") != 1:
+			frappe.throw(frappe._("A payment-required application flow requires one Payment step."))
+		if types.count("Payment") > 1 or types.count("Applicant Details") > 1:
+			frappe.throw(frappe._("Applicant Details and Payment may each appear only once."))
 
 	def _validate_review_stages(self):
 		seen = set()

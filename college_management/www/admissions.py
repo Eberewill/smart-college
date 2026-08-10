@@ -3,6 +3,19 @@ from frappe.utils import get_datetime, now_datetime
 
 no_cache = 1
 
+PROFILE_FIELDS = (
+	("first_name", "First Name", "Data", True),
+	("middle_name", "Middle Name", "Data", False),
+	("last_name", "Last Name", "Data", False),
+	("date_of_birth", "Date of Birth", "Date", False),
+	("gender", "Gender", "Select", False),
+	("phone", "Phone", "Data", False),
+	("nationality", "Nationality", "Data", False),
+	("state_of_origin", "State of Origin", "Data", False),
+	("local_government_area", "Local Government Area", "Data", False),
+	("address", "Address", "Small Text", False),
+)
+
 
 def get_context(context):
 	if frappe.session.user == "Guest":
@@ -15,6 +28,7 @@ def get_context(context):
 		frappe.throw(frappe._("Your Applicant Profile is not available."), frappe.PermissionError)
 	context.title = "Admissions"
 	context.show_sidebar = True
+	context.sidebar_items = _applicant_sidebar()
 	context.profile = frappe.get_doc("Applicant Profile", profile)
 	application_names = frappe.get_all(
 		"Admission Application",
@@ -22,9 +36,33 @@ def get_context(context):
 		pluck="name",
 		order_by="creation desc",
 	)
-	context.applications = [_application_card(name) for name in application_names]
+	context.applications = [_application_summary(name) for name in application_names]
 	context.offerings = _open_offerings({item.admission_programme for item in context.applications})
 	return context
+
+
+def _applicant_sidebar(application=None):
+	links = [frappe._dict(title="Admissions", route="/admissions")]
+	if application:
+		links.append(
+			frappe._dict(title=f"Application {application.name}", route=f"/admissions/{application.name}")
+		)
+	if "Student" in frappe.get_roles():
+		links.append(frappe._dict(title="Student Academics", route="/student"))
+	return [frappe._dict(group_title="Applicant portal", group_items=links)]
+
+
+def _application_summary(name):
+	application = frappe.get_doc("Admission Application", name)
+	return frappe._dict(
+		name=application.name,
+		status=application.status,
+		admission_programme=application.admission_programme,
+		programme=frappe.db.get_value("Programme", application.programme, "programme_name"),
+		modified=application.modified,
+		submitted_at=application.submitted_at,
+		url=f"/admissions/{application.name}",
+	)
 
 
 def _open_offerings(existing_offerings):
@@ -82,6 +120,21 @@ def _application_card(name):
 	decision = _linked_doc("Admission Decision", "admission_application", application.name)
 	letter = _linked_doc("Admission Letter", "admission_application", application.name)
 	student = _linked_doc("Student Profile", "admission_application", application.name)
+	fields = [
+		frappe._dict(
+			key=row.field_key,
+			label=row.label,
+			type=row.field_type,
+			required=row.is_required,
+			help_text=row.help_text,
+			options=[item.strip() for item in (row.options or "").splitlines() if item.strip()],
+			allowed_extensions=row.allowed_extensions,
+			value=responses.get(row.field_key).response_value if responses.get(row.field_key) else "",
+			attachment=responses.get(row.field_key).attachment if responses.get(row.field_key) else "",
+			step=(row.application_step or "").strip().lower(),
+		)
+		for row in offering.application_fields
+	]
 	return frappe._dict(
 		name=application.name,
 		status=application.status,
@@ -90,26 +143,86 @@ def _application_card(name):
 		programme=frappe.db.get_value("Programme", application.programme, "programme_name"),
 		programme_code=application.programme,
 		application_fee=offering.application_fee,
-		fields=[
-			frappe._dict(
-				key=row.field_key,
-				label=row.label,
-				type=row.field_type,
-				required=row.is_required,
-				help_text=row.help_text,
-				options=[item.strip() for item in (row.options or "").splitlines() if item.strip()],
-				allowed_extensions=row.allowed_extensions,
-				value=responses.get(row.field_key).response_value if responses.get(row.field_key) else "",
-				attachment=responses.get(row.field_key).attachment if responses.get(row.field_key) else "",
-			)
-			for row in offering.application_fields
-		],
+		currency=offering.currency,
+		fields=fields,
+		steps=_application_steps(offering, fields),
+		profile_fields=_profile_fields(application.applicant_profile),
+		require_payment=offering.require_payment_before_submission,
 		invoice=invoice,
 		transaction=transaction,
 		decision=decision,
 		letter=letter,
 		student=student,
 	)
+
+
+def _application_steps(offering, fields):
+	if offering.application_steps:
+		return [
+			frappe._dict(
+				key=row.step_key,
+				title=row.step_title,
+				type=row.step_type,
+				description=row.description,
+				fields=[field for field in fields if field.step == row.step_key],
+			)
+			for row in offering.application_steps
+		]
+
+	steps = [frappe._dict(key="details", title="Your details", type="Applicant Details")]
+	questions = [field for field in fields if field.type != "Attachment"]
+	documents = [field for field in fields if field.type == "Attachment"]
+	if questions:
+		steps.append(
+			frappe._dict(
+				key="application", title="Application details", type="Application Fields", fields=questions
+			)
+		)
+	if documents:
+		steps.append(
+			frappe._dict(
+				key="documents", title="Supporting documents", type="Application Fields", fields=documents
+			)
+		)
+	if offering.application_fee:
+		steps.append(frappe._dict(key="payment", title="Application fee", type="Payment"))
+	steps.append(frappe._dict(key="review", title="Review and submit", type="Review & Submit"))
+	return steps
+
+
+def _profile_fields(profile_name):
+	profile = frappe.get_doc("Applicant Profile", profile_name)
+	return [
+		frappe._dict(
+			key=key,
+			label=label,
+			type="Link" if key == "nationality" else field_type,
+			required=required,
+			value=profile.get(key) or "",
+			options=["Female", "Male", "Other", "Prefer not to say"] if key == "gender" else [],
+			link_options="Country" if key == "nationality" else None,
+		)
+		for key, label, field_type, required in PROFILE_FIELDS
+	]
+
+
+@frappe.whitelist(methods=["POST"])
+def save_applicant_profile(values):
+	profile_name = frappe.db.get_value("Applicant Profile", {"user": frappe.session.user}, "name")
+	if not profile_name:
+		frappe.throw(frappe._("Your Applicant Profile is not available."), frappe.PermissionError)
+	profile = frappe.get_doc("Applicant Profile", profile_name)
+	profile.check_permission("write")
+	payload = frappe.parse_json(values) if isinstance(values, str) else values
+	if not isinstance(payload, dict):
+		frappe.throw(frappe._("Applicant details must be an object."))
+	allowed = {field[0] for field in PROFILE_FIELDS}
+	if set(payload) - allowed:
+		frappe.throw(frappe._("Applicant details contain an unsupported field."))
+	for key, value in payload.items():
+		profile.set(key, value.strip() if isinstance(value, str) else value)
+	profile.save()
+	return {"profile": profile.name, "modified": profile.modified}
 
 
 def _linked_doc(doctype, field, value):

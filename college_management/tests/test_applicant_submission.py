@@ -27,7 +27,8 @@ from college_management.payments import (
 	paystack_webhook,
 	verify_payment,
 )
-from college_management.www.admissions import get_context
+from college_management.www.admission import get_context as get_application_context
+from college_management.www.admissions import get_context, save_applicant_profile
 
 
 class TestApplicantSubmission(IntegrationTestCase):
@@ -137,8 +138,79 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertNotIn(second_application, [item.name for item in context.applications])
 		self.assertEqual(context.applications[0].status, "Submitted")
 		self.assertTrue(context.applications[0].submitted_at)
-		self.assertEqual(context.applications[0].fields[0].value, "Applicant")
+		self.assertEqual(context.applications[0].url, f"/admissions/{first_application}")
+		self.assertEqual(context.sidebar_items[0].group_items[0].route, "/admissions")
 		self.assertFalse(context.offerings[0].can_apply)
+		frappe.form_dict = frappe._dict(application=first_application)
+		application_context = frappe._dict()
+		get_application_context(application_context)
+		self.assertEqual(application_context.application.fields[0].value, "Applicant")
+		self.assertEqual(
+			application_context.sidebar_items[0].group_items[1].route,
+			f"/admissions/{first_application}",
+		)
+		frappe.set_user(second_user.name)
+		with self.assertRaises(frappe.PermissionError):
+			get_application_context(frappe._dict())
+		frappe.set_user("Administrator")
+
+	def test_configurable_application_steps_and_profile_autosave(self):
+		steps = [
+			{"step_key": "bio", "step_title": "Personal information", "step_type": "Applicant Details"},
+			{"step_key": "education", "step_title": "Education", "step_type": "Application Fields"},
+			{"step_key": "documents", "step_title": "Documents", "step_type": "Application Fields"},
+			{"step_key": "fee", "step_title": "Payment", "step_type": "Payment"},
+			{"step_key": "confirm", "step_title": "Confirm", "step_type": "Review & Submit"},
+		]
+		offering = self._published_offering(
+			application_fee=1000,
+			require_payment_before_submission=1,
+			application_steps=steps,
+			application_fields=[
+				{**self._field("school", "Previous School", "Data"), "application_step": "education"},
+				{
+					**self._field("result", "Result", "Attachment"),
+					"application_step": "documents",
+					"allowed_extensions": "pdf",
+					"maximum_file_size_mb": 2,
+				},
+			],
+		)
+		user, _ = self._applicant()
+		frappe.set_user(user.name)
+		application = create_application(offering.name)["application"]
+		save_applicant_profile({"first_name": "Ada", "last_name": "Lovelace"})
+		context = frappe._dict()
+		frappe.form_dict = frappe._dict(application=application)
+		get_application_context(context)
+		card = context.application
+		self.assertEqual([step.key for step in card.steps], [row["step_key"] for row in steps])
+		self.assertEqual([step.title for step in card.steps], [row["step_title"] for row in steps])
+		self.assertEqual([step.type for step in card.steps], [row["step_type"] for row in steps])
+		self.assertEqual(card.steps[1].fields[0].key, "school")
+		self.assertEqual(card.steps[2].fields[0].key, "result")
+		self.assertTrue(card.require_payment)
+		self.assertEqual(context.application_url, f"/admissions/{application}")
+		self.assertEqual(
+			{field.key for field in card.profile_fields},
+			{
+				"first_name",
+				"middle_name",
+				"last_name",
+				"date_of_birth",
+				"gender",
+				"phone",
+				"nationality",
+				"state_of_origin",
+				"local_government_area",
+				"address",
+			},
+		)
+		self.assertEqual(
+			frappe.db.get_value("Applicant Profile", {"user": user.name}, "last_name"), "Lovelace"
+		)
+		with self.assertRaises(frappe.ValidationError):
+			save_applicant_profile({"status": "Archived"})
 		frappe.set_user("Administrator")
 
 	def test_submission_requires_complete_valid_responses_and_becomes_immutable(self):
@@ -177,6 +249,39 @@ class TestApplicantSubmission(IntegrationTestCase):
 			application.responses[0].response_value = "Changed"
 			with self.assertRaises(frappe.PermissionError):
 				application.save()
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_default_application_steps_remain_complete(self):
+		offering = self._published_offering(
+			application_fee=1000,
+			require_payment_before_submission=1,
+			application_fields=[
+				self._field("school", "Previous School", "Data"),
+				{
+					**self._field("result", "Result", "Attachment"),
+					"allowed_extensions": "pdf",
+					"maximum_file_size_mb": 2,
+				},
+			],
+		)
+		user, _ = self._applicant()
+		frappe.set_user(user.name)
+		try:
+			application = create_application(offering.name)["application"]
+			frappe.form_dict = frappe._dict(application=application)
+			context = frappe._dict()
+			get_application_context(context)
+			self.assertEqual(
+				[step.type for step in context.application.steps],
+				[
+					"Applicant Details",
+					"Application Fields",
+					"Application Fields",
+					"Payment",
+					"Review & Submit",
+				],
+			)
 		finally:
 			frappe.set_user("Administrator")
 

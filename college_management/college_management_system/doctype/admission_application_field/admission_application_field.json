@@ -1,9 +1,10 @@
 {
  "actions": [], "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB", "istable": 1,
- "field_order": ["field_key", "label", "field_type", "is_required", "options", "allowed_extensions", "maximum_file_size_mb", "help_text"],
+ "field_order": ["field_key", "label", "application_step", "field_type", "is_required", "options", "allowed_extensions", "maximum_file_size_mb", "help_text"],
  "fields": [
   {"fieldname": "field_key", "fieldtype": "Data", "in_list_view": 1, "label": "Field Key", "reqd": 1},
   {"fieldname": "label", "fieldtype": "Data", "in_list_view": 1, "label": "Label", "reqd": 1},
+  {"description": "Step Key from Application Steps. Leave blank only when using the default flow.", "fieldname": "application_step", "fieldtype": "Data", "in_list_view": 1, "label": "Application Step"},
   {"fieldname": "field_type", "fieldtype": "Select", "in_list_view": 1, "label": "Field Type", "options": "Data\nSmall Text\nDate\nSelect\nCheck\nAttachment", "reqd": 1},
   {"default": "0", "fieldname": "is_required", "fieldtype": "Check", "in_list_view": 1, "label": "Required"},
   {"description": "One Select option per line.", "fieldname": "options", "fieldtype": "Small Text", "label": "Options"},
