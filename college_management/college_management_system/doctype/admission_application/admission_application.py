@@ -293,3 +293,28 @@ def submit_application(application):
 	finally:
 		frappe.flags.admission_submission = None
 	return {"application": doc.name, "status": doc.status, "submitted_at": doc.submitted_at}
+
+
+@frappe.whitelist(methods=["POST"])
+def save_application_responses(application, responses):
+	doc = frappe.get_doc("Admission Application", application)
+	doc.check_permission("write")
+	if doc.status != "Draft":
+		frappe.throw(frappe._("Only a Draft application can be edited."))
+	values = frappe.parse_json(responses) if isinstance(responses, str) else responses
+	if not isinstance(values, list):
+		frappe.throw(frappe._("Application responses must be a list."))
+	doc.set("responses", [])
+	for value in values:
+		if not isinstance(value, dict) or not value.get("field_key"):
+			frappe.throw(frappe._("Every response requires an Application Field key."))
+		doc.append(
+			"responses",
+			{
+				"field_key": value["field_key"],
+				"response_value": value.get("response_value"),
+				"attachment": value.get("attachment"),
+			},
+		)
+	doc.save()
+	return {"application": doc.name, "status": doc.status}

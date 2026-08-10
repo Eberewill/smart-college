@@ -54,12 +54,12 @@ accounting journals, and settlement imports belong to later finance increments.
 ## Smoke test
 
 Create a Published Admission Programme with a positive Application Fee and Require Payment Before
-Submission enabled. As an Applicant: create an application, call
-`college_management.payments.create_application_invoice`, then
-`college_management.payments.initialize_payment`; open the returned authorization URL and pay with
-a provider test method. Call `college_management.payments.verify_payment` with the returned
-reference. Confirm the invoice is Paid, reconciliation is Matched, one receipt exists, and the
-application can submit. Repeat verification and confirm a second receipt is not created.
+Submission enabled. As an Applicant, open `/admissions`, start an application, and select Pay
+application fee. Complete the provider-hosted checkout with a Paystack test method, return to the
+portal, and select Verify payment. Confirm the invoice is Paid, reconciliation is Matched, one
+receipt exists, and the application can submit. Repeat verification and confirm a second receipt is
+not created. Finance can run the same authoritative verification from the Reconcile with gateway
+action on Application Payment Transaction.
 
 Automated regression command:
 

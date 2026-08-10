@@ -18,6 +18,7 @@ from college_management.admissions import (
 )
 from college_management.college_management_system.doctype.admission_application.admission_application import (
 	create_application,
+	save_application_responses,
 	submit_application,
 )
 from college_management.payments import (
@@ -26,6 +27,7 @@ from college_management.payments import (
 	paystack_webhook,
 	verify_payment,
 )
+from college_management.www.admissions import get_context
 
 
 class TestApplicantSubmission(IntegrationTestCase):
@@ -107,6 +109,34 @@ class TestApplicantSubmission(IntegrationTestCase):
 			self.assertFalse(application.has_permission("read"))
 		finally:
 			frappe.set_user("Administrator")
+
+	def test_portal_context_and_response_action_are_owner_scoped(self):
+		offering = self._published_offering(
+			application_fields=[self._field("surname", "Surname", "Data", required=1)]
+		)
+		first_user, _ = self._applicant()
+		second_user, _ = self._applicant()
+		frappe.set_user(first_user.name)
+		first_application = create_application(offering.name)["application"]
+		with self.assertRaises(frappe.ValidationError):
+			save_application_responses(
+				first_application,
+				[{"field_key": "unconfigured", "response_value": "Injected"}],
+			)
+		save_application_responses(
+			first_application,
+			[{"field_key": "surname", "response_value": "Applicant"}],
+		)
+		frappe.set_user(second_user.name)
+		second_application = create_application(offering.name)["application"]
+		frappe.set_user(first_user.name)
+		context = frappe._dict()
+		get_context(context)
+		self.assertEqual([item.name for item in context.applications], [first_application])
+		self.assertNotIn(second_application, [item.name for item in context.applications])
+		self.assertEqual(context.applications[0].fields[0].value, "Applicant")
+		self.assertFalse(context.offerings[0].can_apply)
+		frappe.set_user("Administrator")
 
 	def test_submission_requires_complete_valid_responses_and_becomes_immutable(self):
 		offering = self._published_offering(

@@ -89,6 +89,10 @@ app_license = "mit"
 after_install = "college_management.setup.install_roles"
 after_migrate = "college_management.setup.install_roles"
 
+standard_portal_menu_items = [
+	{"title": "Admissions", "route": "/admissions", "role": "Applicant"},
+]
+
 # Uninstallation
 # ------------
 

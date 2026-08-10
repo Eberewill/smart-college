@@ -1,0 +1,159 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ _("Admissions") }}{% endblock %}
+
+{% block header %}
+<div class="cm-page-heading">
+	<div>
+		<p class="cm-eyebrow">{{ _("Applicant portal") }}</p>
+		<h1>{{ _("Admissions") }}</h1>
+		<p>{{ _("Welcome, {0}.").format(profile.first_name) }}</p>
+	</div>
+	<div class="cm-applicant-number">
+		<span>{{ _("Applicant number") }}</span>
+		<strong>{{ profile.applicant_number }}</strong>
+	</div>
+</div>
+{% endblock %}
+
+{% block page_content %}
+<section class="cm-section" aria-labelledby="available-programmes">
+	<div class="cm-section-heading">
+		<div>
+			<p class="cm-eyebrow">{{ _("Open now") }}</p>
+			<h2 id="available-programmes">{{ _("Available programmes") }}</h2>
+		</div>
+	</div>
+	{% if offerings %}
+	<div class="cm-offering-grid">
+		{% for offering in offerings %}
+		<article class="cm-card cm-offering-card">
+			<div>
+				<h3>{{ offering.programme_name }}</h3>
+				<p>{{ offering.programme }}{% if offering.campus %} · {{ offering.campus }}{% endif %}</p>
+			</div>
+			<dl>
+				<div><dt>{{ _("Application fee") }}</dt><dd>{{ offering.currency }} {{ offering.fee }}</dd></div>
+				<div><dt>{{ _("Closes") }}</dt><dd>{{ frappe.utils.format_datetime(offering.closing, "medium") }}</dd></div>
+			</dl>
+			{% if offering.can_apply %}
+			<button class="btn btn-primary" data-action="create" data-offering="{{ offering.name | e }}">{{ _("Start application") }}</button>
+			{% else %}<button class="btn btn-default" disabled>{{ _("Application started") }}</button>{% endif %}
+		</article>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="cm-empty">{{ _("There are no programmes accepting applications right now.") }}</div>
+	{% endif %}
+</section>
+
+<section class="cm-section" aria-labelledby="your-applications">
+	<div class="cm-section-heading">
+		<div>
+			<p class="cm-eyebrow">{{ _("Your records") }}</p>
+			<h2 id="your-applications">{{ _("Applications") }}</h2>
+		</div>
+	</div>
+	{% if applications %}
+	<div class="cm-application-list">
+		{% for application in applications %}
+		<article class="cm-card cm-application-card">
+			<header>
+				<div>
+					<p class="cm-eyebrow">{{ application.name }}</p>
+					<h3>{{ application.programme }}</h3>
+				</div>
+				<span class="cm-status cm-status-{{ application.status | lower | replace(' ', '-') }}">{{ application.status }}</span>
+			</header>
+
+			{% if application.status == "Draft" %}
+			<form data-application-form="{{ application.name | e }}" class="cm-form">
+				{% for field in application.fields %}
+				<div class="form-group{% if field.type == 'Check' %} form-check cm-check{% endif %}">
+					{% if field.type == "Small Text" %}
+					<label for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+					<textarea class="form-control" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" {% if field.required %}required{% endif %}>{{ field.value | e }}</textarea>
+					{% elif field.type == "Select" %}
+					<label for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+					<select class="form-control" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" {% if field.required %}required{% endif %}>
+						<option value="">{{ _("Select") }}</option>
+						{% for option in field.options %}<option value="{{ option | e }}" {% if option == field.value %}selected{% endif %}>{{ option }}</option>{% endfor %}
+					</select>
+					{% elif field.type == "Check" %}
+					<input class="form-check-input" type="checkbox" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" {% if field.required %}required{% endif %} {% if field.value == '1' %}checked{% endif %}>
+					<label class="form-check-label" for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+					{% elif field.type == "Attachment" %}
+					<label for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+					<input class="form-control" type="file" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" data-current="{{ field.attachment | e }}" accept="{% for extension in field.allowed_extensions.split(',') %}.{{ extension }}{% if not loop.last %},{% endif %}{% endfor %}" {% if field.required and not field.attachment %}required{% endif %}>
+					{% if field.attachment %}<small>{{ _("Uploaded") }}: {{ field.attachment }}</small>{% endif %}
+					{% else %}
+					<label for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+					<input class="form-control" type="{% if field.type == 'Date' %}date{% else %}text{% endif %}" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" value="{{ field.value | e }}" {% if field.required %}required{% endif %}>
+					{% endif %}
+					{% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+				</div>
+				{% endfor %}
+				<div class="cm-actions">
+					<button class="btn btn-default" type="button" data-action="save" data-application="{{ application.name | e }}">{{ _("Save draft") }}</button>
+					<button class="btn btn-primary" type="button" data-action="submit" data-application="{{ application.name | e }}">{{ _("Submit application") }}</button>
+				</div>
+			</form>
+			{% else %}
+			<div class="cm-timeline-item"><strong>{{ _("Application submitted") }}</strong><span>{{ _("Your submitted answers and documents are locked.") }}</span></div>
+			{% endif %}
+
+			{% if application.status == "Submitted" %}
+			<div class="cm-stage">
+				<h4>{{ _("Application fee") }}</h4>
+				{% if not application.application_fee %}
+				<p>{{ _("No application fee is required.") }}</p>
+				{% elif not application.invoice %}
+				<button class="btn btn-primary" data-action="invoice" data-application="{{ application.name | e }}">{{ _("Create invoice") }}</button>
+				{% elif application.invoice.status == "Paid" %}
+				<div class="cm-success">{{ _("Payment verified") }} · {{ application.invoice.currency }} {{ application.invoice.amount }}</div>
+				{% else %}
+				<p>{{ application.invoice.name }} · {{ application.invoice.currency }} {{ application.invoice.amount }} · {{ application.invoice.status }}</p>
+				<div class="cm-actions">
+					<button class="btn btn-primary" data-action="pay" data-invoice="{{ application.invoice.name | e }}">{{ _("Pay securely") }}</button>
+					{% if application.transaction %}<button class="btn btn-default" data-action="verify" data-reference="{{ application.transaction.payment_reference | e }}">{{ _("Verify payment") }}</button>{% endif %}
+				</div>
+				{% endif %}
+			</div>
+			{% endif %}
+
+			<div class="cm-stage">
+				<h4>{{ _("Admission decision") }}</h4>
+				{% if application.decision %}
+				<div class="cm-decision cm-decision-{{ application.decision.outcome | lower }}">
+					<strong>{{ application.decision.outcome }}</strong>
+					<p>{{ application.decision.decision_reason }}</p>
+				</div>
+				{% else %}<p>{{ _("Your application is awaiting a final decision.") }}</p>{% endif %}
+			</div>
+
+			{% if application.letter %}
+			<div class="cm-stage">
+				<h4>{{ _("Admission letter") }}</h4>
+				<p>{{ application.letter.letter_number }} · {{ application.letter.acceptance_status }}</p>
+				{% if application.letter.conditions %}<p><strong>{{ _("Conditions") }}:</strong> {{ application.letter.conditions }}</p>{% endif %}
+				<div class="cm-actions">
+					<a class="btn btn-default" target="_blank" rel="noopener" href="/printview?doctype=Admission%20Letter&name={{ application.letter.name | e }}{% if application.letter.print_format %}&format={{ application.letter.print_format | e }}{% endif %}">{{ _("View letter") }}</a>
+					{% if application.letter.acceptance_status == "Awaiting Response" %}
+					<button class="btn btn-primary" data-action="respond" data-letter="{{ application.letter.name | e }}" data-response="Accepted">{{ _("Accept offer") }}</button>
+					<button class="btn btn-default" data-action="respond" data-letter="{{ application.letter.name | e }}" data-response="Declined">{{ _("Decline") }}</button>
+					{% endif %}
+				</div>
+			</div>
+			{% endif %}
+
+			{% if application.student %}
+			<div class="cm-success"><strong>{{ _("Student onboarding complete") }}</strong><br>{{ _("Student number") }}: {{ application.student.student_number }}</div>
+			{% endif %}
+		</article>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="cm-empty">{{ _("You have not started an application.") }}</div>
+	{% endif %}
+</section>
+{% endblock %}
