@@ -91,6 +91,7 @@ after_migrate = "college_management.setup.install_roles"
 
 standard_portal_menu_items = [
 	{"title": "Admissions", "route": "/admissions", "role": "Applicant"},
+	{"title": "Student Academics", "route": "/student", "role": "Student"},
 ]
 
 # Uninstallation
@@ -169,6 +170,10 @@ AUDITED_DOCTYPES = (
 	"Admission Decision",
 	"Admission Letter",
 	"Student Profile",
+	"Student Enrolment",
+	"Course Registration",
+	"Student Status Change",
+	"Student Academic History",
 )
 
 doc_events = {
@@ -193,6 +198,10 @@ has_permission = {
 	"Admission Decision": "college_management.college_management_system.doctype.admission_decision.admission_decision.has_permission",
 	"Admission Letter": "college_management.college_management_system.doctype.admission_letter.admission_letter.has_permission",
 	"Student Profile": "college_management.college_management_system.doctype.student_profile.student_profile.has_permission",
+	"Student Enrolment": "college_management.academics.student_record_has_permission",
+	"Course Registration": "college_management.academics.student_record_has_permission",
+	"Student Status Change": "college_management.academics.student_record_has_permission",
+	"Student Academic History": "college_management.academics.student_record_has_permission",
 	"File": "college_management.college_management_system.doctype.admission_application.admission_application.has_file_permission",
 }
 

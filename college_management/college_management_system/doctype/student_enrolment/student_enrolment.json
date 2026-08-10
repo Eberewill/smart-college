@@ -1,0 +1,24 @@
+{
+ "actions": [], "autoname": "field:enrolment_number", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["enrolment_number", "student", "programme", "department", "campus", "academic_session", "academic_level", "curriculum_version", "status", "enrolled_on", "enrolled_by"],
+ "fields": [
+  {"fieldname": "enrolment_number", "fieldtype": "Data", "in_list_view": 1, "label": "Enrolment Number", "read_only": 1, "unique": 1},
+  {"fieldname": "student", "fieldtype": "Link", "in_list_view": 1, "label": "Student", "options": "Student Profile", "read_only": 1, "reqd": 1},
+  {"fieldname": "programme", "fieldtype": "Link", "in_list_view": 1, "label": "Programme", "options": "Programme", "read_only": 1, "reqd": 1},
+  {"fieldname": "department", "fieldtype": "Link", "label": "Department", "options": "Department", "read_only": 1, "reqd": 1},
+  {"fieldname": "campus", "fieldtype": "Link", "label": "Campus", "options": "Campus", "read_only": 1},
+  {"fieldname": "academic_session", "fieldtype": "Link", "in_list_view": 1, "label": "Academic Session", "options": "Academic Session", "read_only": 1, "reqd": 1},
+  {"fieldname": "academic_level", "fieldtype": "Link", "in_list_view": 1, "label": "Academic Level", "options": "Academic Level", "read_only": 1, "reqd": 1},
+  {"fieldname": "curriculum_version", "fieldtype": "Link", "label": "Curriculum Version", "options": "Curriculum Version", "read_only": 1, "reqd": 1},
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Active\nCompleted\nCancelled", "read_only": 1, "reqd": 1},
+  {"fieldname": "enrolled_on", "fieldtype": "Date", "label": "Enrolled On", "read_only": 1, "reqd": 1},
+  {"fieldname": "enrolled_by", "fieldtype": "Link", "label": "Enrolled By", "options": "User", "read_only": 1, "reqd": 1}
+ ],
+ "module": "College Management System", "name": "Student Enrolment",
+ "permissions": [
+  {"read": 1, "report": 1, "role": "System Manager"}, {"read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Registry Officer"}, {"read": 1, "role": "Academic Approver"},
+  {"if_owner": 1, "print": 1, "read": 1, "role": "Student"}, {"read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "enrolment_number,student,programme,academic_session", "sort_field": "creation", "sort_order": "DESC", "title_field": "enrolment_number", "track_changes": 1
+}

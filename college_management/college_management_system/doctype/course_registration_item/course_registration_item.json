@@ -1,0 +1,11 @@
+{
+ "actions": [], "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB", "istable": 1,
+ "field_order": ["course", "course_title", "course_category", "credit_units"],
+ "fields": [
+  {"fieldname": "course", "fieldtype": "Link", "in_list_view": 1, "label": "Course", "options": "Course", "read_only": 1, "reqd": 1},
+  {"fieldname": "course_title", "fieldtype": "Data", "in_list_view": 1, "label": "Course Title", "read_only": 1, "reqd": 1},
+  {"fieldname": "course_category", "fieldtype": "Link", "in_list_view": 1, "label": "Category", "options": "Course Category", "read_only": 1, "reqd": 1},
+  {"fieldname": "credit_units", "fieldtype": "Float", "in_list_view": 1, "label": "Credit Units", "read_only": 1, "reqd": 1}
+ ],
+ "module": "College Management System", "name": "Course Registration Item", "permissions": []
+}

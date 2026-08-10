@@ -1,0 +1,21 @@
+{
+ "actions": [], "autoname": "field:change_number", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["change_number", "student", "from_status", "to_status", "effective_date", "reason", "approved_by", "approved_at"],
+ "fields": [
+  {"fieldname": "change_number", "fieldtype": "Data", "in_list_view": 1, "label": "Change Number", "read_only": 1, "unique": 1},
+  {"fieldname": "student", "fieldtype": "Link", "in_list_view": 1, "label": "Student", "options": "Student Profile", "read_only": 1, "reqd": 1},
+  {"fieldname": "from_status", "fieldtype": "Data", "label": "From Status", "read_only": 1, "reqd": 1},
+  {"fieldname": "to_status", "fieldtype": "Data", "in_list_view": 1, "label": "To Status", "read_only": 1, "reqd": 1},
+  {"fieldname": "effective_date", "fieldtype": "Date", "in_list_view": 1, "label": "Effective Date", "read_only": 1, "reqd": 1},
+  {"fieldname": "reason", "fieldtype": "Small Text", "label": "Reason", "read_only": 1, "reqd": 1},
+  {"fieldname": "approved_by", "fieldtype": "Link", "label": "Approved By", "options": "User", "read_only": 1, "reqd": 1},
+  {"fieldname": "approved_at", "fieldtype": "Datetime", "label": "Approved At", "read_only": 1, "reqd": 1}
+ ],
+ "module": "College Management System", "name": "Student Status Change",
+ "permissions": [
+  {"read": 1, "report": 1, "role": "System Manager"}, {"read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Registry Officer"},
+  {"if_owner": 1, "read": 1, "role": "Student"}, {"read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "change_number,student,to_status", "sort_field": "creation", "sort_order": "DESC", "title_field": "change_number", "track_changes": 1
+}

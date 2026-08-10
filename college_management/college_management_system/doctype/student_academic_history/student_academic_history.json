@@ -1,0 +1,30 @@
+{
+ "actions": [], "autoname": "field:history_number", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["history_number", "student", "event_type", "effective_date", "academic_section", "programme", "academic_session", "academic_semester", "academic_level", "course", "credit_units", "outcome", "reference_section", "reference_doctype", "reference_name", "details", "recorded_by"],
+ "fields": [
+  {"fieldname": "history_number", "fieldtype": "Data", "in_list_view": 1, "label": "History Number", "read_only": 1, "unique": 1},
+  {"fieldname": "student", "fieldtype": "Link", "in_list_view": 1, "label": "Student", "options": "Student Profile", "read_only": 1, "reqd": 1},
+  {"fieldname": "event_type", "fieldtype": "Data", "in_list_view": 1, "label": "Event Type", "read_only": 1, "reqd": 1},
+  {"fieldname": "effective_date", "fieldtype": "Date", "in_list_view": 1, "label": "Effective Date", "read_only": 1, "reqd": 1},
+  {"fieldname": "academic_section", "fieldtype": "Section Break", "label": "Academic Context"},
+  {"fieldname": "programme", "fieldtype": "Link", "label": "Programme", "options": "Programme", "read_only": 1},
+  {"fieldname": "academic_session", "fieldtype": "Link", "label": "Academic Session", "options": "Academic Session", "read_only": 1},
+  {"fieldname": "academic_semester", "fieldtype": "Link", "label": "Academic Semester", "options": "Academic Semester", "read_only": 1},
+  {"fieldname": "academic_level", "fieldtype": "Link", "label": "Academic Level", "options": "Academic Level", "read_only": 1},
+  {"fieldname": "course", "fieldtype": "Link", "in_list_view": 1, "label": "Course", "options": "Course", "read_only": 1},
+  {"fieldname": "credit_units", "fieldtype": "Float", "label": "Credit Units", "read_only": 1},
+  {"fieldname": "outcome", "fieldtype": "Data", "in_list_view": 1, "label": "Outcome", "read_only": 1},
+  {"fieldname": "reference_section", "fieldtype": "Section Break", "label": "Source"},
+  {"fieldname": "reference_doctype", "fieldtype": "Link", "label": "Reference DocType", "options": "DocType", "read_only": 1, "reqd": 1},
+  {"fieldname": "reference_name", "fieldtype": "Dynamic Link", "label": "Reference", "options": "reference_doctype", "read_only": 1, "reqd": 1},
+  {"fieldname": "details", "fieldtype": "Small Text", "label": "Details", "read_only": 1},
+  {"fieldname": "recorded_by", "fieldtype": "Link", "label": "Recorded By", "options": "User", "read_only": 1, "reqd": 1}
+ ],
+ "module": "College Management System", "name": "Student Academic History",
+ "permissions": [
+  {"read": 1, "report": 1, "role": "System Manager"}, {"read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Registry Officer"}, {"read": 1, "report": 1, "role": "Academic Approver"},
+  {"if_owner": 1, "print": 1, "read": 1, "role": "Student"}, {"read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "history_number,student,event_type,course,outcome", "sort_field": "effective_date", "sort_order": "DESC", "title_field": "history_number", "track_changes": 1
+}

@@ -1,0 +1,27 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ _("Student Academics") }}{% endblock %}
+
+{% block header %}
+<div class="cm-page-heading">
+	<div><p class="cm-eyebrow">{{ _("Student portal") }}</p><h1>{{ _("My academics") }}</h1><p>{{ profile.first_name }} {{ profile.last_name or "" }}</p></div>
+	<div class="cm-student-number"><span>{{ _("Student number") }}</span><strong>{{ profile.student_number }}</strong><small>{{ profile.status }}</small></div>
+</div>
+{% endblock %}
+
+{% block page_content %}
+<section class="cm-section" aria-labelledby="enrolments"><p class="cm-eyebrow">{{ _("Academic placement") }}</p><h2 id="enrolments">{{ _("Enrolments") }}</h2>
+	{% if enrolments %}<div class="cm-grid">{% for enrolment in enrolments %}<article class="cm-card"><header><h3>{{ enrolment.academic_session }}</h3><span class="cm-status">{{ enrolment.status }}</span></header><dl><div><dt>{{ _("Programme") }}</dt><dd>{{ enrolment.programme }}</dd></div><div><dt>{{ _("Level") }}</dt><dd>{{ enrolment.academic_level }}</dd></div><div><dt>{{ _("Curriculum") }}</dt><dd>{{ enrolment.curriculum_version }}</dd></div></dl></article>{% endfor %}</div>{% else %}<div class="cm-empty">{{ _("Registry has not activated an enrolment yet.") }}</div>{% endif %}
+</section>
+
+{% if open_semesters %}<section class="cm-section" aria-labelledby="open-registration"><p class="cm-eyebrow">{{ _("Open now") }}</p><h2 id="open-registration">{{ _("Course registration") }}</h2><div class="cm-grid">{% for semester in open_semesters %}<article class="cm-card"><h3>{{ semester.semester_name }}</h3><p>{{ semester.name }}</p><button class="btn btn-primary" data-action="create" data-enrolment="{{ semester.enrolment | e }}" data-semester="{{ semester.name | e }}">{{ _("Start registration") }}</button></article>{% endfor %}</div></section>{% endif %}
+
+<section class="cm-section" aria-labelledby="registrations"><p class="cm-eyebrow">{{ _("Course records") }}</p><h2 id="registrations">{{ _("Registrations") }}</h2>
+	{% if registrations %}<div class="cm-list">{% for registration in registrations %}<article class="cm-card"><header><div><p class="cm-eyebrow">{{ registration.name }}</p><h3>{{ registration.academic_semester }}</h3></div><span class="cm-status">{{ registration.status }}</span></header>
+		{% if registration.status == "Draft" %}<form data-registration-form="{{ registration.name | e }}"><div class="cm-course-list">{% for course in registration.available_courses %}<label><input type="checkbox" value="{{ course.course | e }}" {% if course.course in registration.selected_courses %}checked{% endif %}><span><strong>{{ course.course }} · {{ course.course_title }}</strong><small>{{ course.credit_units }} {{ _("credits") }}</small></span></label>{% endfor %}</div><div class="cm-actions"><button class="btn btn-default" data-action="save" data-registration="{{ registration.name | e }}">{{ _("Save draft") }}</button><button class="btn btn-primary" data-action="submit" data-registration="{{ registration.name | e }}">{{ _("Submit for review") }}</button></div></form>
+		{% else %}<table class="table"><thead><tr><th>{{ _("Course") }}</th><th>{{ _("Credits") }}</th></tr></thead><tbody>{% for course in registration.courses %}<tr><td>{{ course.course }} · {{ course.course_title }}</td><td>{{ course.credit_units }}</td></tr>{% endfor %}</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>{{ registration.total_credit_units }}</th></tr></tfoot></table>{% if registration.can_reopen %}<button class="btn btn-default" data-action="reopen" data-registration="{{ registration.name | e }}">{{ _("Request add/drop") }}</button>{% endif %}{% endif %}
+	</article>{% endfor %}</div>{% else %}<div class="cm-empty">{{ _("No course registrations yet.") }}</div>{% endif %}
+</section>
+
+<section class="cm-section" aria-labelledby="history"><p class="cm-eyebrow">{{ _("Permanent record") }}</p><h2 id="history">{{ _("Academic history") }}</h2>{% if history %}<div class="cm-history">{% for item in history %}<article><time>{{ item.effective_date }}</time><div><strong>{{ item.event_type }}{% if item.course %} · {{ item.course }}{% endif %}</strong><p>{{ item.outcome or item.details or "" }}</p></div></article>{% endfor %}</div>{% else %}<div class="cm-empty">{{ _("No academic history has been recorded.") }}</div>{% endif %}</section>
+{% endblock %}
