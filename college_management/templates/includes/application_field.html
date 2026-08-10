@@ -1,0 +1,31 @@
+{% if field.type == "Date" %}
+<div class="cm-frappe-control" data-frappe-control data-control-name="{{ field.key | e }}" data-fieldtype="Date" data-label="{{ field.label | e }}" data-required="{{ 1 if field.required else 0 }}">
+	<input type="hidden" data-control-value data-key="{{ field.key | e }}" data-type="{{ field.type }}" value="{{ field.value | e }}">
+</div>
+{% else %}
+<div class="form-group">
+	{% if field.type == "Small Text" %}
+	<label for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span class="text-danger"> *</span>{% endif %}</label>
+	<textarea class="form-control" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" {% if field.required %}required{% endif %}>{{ field.value | e }}</textarea>
+	{% elif field.type == "Select" %}
+	<label for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span class="text-danger"> *</span>{% endif %}</label>
+	<select class="form-control" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" {% if field.required %}required{% endif %}>
+		<option value="">{{ _("Select") }}</option>
+		{% for option in field.options %}<option value="{{ option | e }}" {% if option == field.value %}selected{% endif %}>{{ option }}</option>{% endfor %}
+	</select>
+	{% elif field.type == "Check" %}
+	<div class="custom-control custom-checkbox">
+		<input class="custom-control-input" type="checkbox" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" {% if field.required %}required{% endif %} {% if field.value == '1' %}checked{% endif %}>
+		<label class="custom-control-label" for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span class="text-danger"> *</span>{% endif %}</label>
+	</div>
+	{% elif field.type == "Attachment" %}
+	<label for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span class="text-danger"> *</span>{% endif %}</label>
+	<input class="form-control" type="file" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" data-current="{{ field.attachment | e }}" accept="{% for extension in field.allowed_extensions.split(',') %}.{{ extension }}{% if not loop.last %},{% endif %}{% endfor %}" {% if field.required and not field.attachment %}required{% endif %}>
+	{% if field.attachment %}<div class="small text-muted mt-2">{{ _("Uploaded") }}: <a href="{{ field.attachment | e }}" target="_blank" rel="noopener">{{ _("View document") }}</a></div>{% endif %}
+	{% else %}
+	<label for="{{ application.name }}-{{ field.key }}">{{ field.label }}{% if field.required %}<span class="text-danger"> *</span>{% endif %}</label>
+	<input class="form-control" type="text" id="{{ application.name }}-{{ field.key }}" data-key="{{ field.key | e }}" data-type="{{ field.type }}" value="{{ field.value | e }}" {% if field.required %}required{% endif %}>
+	{% endif %}
+	{% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+</div>
+{% endif %}

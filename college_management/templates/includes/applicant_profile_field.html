@@ -1,0 +1,21 @@
+{% if field.type in ("Date", "Link") %}
+<div class="cm-frappe-control" data-frappe-control data-control-name="{{ field.key | e }}" data-fieldtype="{{ field.type | e }}" data-label="{{ field.label | e }}" data-options="{{ field.link_options or '' | e }}" data-required="{{ 1 if field.required else 0 }}">
+	<input type="hidden" data-control-value data-profile-key="{{ field.key | e }}" value="{{ field.value | e }}">
+</div>
+{% else %}
+<div class="form-group">
+	{% if field.type == "Small Text" %}
+	<label for="{{ application.name }}-profile-{{ field.key }}">{{ field.label }}{% if field.required %}<span class="text-danger"> *</span>{% endif %}</label>
+	<textarea class="form-control" id="{{ application.name }}-profile-{{ field.key }}" data-profile-key="{{ field.key | e }}" {% if field.required %}required{% endif %}>{{ field.value | e }}</textarea>
+	{% elif field.type == "Select" %}
+	<label for="{{ application.name }}-profile-{{ field.key }}">{{ field.label }}{% if field.required %}<span class="text-danger"> *</span>{% endif %}</label>
+	<select class="form-control" id="{{ application.name }}-profile-{{ field.key }}" data-profile-key="{{ field.key | e }}" {% if field.required %}required{% endif %}>
+		<option value="">{{ _("Select") }}</option>
+		{% for option in field.options %}<option value="{{ option | e }}" {% if option == field.value %}selected{% endif %}>{{ option }}</option>{% endfor %}
+	</select>
+	{% else %}
+	<label for="{{ application.name }}-profile-{{ field.key }}">{{ field.label }}{% if field.required %}<span class="text-danger"> *</span>{% endif %}</label>
+	<input class="form-control" type="text" id="{{ application.name }}-profile-{{ field.key }}" data-profile-key="{{ field.key | e }}" value="{{ field.value | e }}" {% if field.required %}required{% endif %}>
+	{% endif %}
+</div>
+{% endif %}

@@ -1,0 +1,72 @@
+.cm-application-shell {
+	max-width: 54rem;
+}
+.cm-step-navigation {
+	position: sticky;
+	top: 1rem;
+}
+.cm-step-navigation [aria-current="step"] {
+	background: var(--subtle-accent);
+	border-color: var(--primary);
+	color: var(--text-color);
+	font-weight: 600;
+}
+.cm-step-number {
+	align-items: center;
+	background: var(--subtle-fg);
+	border-radius: 50%;
+	display: inline-flex;
+	flex: 0 0 1.75rem;
+	height: 1.75rem;
+	justify-content: center;
+}
+.cm-step-navigation [aria-current="step"] .cm-step-number {
+	background: var(--primary);
+	color: white;
+}
+.cm-wizard-step[hidden] {
+	display: none;
+}
+.cm-review-list {
+	margin: 0 0 1.5rem;
+}
+.cm-review-list > div {
+	border-top: 1px solid var(--border-color);
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: minmax(10rem, 1fr) 2fr;
+	padding: 0.75rem 0;
+}
+.cm-review-list dt {
+	color: var(--text-muted);
+	font-weight: 500;
+}
+.cm-review-list dd {
+	margin: 0;
+	overflow-wrap: anywhere;
+	white-space: pre-wrap;
+}
+.cm-frappe-control .form-group {
+	margin-bottom: 1rem;
+}
+.cm-frappe-control .tooltip-content {
+	display: none;
+}
+@media (max-width: 991px) {
+	.cm-step-navigation {
+		flex-direction: row;
+		overflow-x: auto;
+		position: static;
+	}
+	.cm-step-navigation .list-group-item {
+		border-width: 1px;
+		flex: 0 0 auto;
+		width: auto;
+	}
+}
+@media (max-width: 575px) {
+	.cm-review-list > div {
+		gap: 0.25rem;
+		grid-template-columns: 1fr;
+	}
+}
