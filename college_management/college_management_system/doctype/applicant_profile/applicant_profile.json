@@ -1,0 +1,30 @@
+{
+ "actions": [], "autoname": "field:applicant_number", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["applicant_number", "user", "contact_email", "status", "identity_section", "first_name", "middle_name", "last_name", "date_of_birth", "gender", "contact_section", "phone", "nationality", "state_of_origin", "local_government_area", "address"],
+ "fields": [
+  {"fieldname": "applicant_number", "fieldtype": "Data", "in_list_view": 1, "label": "Applicant Number", "read_only": 1, "unique": 1},
+  {"fieldname": "user", "fieldtype": "Link", "in_list_view": 1, "label": "User", "options": "User", "reqd": 1, "unique": 1},
+  {"fetch_from": "user.email", "fieldname": "contact_email", "fieldtype": "Data", "label": "Contact Email", "options": "Email", "read_only": 1},
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Active\nSuspended\nArchived", "reqd": 1},
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Identity"},
+  {"fieldname": "first_name", "fieldtype": "Data", "in_list_view": 1, "label": "First Name", "reqd": 1},
+  {"fieldname": "middle_name", "fieldtype": "Data", "label": "Middle Name"},
+  {"fieldname": "last_name", "fieldtype": "Data", "in_list_view": 1, "label": "Last Name"},
+  {"fieldname": "date_of_birth", "fieldtype": "Date", "label": "Date of Birth"},
+  {"fieldname": "gender", "fieldtype": "Select", "label": "Gender", "options": "\nFemale\nMale\nOther\nPrefer not to say"},
+  {"fieldname": "contact_section", "fieldtype": "Section Break", "label": "Contact and Origin"},
+  {"fieldname": "phone", "fieldtype": "Data", "label": "Phone", "options": "Phone"},
+  {"fieldname": "nationality", "fieldtype": "Link", "label": "Nationality", "options": "Country"},
+  {"fieldname": "state_of_origin", "fieldtype": "Data", "label": "State of Origin"},
+  {"fieldname": "local_government_area", "fieldtype": "Data", "label": "Local Government Area"},
+  {"fieldname": "address", "fieldtype": "Small Text", "label": "Address"}
+ ],
+ "links": [], "module": "College Management System", "name": "Applicant Profile",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"read": 1, "role": "Institution Super Admin"}, {"read": 1, "role": "Admissions Officer"}, {"read": 1, "role": "Registry Officer"},
+  {"if_owner": 1, "read": 1, "role": "Applicant", "write": 1},
+  {"read": 1, "role": "Auditor"}
+ ],
+ "search_fields": "applicant_number,first_name,middle_name,last_name,user", "sort_field": "creation", "sort_order": "DESC", "states": [], "title_field": "applicant_number", "track_changes": 1
+}

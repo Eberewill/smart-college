@@ -11,9 +11,11 @@
  "is_hidden": 0,
  "label": "College Management",
  "links": [
-  {"hidden": 0, "is_query_report": 0, "label": "Admissions", "link_count": 2, "onboard": 0, "type": "Card Break"},
+  {"hidden": 0, "is_query_report": 0, "label": "Admissions", "link_count": 4, "onboard": 0, "type": "Card Break"},
   {"hidden": 0, "is_query_report": 0, "label": "Admission Cycle", "link_count": 0, "link_to": "Admission Cycle", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Admission Programme", "link_count": 0, "link_to": "Admission Programme", "link_type": "DocType", "onboard": 0, "type": "Link"},
+  {"hidden": 0, "is_query_report": 0, "label": "Applicant Profile", "link_count": 0, "link_to": "Applicant Profile", "link_type": "DocType", "onboard": 0, "type": "Link"},
+  {"hidden": 0, "is_query_report": 0, "label": "Admission Application", "link_count": 0, "link_to": "Admission Application", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Organisation", "link_count": 4, "onboard": 0, "type": "Card Break"},
   {"hidden": 0, "is_query_report": 0, "label": "Institution", "link_count": 0, "link_to": "Institution", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Campus", "link_count": 0, "link_to": "Campus", "link_type": "DocType", "onboard": 0, "type": "Link"},
@@ -32,7 +34,7 @@
   {"hidden": 0, "is_query_report": 0, "label": "Staff Profile", "link_count": 0, "link_to": "Staff Profile", "link_type": "DocType", "onboard": 0, "type": "Link"},
   {"hidden": 0, "is_query_report": 0, "label": "Domain Audit Event", "link_count": 0, "link_to": "Domain Audit Event", "link_type": "DocType", "onboard": 0, "type": "Link"}
  ],
- "modified": "2026-08-10 12:30:00.000000",
+ "modified": "2026-08-10 13:30:00.000000",
  "modified_by": "Administrator",
  "module": "College Management System",
  "name": "College Management",

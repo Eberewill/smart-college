@@ -1,0 +1,11 @@
+{
+ "actions": [], "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB", "istable": 1,
+ "field_order": ["field_key", "field_label", "response_value", "attachment"],
+ "fields": [
+  {"fieldname": "field_key", "fieldtype": "Data", "in_list_view": 1, "label": "Field Key", "reqd": 1},
+  {"fieldname": "field_label", "fieldtype": "Data", "in_list_view": 1, "label": "Field Label", "read_only": 1},
+  {"fieldname": "response_value", "fieldtype": "Small Text", "in_list_view": 1, "label": "Response"},
+  {"fieldname": "attachment", "fieldtype": "Attach", "in_list_view": 1, "label": "Attachment"}
+ ],
+ "links": [], "module": "College Management System", "name": "Admission Application Response", "permissions": [], "sort_field": "creation", "sort_order": "DESC", "states": []
+}

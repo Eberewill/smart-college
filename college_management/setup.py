@@ -34,6 +34,9 @@ def install_roles():
 		):
 			frappe.db.set_value("Role", role_name, "two_factor_auth", 1)
 
+	if not frappe.db.get_single_value("Portal Settings", "default_role"):
+		frappe.db.set_single_value("Portal Settings", "default_role", "Applicant")
+
 
 def enable_privileged_mfa():
 	"""Explicit production action: enable OTP-app MFA for privileged roles only."""

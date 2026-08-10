@@ -1,0 +1,26 @@
+{
+ "actions": [], "autoname": "field:application_number", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["application_number", "applicant_profile", "admission_programme", "admission_cycle", "programme", "status", "submitted_at", "responses_section", "responses", "submission_snapshot"],
+ "fields": [
+  {"fieldname": "application_number", "fieldtype": "Data", "in_list_view": 1, "label": "Application Number", "read_only": 1, "unique": 1},
+  {"fieldname": "applicant_profile", "fieldtype": "Link", "in_list_view": 1, "label": "Applicant Profile", "options": "Applicant Profile", "reqd": 1},
+  {"fieldname": "admission_programme", "fieldtype": "Link", "in_list_view": 1, "label": "Admission Programme", "options": "Admission Programme", "reqd": 1},
+  {"fetch_from": "admission_programme.admission_cycle", "fieldname": "admission_cycle", "fieldtype": "Link", "in_list_view": 1, "label": "Admission Cycle", "options": "Admission Cycle", "read_only": 1},
+  {"fetch_from": "admission_programme.programme", "fieldname": "programme", "fieldtype": "Link", "in_list_view": 1, "label": "Programme", "options": "Programme", "read_only": 1},
+  {"default": "Draft", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Draft\nSubmitted", "read_only": 1, "reqd": 1},
+  {"fieldname": "submitted_at", "fieldtype": "Datetime", "label": "Submitted At", "read_only": 1},
+  {"fieldname": "responses_section", "fieldtype": "Section Break", "label": "Application Responses"},
+  {"fieldname": "responses", "fieldtype": "Table", "label": "Responses", "options": "Admission Application Response"},
+  {"fieldname": "submission_snapshot", "fieldtype": "Code", "hidden": 1, "label": "Submission Snapshot", "options": "JSON", "read_only": 1}
+ ],
+ "links": [], "module": "College Management System", "name": "Admission Application",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"read": 1, "role": "Institution Super Admin"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Admissions Officer"},
+  {"read": 1, "role": "Registry Officer"}, {"read": 1, "role": "Finance Officer"},
+  {"create": 1, "delete": 1, "if_owner": 1, "read": 1, "role": "Applicant", "write": 1},
+  {"read": 1, "role": "Auditor"}
+ ],
+ "search_fields": "application_number,applicant_profile,admission_cycle,programme", "sort_field": "creation", "sort_order": "DESC", "states": [], "title_field": "application_number", "track_changes": 1
+}

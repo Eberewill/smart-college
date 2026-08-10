@@ -10,6 +10,15 @@ class Institution(CodeDocument):
 
 	def validate(self):
 		super().validate()
+		for field in ("applicant_number_series", "application_number_series"):
+			series = (self.get(field) or "").strip().upper()
+			if not re.fullmatch(r"[A-Z0-9._/-]*#{4,}[A-Z0-9._/#-]*", series):
+				frappe.throw(
+					frappe._(
+						"{0} must contain only safe series characters and at least four # signs."
+					).format(self.meta.get_label(field))
+				)
+			self.set(field, series)
 		if self.primary_domain:
 			self.primary_domain = self.primary_domain.strip().lower().rstrip(".")
 			labels = self.primary_domain.split(".")

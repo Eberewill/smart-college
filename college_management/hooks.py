@@ -154,6 +154,8 @@ AUDITED_DOCTYPES = (
 	"Staff Profile",
 	"Admission Cycle",
 	"Admission Programme",
+	"Applicant Profile",
+	"Admission Application",
 )
 
 doc_events = {
@@ -162,6 +164,16 @@ doc_events = {
 		"after_delete": "college_management.audit.record_delete",
 	}
 	for doctype in AUDITED_DOCTYPES
+}
+doc_events["User"] = {"on_update": "college_management.identity.user_updated"}
+doc_events["File"] = {
+	"before_save": "college_management.college_management_system.doctype.admission_application.admission_application.protect_submitted_application_file",
+	"on_trash": "college_management.college_management_system.doctype.admission_application.admission_application.protect_submitted_application_file",
+}
+
+has_permission = {
+	"Admission Application": "college_management.college_management_system.doctype.admission_application.admission_application.has_permission",
+	"File": "college_management.college_management_system.doctype.admission_application.admission_application.has_file_permission",
 }
 
 # Scheduled Tasks

@@ -38,6 +38,21 @@ def record_delete(doc, method=None):
 	_write_event(doc, action="Deleted", previous_values=_snapshot(doc))
 
 
+def record_user_security_change(doc):
+	if in_schema_operation():
+		return
+	previous = doc.get_doc_before_save()
+	before, after = _user_security_snapshot(previous), _user_security_snapshot(doc)
+	if before == after:
+		return
+	_write_event(
+		doc,
+		action="Account Created" if previous is None else "Account Security Changed",
+		previous_values=before,
+		resulting_values=after,
+	)
+
+
 def _write_event(doc, action, previous_values=None, resulting_values=None):
 	actor = getattr(frappe.session, "user", None) or "Guest"
 	frappe.get_doc(
@@ -78,6 +93,16 @@ def _snapshot(doc):
 	if not doc:
 		return None
 	return _clean(doc.as_dict(no_nulls=True))
+
+
+def _user_security_snapshot(doc):
+	if not doc:
+		return None
+	return {
+		"enabled": bool(doc.enabled),
+		"user_type": doc.user_type,
+		"roles": sorted(row.role for row in doc.roles),
+	}
 
 
 def _clean(value):
