@@ -89,7 +89,11 @@ class AdmissionApplication(Document):
 		self._validate_responses(offering, require_complete=self.status == "Submitted")
 		if self.status == "Submitted":
 			if offering.require_payment_before_submission:
-				frappe.throw(frappe._("Verified application-fee payment is required before submission."))
+				invoice_status = frappe.db.get_value(
+					"Application Invoice", {"admission_application": self.name}, "status"
+				)
+				if invoice_status != "Paid":
+					frappe.throw(frappe._("Verified application-fee payment is required before submission."))
 			self.submitted_at = now_datetime()
 			self.submission_snapshot = self._submission_snapshot(offering)
 

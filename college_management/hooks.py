@@ -156,6 +156,11 @@ AUDITED_DOCTYPES = (
 	"Admission Programme",
 	"Applicant Profile",
 	"Admission Application",
+	"Payment Gateway Configuration",
+	"Application Invoice",
+	"Application Payment Transaction",
+	"Payment Webhook Event",
+	"Application Payment Receipt",
 )
 
 doc_events = {
@@ -173,6 +178,9 @@ doc_events["File"] = {
 
 has_permission = {
 	"Admission Application": "college_management.college_management_system.doctype.admission_application.admission_application.has_permission",
+	"Application Invoice": "college_management.college_management_system.doctype.application_invoice.application_invoice.has_permission",
+	"Application Payment Transaction": "college_management.college_management_system.doctype.application_payment_transaction.application_payment_transaction.has_permission",
+	"Application Payment Receipt": "college_management.college_management_system.doctype.application_payment_receipt.application_payment_receipt.has_permission",
 	"File": "college_management.college_management_system.doctype.admission_application.admission_application.has_file_permission",
 }
 

@@ -18,6 +18,7 @@ STANDARD_FIELDS = {
 	"parentfield",
 	"parenttype",
 }
+SENSITIVE_FIELDS = {"checkout_url"}
 
 
 def record_update(doc, method=None):
@@ -92,7 +93,11 @@ def _institution(doc):
 def _snapshot(doc):
 	if not doc:
 		return None
-	return _clean(doc.as_dict(no_nulls=True))
+	values = doc.as_dict(no_nulls=True)
+	for field in doc.meta.fields:
+		if field.fieldtype == "Password" or field.fieldname in SENSITIVE_FIELDS:
+			values.pop(field.fieldname, None)
+	return _clean(values)
 
 
 def _user_security_snapshot(doc):

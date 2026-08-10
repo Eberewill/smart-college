@@ -1,0 +1,28 @@
+{
+ "actions": [], "autoname": "field:payment_reference", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["payment_reference", "application_invoice", "provider", "amount", "currency", "status", "checkout_section", "checkout_url", "verification_section", "provider_transaction_id", "verified_at", "reconciliation_status", "observed_amount", "observed_currency", "gateway_message"],
+ "fields": [
+  {"fieldname": "payment_reference", "fieldtype": "Data", "in_list_view": 1, "label": "Payment Reference", "read_only": 1, "unique": 1},
+  {"fieldname": "application_invoice", "fieldtype": "Link", "in_list_view": 1, "label": "Application Invoice", "options": "Application Invoice", "read_only": 1, "reqd": 1},
+  {"fieldname": "provider", "fieldtype": "Select", "label": "Provider", "options": "Paystack", "read_only": 1, "reqd": 1},
+  {"fieldname": "amount", "fieldtype": "Currency", "label": "Expected Amount", "read_only": 1, "reqd": 1},
+  {"fieldname": "currency", "fieldtype": "Link", "label": "Expected Currency", "options": "Currency", "read_only": 1, "reqd": 1},
+  {"default": "Initialized", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Initialized\nPending\nSuccessful\nFailed", "read_only": 1, "reqd": 1},
+  {"fieldname": "checkout_section", "fieldtype": "Section Break", "label": "Checkout"},
+  {"fieldname": "checkout_url", "fieldtype": "Data", "label": "Checkout URL", "options": "URL", "read_only": 1},
+  {"fieldname": "verification_section", "fieldtype": "Section Break", "label": "Server Verification"},
+  {"fieldname": "provider_transaction_id", "fieldtype": "Data", "label": "Provider Transaction ID", "read_only": 1},
+  {"fieldname": "verified_at", "fieldtype": "Datetime", "label": "Verified At", "read_only": 1},
+  {"default": "Not Verified", "fieldname": "reconciliation_status", "fieldtype": "Select", "in_list_view": 1, "label": "Reconciliation Status", "options": "Not Verified\nMatched\nReference Mismatch\nAmount Mismatch\nCurrency Mismatch\nPayment Not Successful", "read_only": 1, "reqd": 1},
+  {"fieldname": "observed_amount", "fieldtype": "Currency", "label": "Observed Amount", "read_only": 1},
+  {"fieldname": "observed_currency", "fieldtype": "Data", "label": "Observed Currency", "read_only": 1},
+  {"fieldname": "gateway_message", "fieldtype": "Small Text", "label": "Gateway Message", "read_only": 1}
+ ],
+ "module": "College Management System", "name": "Application Payment Transaction",
+ "permissions": [
+  {"read": 1, "report": 1, "role": "System Manager"}, {"read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"export": 1, "read": 1, "report": 1, "role": "Finance Officer"}, {"if_owner": 1, "read": 1, "role": "Applicant"},
+  {"read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "payment_reference,application_invoice,provider_transaction_id", "sort_field": "creation", "sort_order": "DESC", "title_field": "payment_reference", "track_changes": 1
+}

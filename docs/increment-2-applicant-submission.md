@@ -3,8 +3,7 @@
 ## Status
 
 Implemented as the applicant transaction layer over published admissions configuration. Applicant
-review, payments, decisions, letters, acceptance, and student conversion remain later Increment 2
-slices.
+review, decisions, letters, acceptance, and student conversion remain later Increment 2 slices.
 
 ## Identity and ownership
 
@@ -49,6 +48,7 @@ spoofing but is not an antivirus engine.
 
 ## Payment boundary
 
-If an offering requires payment before submission, submission fails closed until the verified
-payment slice exists. No browser callback, manually supplied flag, or draft response can represent
-payment verification.
+If an offering requires payment before submission, its Application Invoice must be Paid. Only the
+server-side payment verification service can produce that state; browser redirects, webhook fields,
+and manually supplied draft values are never trusted as proof of payment. See
+`increment-2-application-payments.md` for the payment lifecycle and operator controls.

@@ -1,5 +1,8 @@
 import base64
+import hashlib
+import hmac
 import json
+from unittest.mock import Mock, patch
 
 import frappe
 from frappe.tests import IntegrationTestCase
@@ -8,6 +11,12 @@ from frappe.utils import add_days, now_datetime, nowdate
 from college_management.college_management_system.doctype.admission_application.admission_application import (
 	create_application,
 	submit_application,
+)
+from college_management.payments import (
+	create_application_invoice,
+	initialize_payment,
+	paystack_webhook,
+	verify_payment,
 )
 
 
@@ -144,6 +153,131 @@ class TestApplicantSubmission(IntegrationTestCase):
 		finally:
 			frappe.set_user("Administrator")
 
+	def test_verified_payment_pays_invoice_issues_one_receipt_and_allows_submission(self):
+		offering = self._published_offering(application_fee=5000, require_payment_before_submission=1)
+		self._gateway()
+		user, _ = self._applicant()
+		frappe.set_user(user.name)
+		try:
+			application = create_application(offering.name)["application"]
+			invoice = create_application_invoice(application)
+			with patch(
+				"college_management.payments.requests.post",
+				return_value=self._response(
+					{
+						"status": True,
+						"data": {
+							"reference": "placeholder",
+							"authorization_url": "https://checkout.paystack.com/test",
+							"access_code": "access",
+						},
+					}
+				),
+			) as post:
+				# Paystack must echo our generated reference, so let the mock copy it from the request.
+				post.side_effect = lambda *args, **kwargs: self._response(
+					{
+						"status": True,
+						"data": {
+							"reference": kwargs["json"]["reference"],
+							"authorization_url": "https://checkout.paystack.com/test",
+							"access_code": "access",
+						},
+					}
+				)
+				payment = initialize_payment(invoice["invoice"])
+				retry = initialize_payment(invoice["invoice"])
+				self.assertEqual(post.call_args.kwargs["json"]["amount"], 500000)
+				self.assertNotIn("secret", json.dumps(post.call_args.kwargs["json"]))
+				self.assertEqual(retry["reference"], payment["reference"])
+				self.assertEqual(post.call_count, 1)
+			verification = {
+				"id": 123456789012,
+				"reference": payment["reference"],
+				"amount": 500000,
+				"currency": "NGN",
+				"status": "success",
+				"gateway_response": "Successful",
+				"paid_at": now_datetime(),
+			}
+			with patch("college_management.payments._fetch_verification", return_value=verification):
+				self.assertEqual(verify_payment(payment["reference"])["invoice_status"], "Paid")
+				self.assertEqual(verify_payment(payment["reference"])["invoice_status"], "Paid")
+			self.assertEqual(
+				frappe.db.count("Application Payment Receipt", {"application_invoice": invoice["invoice"]}), 1
+			)
+			self.assertEqual(submit_application(application)["status"], "Submitted")
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_verification_mismatch_never_credits_the_invoice(self):
+		offering = self._published_offering(application_fee=5000, require_payment_before_submission=1)
+		self._gateway()
+		user, _ = self._applicant()
+		frappe.set_user(user.name)
+		try:
+			application = create_application(offering.name)["application"]
+			invoice = create_application_invoice(application)["invoice"]
+			with patch("college_management.payments.requests.post") as post:
+				post.side_effect = lambda *args, **kwargs: self._response(
+					{
+						"status": True,
+						"data": {
+							"reference": kwargs["json"]["reference"],
+							"authorization_url": "https://checkout.paystack.com/test",
+						},
+					}
+				)
+				reference = initialize_payment(invoice)["reference"]
+			with patch(
+				"college_management.payments._fetch_verification",
+				return_value={
+					"id": 2,
+					"reference": reference,
+					"amount": 499900,
+					"currency": "NGN",
+					"status": "success",
+				},
+			):
+				result = verify_payment(reference)
+			self.assertEqual(result["reconciliation_status"], "Amount Mismatch")
+			self.assertNotEqual(result["invoice_status"], "Paid")
+			self.assertFalse(
+				frappe.db.exists("Application Payment Receipt", {"application_invoice": invoice})
+			)
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_webhook_signature_and_payload_hash_are_idempotent(self):
+		gateway = self._gateway()
+		audit = frappe.db.get_value(
+			"Domain Audit Event",
+			{"resource_type": "Payment Gateway Configuration", "resource_name": gateway.name},
+			"resulting_values",
+		)
+		self.assertNotIn("sk_test_college", audit)
+		self.assertNotIn("secret_key", audit)
+		payload = json.dumps({"event": "charge.success", "data": {"reference": "unknown"}}).encode()
+		signature = hmac.new(b"sk_test_college", payload, hashlib.sha512).hexdigest()
+		request = Mock()
+		request.get_data.return_value = payload
+		with (
+			patch.object(frappe, "request", request),
+			patch.object(frappe, "get_request_header", return_value="invalid"),
+		):
+			with self.assertRaises(frappe.PermissionError):
+				paystack_webhook()
+		with (
+			patch.object(frappe, "request", request),
+			patch.object(frappe, "get_request_header", return_value=signature),
+			patch.object(frappe, "enqueue"),
+		):
+			self.assertEqual(paystack_webhook()["status"], "received")
+			self.assertEqual(paystack_webhook()["status"], "duplicate")
+		self.assertEqual(
+			frappe.db.count("Payment Webhook Event", {"payload_hash": hashlib.sha256(payload).hexdigest()}), 1
+		)
+
 	def test_attachment_requires_private_owned_file_with_matching_signature(self):
 		offering = self._published_offering(
 			application_fields=[
@@ -230,6 +364,33 @@ class TestApplicantSubmission(IntegrationTestCase):
 			}
 		).insert(ignore_permissions=True)
 		return user, frappe.get_doc("Applicant Profile", {"user": user.name})
+
+	def _gateway(self):
+		existing = frappe.db.get_value(
+			"Payment Gateway Configuration", {"provider": "Paystack", "enabled": 1}, "name"
+		)
+		if existing:
+			gateway = frappe.get_doc("Payment Gateway Configuration", existing)
+			gateway.secret_key = "sk_test_college"
+			gateway.public_key = "pk_test_college"
+			gateway.save()
+			return gateway
+		return self._insert(
+			"Payment Gateway Configuration",
+			gateway_code=f"PAYSTACK-{self.suffix}",
+			provider="Paystack",
+			environment="Test",
+			enabled=1,
+			public_key="pk_test_college",
+			secret_key="sk_test_college",
+		)
+
+	@staticmethod
+	def _response(payload):
+		response = Mock()
+		response.raise_for_status.return_value = None
+		response.json.return_value = payload
+		return response
 
 	@staticmethod
 	def _field(key, label, field_type, required=0, options=None):

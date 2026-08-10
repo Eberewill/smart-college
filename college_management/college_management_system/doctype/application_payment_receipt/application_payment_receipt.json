@@ -1,0 +1,22 @@
+{
+ "actions": [], "autoname": "field:receipt_number", "doctype": "DocType", "engine": "InnoDB", "is_submittable": 0,
+ "field_order": ["receipt_number", "application_invoice", "payment_transaction", "admission_application", "applicant_profile", "amount", "currency", "issued_at", "verification_code"],
+ "fields": [
+  {"fieldname": "receipt_number", "fieldtype": "Data", "in_list_view": 1, "label": "Receipt Number", "read_only": 1, "unique": 1},
+  {"fieldname": "application_invoice", "fieldtype": "Link", "label": "Application Invoice", "options": "Application Invoice", "read_only": 1, "reqd": 1, "unique": 1},
+  {"fieldname": "payment_transaction", "fieldtype": "Link", "label": "Payment Transaction", "options": "Application Payment Transaction", "read_only": 1, "reqd": 1, "unique": 1},
+  {"fieldname": "admission_application", "fieldtype": "Link", "label": "Admission Application", "options": "Admission Application", "read_only": 1, "reqd": 1},
+  {"fieldname": "applicant_profile", "fieldtype": "Link", "label": "Applicant Profile", "options": "Applicant Profile", "read_only": 1, "reqd": 1},
+  {"fieldname": "amount", "fieldtype": "Currency", "label": "Amount Paid", "read_only": 1, "reqd": 1},
+  {"fieldname": "currency", "fieldtype": "Link", "label": "Currency", "options": "Currency", "read_only": 1, "reqd": 1},
+  {"fieldname": "issued_at", "fieldtype": "Datetime", "label": "Issued At", "read_only": 1, "reqd": 1},
+  {"fieldname": "verification_code", "fieldtype": "Data", "label": "Verification Code", "read_only": 1, "unique": 1}
+ ],
+ "module": "College Management System", "name": "Application Payment Receipt", "allow_rename": 0,
+ "permissions": [
+  {"print": 1, "read": 1, "report": 1, "role": "System Manager"}, {"print": 1, "read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Finance Officer"}, {"if_owner": 1, "print": 1, "read": 1, "role": "Applicant"},
+  {"print": 1, "read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "receipt_number,application_invoice,payment_transaction", "sort_field": "creation", "sort_order": "DESC", "title_field": "receipt_number", "track_changes": 1
+}

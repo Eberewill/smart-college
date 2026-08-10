@@ -1,0 +1,19 @@
+{
+ "actions": [], "autoname": "hash", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["provider", "event_type", "payment_reference", "payload_hash", "received_at", "processing_status", "processing_error"],
+ "fields": [
+  {"fieldname": "provider", "fieldtype": "Select", "in_list_view": 1, "label": "Provider", "options": "Paystack", "read_only": 1, "reqd": 1},
+  {"fieldname": "event_type", "fieldtype": "Data", "in_list_view": 1, "label": "Event Type", "read_only": 1},
+  {"fieldname": "payment_reference", "fieldtype": "Data", "label": "Payment Reference", "read_only": 1},
+  {"fieldname": "payload_hash", "fieldtype": "Data", "label": "Payload Hash", "read_only": 1, "reqd": 1, "unique": 1},
+  {"fieldname": "received_at", "fieldtype": "Datetime", "label": "Received At", "read_only": 1, "reqd": 1},
+  {"default": "Received", "fieldname": "processing_status", "fieldtype": "Select", "in_list_view": 1, "label": "Processing Status", "options": "Received\nProcessed\nIgnored\nFailed", "read_only": 1},
+  {"fieldname": "processing_error", "fieldtype": "Small Text", "label": "Processing Error", "read_only": 1}
+ ],
+ "module": "College Management System", "name": "Payment Webhook Event",
+ "permissions": [
+  {"read": 1, "report": 1, "role": "System Manager"}, {"read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"export": 1, "read": 1, "report": 1, "role": "Finance Officer"}, {"read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "sort_field": "creation", "sort_order": "DESC", "track_changes": 1
+}

@@ -1,0 +1,19 @@
+{
+ "actions": [], "autoname": "field:gateway_code", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["gateway_code", "provider", "environment", "enabled", "credentials_section", "public_key", "secret_key"],
+ "fields": [
+  {"fieldname": "gateway_code", "fieldtype": "Data", "in_list_view": 1, "label": "Gateway Code", "reqd": 1, "unique": 1},
+  {"fieldname": "provider", "fieldtype": "Select", "in_list_view": 1, "label": "Provider", "options": "Paystack", "reqd": 1},
+  {"default": "Test", "fieldname": "environment", "fieldtype": "Select", "label": "Environment", "options": "Test\nLive", "reqd": 1},
+  {"default": "0", "fieldname": "enabled", "fieldtype": "Check", "in_list_view": 1, "label": "Enabled"},
+  {"fieldname": "credentials_section", "fieldtype": "Section Break", "label": "Encrypted Credentials"},
+  {"fieldname": "public_key", "fieldtype": "Password", "label": "Public Key"},
+  {"fieldname": "secret_key", "fieldtype": "Password", "label": "Secret Key"}
+ ],
+ "module": "College Management System", "name": "Payment Gateway Configuration",
+ "permissions": [
+  {"create": 1, "delete": 1, "read": 1, "report": 1, "role": "System Manager", "write": 1},
+  {"create": 1, "read": 1, "report": 1, "role": "Institution Super Admin", "write": 1}
+ ],
+ "sort_field": "modified", "sort_order": "DESC", "track_changes": 1
+}
