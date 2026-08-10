@@ -1,0 +1,13 @@
+{
+ "actions": [], "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB", "istable": 1,
+ "field_order": ["stage_code", "stage_name", "reviewer_role", "max_score", "pass_score", "checklist_items"],
+ "fields": [
+  {"fieldname": "stage_code", "fieldtype": "Data", "in_list_view": 1, "label": "Stage Code", "reqd": 1},
+  {"fieldname": "stage_name", "fieldtype": "Data", "in_list_view": 1, "label": "Stage Name", "reqd": 1},
+  {"fieldname": "reviewer_role", "fieldtype": "Link", "in_list_view": 1, "label": "Reviewer Role", "options": "Role", "reqd": 1},
+  {"fieldname": "max_score", "fieldtype": "Float", "in_list_view": 1, "label": "Maximum Score", "non_negative": 1, "reqd": 1},
+  {"fieldname": "pass_score", "fieldtype": "Float", "in_list_view": 1, "label": "Pass Score", "non_negative": 1, "reqd": 1},
+  {"description": "One required check per line.", "fieldname": "checklist_items", "fieldtype": "Small Text", "label": "Checklist Items", "reqd": 1}
+ ],
+ "module": "College Management System", "name": "Admission Review Stage", "permissions": []
+}

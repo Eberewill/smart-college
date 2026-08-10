@@ -10,7 +10,14 @@ class Institution(CodeDocument):
 
 	def validate(self):
 		super().validate()
-		for field in ("applicant_number_series", "application_number_series"):
+		for field in (
+			"applicant_number_series",
+			"application_number_series",
+			"application_invoice_series",
+			"payment_receipt_series",
+			"admission_letter_series",
+			"student_number_series",
+		):
 			series = (self.get(field) or "").strip().upper()
 			if not re.fullmatch(r"[A-Z0-9._/-]*#{4,}[A-Z0-9._/#-]*", series):
 				frappe.throw(

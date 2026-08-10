@@ -18,6 +18,8 @@ class AdmissionProgramme(Document):
 		self._validate_window()
 		self._validate_fee()
 		self._validate_application_fields()
+		self._validate_review_stages()
+		self._validate_letter_template()
 
 	def on_trash(self):
 		if not in_schema_operation():
@@ -85,6 +87,34 @@ class AdmissionProgramme(Document):
 				frappe.throw(frappe._("Select field {0} requires options.").format(row.field_key))
 			if row.field_type == "Attachment":
 				self._validate_attachment_field(row)
+
+	def _validate_review_stages(self):
+		seen = set()
+		for row in self.review_stages:
+			row.stage_code = (row.stage_code or "").strip().lower()
+			if not FIELD_KEY_PATTERN.fullmatch(row.stage_code):
+				frappe.throw(
+					frappe._("Review Stage Code must use lowercase letters, numbers, and underscores.")
+				)
+			if row.stage_code in seen:
+				frappe.throw(frappe._("Review Stage {0} is duplicated.").format(row.stage_code))
+			seen.add(row.stage_code)
+			if flt(row.max_score) <= 0 or flt(row.pass_score) < 0 or flt(row.pass_score) > flt(row.max_score):
+				frappe.throw(
+					frappe._("Review stage scores must have a positive maximum and a valid pass score.")
+				)
+			checks = [item.strip() for item in (row.checklist_items or "").splitlines() if item.strip()]
+			if not checks or len(checks) != len(set(checks)):
+				frappe.throw(frappe._("Each review stage requires unique checklist items."))
+			row.checklist_items = "\n".join(checks)
+
+	def _validate_letter_template(self):
+		if (
+			self.admission_letter_print_format
+			and frappe.db.get_value("Print Format", self.admission_letter_print_format, "doc_type")
+			!= "Admission Letter"
+		):
+			frappe.throw(frappe._("Admission Letter Print Format must belong to Admission Letter."))
 
 	@staticmethod
 	def _validate_attachment_field(row):

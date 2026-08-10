@@ -1,6 +1,6 @@
 {
  "actions": [], "autoname": "hash", "doctype": "DocType", "engine": "InnoDB",
- "field_order": ["admission_cycle", "programme", "campus", "is_enabled", "capacity", "window_section", "applications_open_from", "applications_close_at", "fee_section", "application_fee", "currency", "require_payment_before_submission", "form_section", "application_fields", "notes"],
+ "field_order": ["admission_cycle", "programme", "campus", "is_enabled", "capacity", "window_section", "applications_open_from", "applications_close_at", "fee_section", "application_fee", "currency", "require_payment_before_submission", "form_section", "application_fields", "review_section", "review_stages", "letter_section", "admission_letter_print_format", "notes"],
  "fields": [
   {"fieldname": "admission_cycle", "fieldtype": "Link", "in_list_view": 1, "label": "Admission Cycle", "options": "Admission Cycle", "reqd": 1},
   {"fieldname": "programme", "fieldtype": "Link", "in_list_view": 1, "label": "Programme", "options": "Programme", "reqd": 1},
@@ -16,6 +16,10 @@
   {"default": "0", "fieldname": "require_payment_before_submission", "fieldtype": "Check", "label": "Require Payment Before Submission"},
   {"fieldname": "form_section", "fieldtype": "Section Break", "label": "Application Fields and Documents"},
   {"fieldname": "application_fields", "fieldtype": "Table", "label": "Application Fields", "options": "Admission Application Field"},
+  {"fieldname": "review_section", "fieldtype": "Section Break", "label": "Review Workflow"},
+  {"fieldname": "review_stages", "fieldtype": "Table", "label": "Review Stages", "options": "Admission Review Stage"},
+  {"fieldname": "letter_section", "fieldtype": "Section Break", "label": "Admission Letter"},
+  {"description": "Optional approved Frappe Print Format for Admission Letter.", "fieldname": "admission_letter_print_format", "fieldtype": "Link", "label": "Admission Letter Print Format", "options": "Print Format"},
   {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"}
  ],
  "links": [], "module": "College Management System", "name": "Admission Programme",

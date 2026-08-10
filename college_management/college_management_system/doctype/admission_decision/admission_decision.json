@@ -1,0 +1,22 @@
+{
+ "actions": [], "autoname": "hash", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["admission_application", "outcome", "decision_reason", "conditions", "decided_by", "decided_at", "review_summary"],
+ "fields": [
+  {"fieldname": "admission_application", "fieldtype": "Link", "in_list_view": 1, "label": "Admission Application", "options": "Admission Application", "read_only": 1, "reqd": 1, "unique": 1},
+  {"fieldname": "outcome", "fieldtype": "Select", "in_list_view": 1, "label": "Outcome", "options": "Admitted\nRejected", "read_only": 1, "reqd": 1},
+  {"fieldname": "decision_reason", "fieldtype": "Small Text", "label": "Decision Reason", "read_only": 1, "reqd": 1},
+  {"fieldname": "conditions", "fieldtype": "Small Text", "label": "Admission Conditions", "read_only": 1},
+  {"fieldname": "decided_by", "fieldtype": "Link", "label": "Decided By", "options": "User", "read_only": 1, "reqd": 1},
+  {"fieldname": "decided_at", "fieldtype": "Datetime", "label": "Decided At", "read_only": 1, "reqd": 1},
+  {"fieldname": "review_summary", "fieldtype": "Code", "hidden": 1, "label": "Review Summary", "options": "JSON", "permlevel": 1, "read_only": 1, "reqd": 1}
+ ],
+ "module": "College Management System", "name": "Admission Decision",
+ "permissions": [
+  {"read": 1, "report": 1, "role": "System Manager"}, {"read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"read": 1, "report": 1, "role": "Admissions Officer"}, {"if_owner": 1, "read": 1, "role": "Applicant"},
+  {"read": 1, "report": 1, "role": "Auditor"},
+  {"permlevel": 1, "read": 1, "role": "System Manager"}, {"permlevel": 1, "read": 1, "role": "Institution Super Admin"},
+  {"permlevel": 1, "read": 1, "role": "Admissions Officer"}, {"permlevel": 1, "read": 1, "role": "Auditor"}
+ ],
+ "search_fields": "admission_application,outcome,decided_by", "sort_field": "creation", "sort_order": "DESC", "track_changes": 1
+}

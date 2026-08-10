@@ -8,6 +8,14 @@ import frappe
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, now_datetime, nowdate
 
+from college_management.admissions import (
+	assign_review,
+	complete_review,
+	convert_to_student,
+	issue_admission_letter,
+	record_decision,
+	respond_to_admission,
+)
 from college_management.college_management_system.doctype.admission_application.admission_application import (
 	create_application,
 	submit_application,
@@ -278,6 +286,114 @@ class TestApplicantSubmission(IntegrationTestCase):
 			frappe.db.count("Payment Webhook Event", {"payload_hash": hashlib.sha256(payload).hexdigest()}), 1
 		)
 
+	def test_review_decision_acceptance_and_student_conversion_are_governed(self):
+		offering = self._published_offering(
+			review_stages=[
+				{
+					"stage_code": "screening",
+					"stage_name": "Document Screening",
+					"reviewer_role": "Admissions Officer",
+					"max_score": 100,
+					"pass_score": 60,
+					"checklist_items": "Identity document\nEntry qualification",
+				}
+			]
+		)
+		applicant, _ = self._applicant()
+		reviewer = self._staff("Admissions Officer")
+		decision_maker = self._staff("Admissions Officer")
+		registry = self._staff("Registry Officer")
+		frappe.set_user(applicant.name)
+		application = create_application(offering.name)["application"]
+		submit_application(application)
+
+		frappe.set_user("Administrator")
+		review_name = assign_review(application, "screening", reviewer.name)["review"]
+		frappe.set_user(applicant.name)
+		self.assertFalse(frappe.get_doc("Admission Review", review_name).has_permission("read"))
+		frappe.set_user(reviewer.name)
+		with self.assertRaises(frappe.ValidationError):
+			complete_review(
+				review_name,
+				{"Identity document": "Pass"},
+				80,
+				"Recommend Admission",
+			)
+		complete_review(
+			review_name,
+			{
+				"Identity document": "Pass",
+				"Entry qualification": {"result": "Pass", "notes": "Verified"},
+			},
+			80,
+			"Recommend Admission",
+			"Requirements verified.",
+		)
+		with self.assertRaises(frappe.PermissionError):
+			record_decision(application, "Admitted", "Meets entry requirements")
+
+		frappe.set_user(decision_maker.name)
+		decision = record_decision(application, "Admitted", "Meets entry requirements")["decision"]
+		letter = issue_admission_letter(decision, add_days(nowdate(), 14))["letter"]
+		self.assertEqual(issue_admission_letter(decision, add_days(nowdate(), 14))["letter"], letter)
+		with self.assertRaises(frappe.PermissionError):
+			frappe.get_doc("Admission Decision", decision).save()
+
+		frappe.set_user(applicant.name)
+		applicant_decision = frappe.get_doc("Admission Decision", decision)
+		self.assertTrue(applicant_decision.has_permission("read"))
+		applicant_decision.apply_fieldlevel_read_permissions()
+		self.assertFalse(applicant_decision.get("review_summary"))
+		self.assertEqual(respond_to_admission(letter, "Accepted")["status"], "Accepted")
+		with self.assertRaises(frappe.ValidationError):
+			respond_to_admission(letter, "Declined")
+
+		frappe.set_user(registry.name)
+		student = convert_to_student(letter)["student"]
+		self.assertEqual(convert_to_student(letter)["student"], student)
+		self.assertEqual(frappe.db.count("Student Profile", {"admission_application": application}), 1)
+		self.assertIn("Student", frappe.get_roles(applicant.name))
+		frappe.set_user(applicant.name)
+		self.assertTrue(frappe.get_doc("Student Profile", student).has_permission("read"))
+		frappe.set_user("Administrator")
+
+	def test_review_stages_must_run_in_configured_order(self):
+		offering = self._published_offering(
+			review_stages=[
+				{
+					"stage_code": "documents",
+					"stage_name": "Documents",
+					"reviewer_role": "Admissions Officer",
+					"max_score": 50,
+					"pass_score": 25,
+					"checklist_items": "Documents complete",
+				},
+				{
+					"stage_code": "eligibility",
+					"stage_name": "Eligibility",
+					"reviewer_role": "Admissions Officer",
+					"max_score": 50,
+					"pass_score": 25,
+					"checklist_items": "Eligible programme choice",
+				},
+			]
+		)
+		applicant, _ = self._applicant()
+		reviewer = self._staff("Admissions Officer")
+		frappe.set_user(applicant.name)
+		application = create_application(offering.name)["application"]
+		submit_application(application)
+		frappe.set_user("Administrator")
+		with self.assertRaises(frappe.ValidationError):
+			assign_review(application, "eligibility", reviewer.name)
+		first = assign_review(application, "documents", reviewer.name)["review"]
+		frappe.set_user(reviewer.name)
+		with self.assertRaises(frappe.ValidationError):
+			complete_review(first, {"Documents complete": "Pass"}, 20, "Recommend Admission")
+		complete_review(first, {"Documents complete": "Pass"}, 30, "Recommend Admission")
+		frappe.set_user("Administrator")
+		self.assertEqual(assign_review(application, "eligibility", reviewer.name)["status"], "Assigned")
+
 	def test_attachment_requires_private_owned_file_with_matching_signature(self):
 		offering = self._published_offering(
 			application_fields=[
@@ -384,6 +500,22 @@ class TestApplicantSubmission(IntegrationTestCase):
 			public_key="pk_test_college",
 			secret_key="sk_test_college",
 		)
+
+	@staticmethod
+	def _staff(role):
+		email = f"staff-{frappe.generate_hash(length=8)}@example.test"
+		return frappe.get_doc(
+			{
+				"doctype": "User",
+				"email": email,
+				"first_name": "Staff",
+				"last_name": "Reviewer",
+				"enabled": 1,
+				"user_type": "System User",
+				"send_welcome_email": 0,
+				"roles": [{"role": role}],
+			}
+		).insert(ignore_permissions=True)
 
 	@staticmethod
 	def _response(payload):

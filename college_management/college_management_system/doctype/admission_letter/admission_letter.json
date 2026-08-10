@@ -1,0 +1,30 @@
+{
+ "actions": [], "autoname": "field:letter_number", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["letter_number", "admission_decision", "admission_application", "applicant_profile", "programme", "admission_cycle", "academic_session", "campus", "issued_at", "issued_by", "acceptance_deadline", "acceptance_status", "responded_at", "conditions", "verification_code", "print_format", "letter_snapshot"],
+ "fields": [
+  {"fieldname": "letter_number", "fieldtype": "Data", "in_list_view": 1, "label": "Letter Number", "read_only": 1, "unique": 1},
+  {"fieldname": "admission_decision", "fieldtype": "Link", "label": "Admission Decision", "options": "Admission Decision", "read_only": 1, "reqd": 1, "unique": 1},
+  {"fieldname": "admission_application", "fieldtype": "Link", "in_list_view": 1, "label": "Admission Application", "options": "Admission Application", "read_only": 1, "reqd": 1, "unique": 1},
+  {"fieldname": "applicant_profile", "fieldtype": "Link", "label": "Applicant Profile", "options": "Applicant Profile", "read_only": 1, "reqd": 1},
+  {"fieldname": "programme", "fieldtype": "Link", "label": "Programme", "options": "Programme", "read_only": 1, "reqd": 1},
+  {"fieldname": "admission_cycle", "fieldtype": "Link", "label": "Admission Cycle", "options": "Admission Cycle", "read_only": 1, "reqd": 1},
+  {"fieldname": "academic_session", "fieldtype": "Link", "label": "Academic Session", "options": "Academic Session", "read_only": 1, "reqd": 1},
+  {"fieldname": "campus", "fieldtype": "Link", "label": "Campus", "options": "Campus", "read_only": 1},
+  {"fieldname": "issued_at", "fieldtype": "Datetime", "label": "Issued At", "read_only": 1, "reqd": 1},
+  {"fieldname": "issued_by", "fieldtype": "Link", "label": "Issued By", "options": "User", "read_only": 1, "reqd": 1},
+  {"fieldname": "acceptance_deadline", "fieldtype": "Date", "label": "Acceptance Deadline", "read_only": 1, "reqd": 1},
+  {"default": "Awaiting Response", "fieldname": "acceptance_status", "fieldtype": "Select", "in_list_view": 1, "label": "Acceptance Status", "options": "Awaiting Response\nAccepted\nDeclined\nExpired", "read_only": 1, "reqd": 1},
+  {"fieldname": "responded_at", "fieldtype": "Datetime", "label": "Responded At", "read_only": 1},
+  {"fieldname": "conditions", "fieldtype": "Small Text", "label": "Conditions", "read_only": 1},
+  {"fieldname": "verification_code", "fieldtype": "Data", "label": "Verification Code", "read_only": 1, "unique": 1},
+  {"fieldname": "print_format", "fieldtype": "Link", "label": "Approved Print Format", "options": "Print Format", "read_only": 1},
+  {"fieldname": "letter_snapshot", "fieldtype": "Code", "hidden": 1, "label": "Issued Letter Snapshot", "options": "JSON", "read_only": 1, "reqd": 1}
+ ],
+ "module": "College Management System", "name": "Admission Letter",
+ "permissions": [
+  {"print": 1, "read": 1, "report": 1, "role": "System Manager"}, {"print": 1, "read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"print": 1, "read": 1, "report": 1, "role": "Admissions Officer"}, {"print": 1, "read": 1, "report": 1, "role": "Registry Officer"},
+  {"if_owner": 1, "print": 1, "read": 1, "role": "Applicant"}, {"print": 1, "read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "letter_number,admission_application,applicant_profile", "sort_field": "creation", "sort_order": "DESC", "title_field": "letter_number", "track_changes": 1
+}

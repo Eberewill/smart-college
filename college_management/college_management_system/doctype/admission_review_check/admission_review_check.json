@@ -1,0 +1,10 @@
+{
+ "actions": [], "doctype": "DocType", "editable_grid": 1, "engine": "InnoDB", "istable": 1,
+ "field_order": ["check_label", "result", "notes"],
+ "fields": [
+  {"fieldname": "check_label", "fieldtype": "Data", "in_list_view": 1, "label": "Check", "read_only": 1, "reqd": 1},
+  {"default": "Pending", "fieldname": "result", "fieldtype": "Select", "in_list_view": 1, "label": "Result", "options": "Pending\nPass\nFail\nNot Applicable", "reqd": 1},
+  {"fieldname": "notes", "fieldtype": "Small Text", "in_list_view": 1, "label": "Notes"}
+ ],
+ "module": "College Management System", "name": "Admission Review Check", "permissions": []
+}

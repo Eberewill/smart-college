@@ -1,0 +1,34 @@
+{
+ "actions": [], "autoname": "field:student_number", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["student_number", "user", "applicant_profile", "admission_application", "status", "academic_section", "programme", "department", "campus", "admission_cycle", "academic_session", "current_level", "admission_date", "identity_section", "first_name", "middle_name", "last_name", "date_of_birth", "gender", "phone", "contact_email"],
+ "fields": [
+  {"fieldname": "student_number", "fieldtype": "Data", "in_list_view": 1, "label": "Student Number", "read_only": 1, "unique": 1},
+  {"fieldname": "user", "fieldtype": "Link", "in_list_view": 1, "label": "User", "options": "User", "read_only": 1, "reqd": 1, "unique": 1},
+  {"fieldname": "applicant_profile", "fieldtype": "Link", "label": "Applicant Profile", "options": "Applicant Profile", "read_only": 1, "reqd": 1, "unique": 1},
+  {"fieldname": "admission_application", "fieldtype": "Link", "label": "Admission Application", "options": "Admission Application", "read_only": 1, "reqd": 1, "unique": 1},
+  {"default": "Active", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Active\nDeferred\nSuspended\nWithdrawn\nGraduated\nArchived", "read_only": 1, "reqd": 1},
+  {"fieldname": "academic_section", "fieldtype": "Section Break", "label": "Academic Placement"},
+  {"fieldname": "programme", "fieldtype": "Link", "in_list_view": 1, "label": "Programme", "options": "Programme", "read_only": 1, "reqd": 1},
+  {"fieldname": "department", "fieldtype": "Link", "label": "Department", "options": "Department", "read_only": 1, "reqd": 1},
+  {"fieldname": "campus", "fieldtype": "Link", "label": "Campus", "options": "Campus", "read_only": 1},
+  {"fieldname": "admission_cycle", "fieldtype": "Link", "label": "Admission Cycle", "options": "Admission Cycle", "read_only": 1, "reqd": 1},
+  {"fieldname": "academic_session", "fieldtype": "Link", "label": "Academic Session", "options": "Academic Session", "read_only": 1, "reqd": 1},
+  {"fieldname": "current_level", "fieldtype": "Link", "label": "Current Level", "options": "Academic Level", "read_only": 1},
+  {"fieldname": "admission_date", "fieldtype": "Date", "label": "Admission Date", "read_only": 1, "reqd": 1},
+  {"fieldname": "identity_section", "fieldtype": "Section Break", "label": "Identity Snapshot"},
+  {"fieldname": "first_name", "fieldtype": "Data", "label": "First Name", "read_only": 1, "reqd": 1},
+  {"fieldname": "middle_name", "fieldtype": "Data", "label": "Middle Name", "read_only": 1},
+  {"fieldname": "last_name", "fieldtype": "Data", "label": "Last Name", "read_only": 1},
+  {"fieldname": "date_of_birth", "fieldtype": "Date", "label": "Date of Birth", "read_only": 1},
+  {"fieldname": "gender", "fieldtype": "Data", "label": "Gender", "read_only": 1},
+  {"fieldname": "phone", "fieldtype": "Data", "label": "Phone", "read_only": 1},
+  {"fieldname": "contact_email", "fieldtype": "Data", "label": "Contact Email", "options": "Email", "read_only": 1}
+ ],
+ "module": "College Management System", "name": "Student Profile",
+ "permissions": [
+  {"read": 1, "report": 1, "role": "System Manager"}, {"read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Registry Officer"},
+  {"if_owner": 1, "print": 1, "read": 1, "role": "Student"}, {"read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "student_number,first_name,middle_name,last_name,user", "sort_field": "creation", "sort_order": "DESC", "title_field": "student_number", "track_changes": 1
+}

@@ -1,0 +1,31 @@
+{
+ "actions": [], "autoname": "hash", "doctype": "DocType", "engine": "InnoDB",
+ "field_order": ["assignment_key", "admission_application", "stage_code", "stage_name", "status", "assignment_section", "assigned_to", "reviewer_role", "assigned_by", "assigned_at", "screening_section", "checks", "score", "max_score", "pass_score", "recommendation", "reviewer_comments", "completed_by", "completed_at"],
+ "fields": [
+  {"fieldname": "assignment_key", "fieldtype": "Data", "hidden": 1, "label": "Assignment Key", "read_only": 1, "unique": 1},
+  {"fieldname": "admission_application", "fieldtype": "Link", "in_list_view": 1, "label": "Admission Application", "options": "Admission Application", "read_only": 1, "reqd": 1},
+  {"fieldname": "stage_code", "fieldtype": "Data", "label": "Stage Code", "read_only": 1, "reqd": 1},
+  {"fieldname": "stage_name", "fieldtype": "Data", "in_list_view": 1, "label": "Stage Name", "read_only": 1, "reqd": 1},
+  {"default": "Assigned", "fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Assigned\nCompleted", "read_only": 1, "reqd": 1},
+  {"fieldname": "assignment_section", "fieldtype": "Section Break", "label": "Assignment"},
+  {"fieldname": "assigned_to", "fieldtype": "Link", "in_list_view": 1, "label": "Assigned To", "options": "User", "read_only": 1, "reqd": 1},
+  {"fieldname": "reviewer_role", "fieldtype": "Link", "label": "Required Reviewer Role", "options": "Role", "read_only": 1, "reqd": 1},
+  {"fieldname": "assigned_by", "fieldtype": "Link", "label": "Assigned By", "options": "User", "read_only": 1, "reqd": 1},
+  {"fieldname": "assigned_at", "fieldtype": "Datetime", "label": "Assigned At", "read_only": 1, "reqd": 1},
+  {"fieldname": "screening_section", "fieldtype": "Section Break", "label": "Screening"},
+  {"fieldname": "checks", "fieldtype": "Table", "label": "Document and Eligibility Checks", "options": "Admission Review Check"},
+  {"default": "0", "fieldname": "score", "fieldtype": "Float", "label": "Score", "non_negative": 1},
+  {"fieldname": "max_score", "fieldtype": "Float", "label": "Maximum Score", "read_only": 1, "reqd": 1},
+  {"fieldname": "pass_score", "fieldtype": "Float", "label": "Pass Score", "read_only": 1, "reqd": 1},
+  {"fieldname": "recommendation", "fieldtype": "Select", "label": "Recommendation", "options": "\nRecommend Admission\nRecommend Rejection\nRefer", "read_only": 1},
+  {"fieldname": "reviewer_comments", "fieldtype": "Small Text", "label": "Reviewer Comments", "read_only": 1},
+  {"fieldname": "completed_by", "fieldtype": "Link", "label": "Completed By", "options": "User", "read_only": 1},
+  {"fieldname": "completed_at", "fieldtype": "Datetime", "label": "Completed At", "read_only": 1}
+ ],
+ "module": "College Management System", "name": "Admission Review",
+ "permissions": [
+  {"read": 1, "report": 1, "role": "System Manager"}, {"read": 1, "report": 1, "role": "Institution Super Admin"},
+  {"read": 1, "report": 1, "role": "Admissions Officer"}, {"read": 1, "report": 1, "role": "Auditor"}
+ ],
+ "search_fields": "admission_application,stage_name,assigned_to", "sort_field": "creation", "sort_order": "DESC", "track_changes": 1
+}

@@ -2,8 +2,9 @@
 
 ## Status
 
-Implemented as the applicant transaction layer over published admissions configuration. Applicant
-review, decisions, letters, acceptance, and student conversion remain later Increment 2 slices.
+Implemented as the applicant transaction layer over published admissions configuration. Review,
+decisions, letters, acceptance, and student conversion are documented in
+`increment-2-admissions-review-and-onboarding.md`.
 
 ## Identity and ownership
 
@@ -30,8 +31,8 @@ invalid Select/Check/Date values, text beyond the supported bounds, and files on
 fields are rejected. Submission requires every required response and stores an immutable JSON
 snapshot of the applicant, offering, and responses.
 
-Submitted applications cannot be edited or deleted. Later review and decision stages will be
-separate authorised actions rather than reopening the applicant's submitted record.
+Submitted applications cannot be edited or deleted. Review and decision stages use separate,
+audited records rather than reopening the applicant's submitted record.
 
 ## Private supporting documents
 

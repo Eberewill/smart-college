@@ -3,7 +3,7 @@
  "autoname": "field:institution_code",
  "doctype": "DocType",
  "engine": "InnoDB",
- "field_order": ["institution_code", "institution_name", "abbreviation", "institution_type", "registration_number", "branding_section", "logo", "primary_color", "secondary_color", "primary_domain", "contact_section", "email", "phone", "website", "support_email", "support_phone", "email_sender_name", "default_letter_head", "numbering_section", "applicant_number_series", "application_number_series", "application_invoice_series", "payment_receipt_series", "address_section", "address", "city", "state", "country", "is_active", "site_singleton_key"],
+ "field_order": ["institution_code", "institution_name", "abbreviation", "institution_type", "registration_number", "branding_section", "logo", "primary_color", "secondary_color", "primary_domain", "contact_section", "email", "phone", "website", "support_email", "support_phone", "email_sender_name", "default_letter_head", "numbering_section", "applicant_number_series", "application_number_series", "application_invoice_series", "payment_receipt_series", "admission_letter_series", "student_number_series", "address_section", "address", "city", "state", "country", "is_active", "site_singleton_key"],
  "fields": [
   {"fieldname": "institution_code", "fieldtype": "Data", "in_list_view": 1, "label": "Institution Code", "reqd": 1, "unique": 1},
   {"fieldname": "institution_name", "fieldtype": "Data", "in_list_view": 1, "label": "Institution Name", "reqd": 1},
@@ -28,6 +28,8 @@
   {"default": "ADM-.YYYY.-.#####", "fieldname": "application_number_series", "fieldtype": "Data", "label": "Application Number Series", "reqd": 1},
   {"default": "INV-.YYYY.-.#####", "fieldname": "application_invoice_series", "fieldtype": "Data", "label": "Application Invoice Series", "reqd": 1},
   {"default": "RCT-.YYYY.-.#####", "fieldname": "payment_receipt_series", "fieldtype": "Data", "label": "Payment Receipt Series", "reqd": 1},
+  {"default": "LTR-.YYYY.-.#####", "fieldname": "admission_letter_series", "fieldtype": "Data", "label": "Admission Letter Series", "reqd": 1},
+  {"default": "STU-.YYYY.-.#####", "fieldname": "student_number_series", "fieldtype": "Data", "label": "Student Number Series", "reqd": 1},
   {"fieldname": "address_section", "fieldtype": "Section Break", "label": "Address"},
   {"fieldname": "address", "fieldtype": "Small Text", "label": "Address"},
   {"fieldname": "city", "fieldtype": "Data", "label": "City"},
