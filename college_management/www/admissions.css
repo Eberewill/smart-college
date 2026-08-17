@@ -13,7 +13,6 @@
 }
 .cm-applications-heading p,
 .cm-application-count,
-.cm-programmes-panel header p,
 .cm-empty-applications p { margin: 0; color: var(--cm-muted); }
 .cm-action-button {
 	background: var(--cm-brand-accent);
@@ -61,7 +60,6 @@
 .cm-application-count { margin-bottom: 1.25rem; }
 .cm-application-list { display: grid; gap: 1rem; }
 .cm-application-card,
-.cm-programmes-panel,
 .cm-empty-applications {
 	background: #fff;
 	border: 1px solid var(--cm-border);
@@ -104,30 +102,10 @@
 .cm-progress-track { flex: 1; height: .55rem; margin: 0 !important; overflow: hidden; border-radius: 999px; background: #e8ecf0; }
 .cm-progress-track > span { height: 100%; margin: 0; border-radius: inherit; background: var(--cm-brand-accent); }
 .cm-application-actions { display: flex; align-items: center; gap: 2rem; padding-top: 1rem; }
-.cm-application-actions a:not(.btn) { color: var(--cm-brand-accent); }
-.cm-autosave-note {
-	display: flex;
-	align-items: center;
-	gap: 1rem;
-	margin-top: 1.5rem;
-	padding: 1rem 1.25rem;
-	border: 1px solid color-mix(in srgb, var(--cm-brand-accent), #fff 55%);
-	border-radius: .65rem;
-	background: color-mix(in srgb, var(--cm-brand-accent), #fff 96%);
-}
-.cm-autosave-note > span { color: var(--cm-brand-accent); }
-.cm-autosave-note strong { display: block; margin-bottom: .15rem; }
-.cm-autosave-note p { margin: 0; color: var(--cm-muted); }
-.cm-programmes-panel { margin-top: 2rem; padding: 1.25rem; scroll-margin-top: 1rem; }
-.cm-programmes-panel header { margin-bottom: 1rem; }
-.cm-programmes-panel h2,
 .cm-empty-applications h2 { margin: 0 0 .3rem; font-size: 1.3rem; color: var(--cm-brand-primary); }
-.cm-programmes-panel th { background: #f7f9fb; font-weight: 500; white-space: nowrap; }
-.cm-programmes-panel td { vertical-align: middle; }
 .cm-empty-applications { padding: 3rem 1.5rem; text-align: center; }
 .cm-empty-applications > span { color: var(--cm-brand-accent); }
-.cm-empty-filter,
-.cm-empty-programmes { padding: 1.5rem; color: var(--cm-muted); text-align: center; }
+.cm-empty-filter { padding: 1.5rem; color: var(--cm-muted); text-align: center; }
 
 @media (max-width: 991px) {
 	.cm-application-metadata { grid-template-columns: repeat(2, 1fr); row-gap: 1rem; }
@@ -149,5 +127,4 @@
 	.cm-application-metadata > div:last-child { border-bottom: 0; }
 	.cm-application-actions { align-items: stretch; flex-direction: column; gap: .75rem; }
 	.cm-application-actions .btn { width: 100%; }
-	.cm-application-actions a:not(.btn) { text-align: center; }
 }

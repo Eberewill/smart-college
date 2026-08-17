@@ -13,7 +13,9 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn('data-application-search', template)
 		self.assertIn('data-application-status', template)
 		self.assertIn('cm-progress-track', template)
-		self.assertIn('class="table', template)
+		self.assertNotIn('Available programmes', template)
+		self.assertNotIn('Applications are saved automatically', template)
+		self.assertEqual(template.count('href="{{ application.url | e }}"'), 1)
 		self.assertIn('search.addEventListener("input", filterApplications)', script)
 		self.assertIn('status.addEventListener("change", filterApplications)', script)
 

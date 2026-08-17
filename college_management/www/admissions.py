@@ -1,5 +1,4 @@
 import frappe
-from frappe.utils import get_datetime, now_datetime
 
 no_cache = 1
 
@@ -28,7 +27,6 @@ def get_context(context):
 		order_by="creation desc",
 	)
 	context.applications = [_application_summary(name) for name in application_names]
-	context.offerings = _open_offerings({item.admission_programme for item in context.applications})
 	return context
 
 
@@ -118,42 +116,6 @@ def _application_progress(card):
 			complete = False
 		completed += bool(complete)
 	return round(completed / len(card.steps) * 100) if card.steps else 0
-
-
-def _open_offerings(existing_offerings):
-	now = now_datetime()
-	items = []
-	for name in frappe.get_all(
-		"Admission Programme",
-		filters={"is_enabled": 1},
-		pluck="name",
-		order_by="creation desc",
-	):
-		offering = frappe.get_doc("Admission Programme", name)
-		cycle = frappe.db.get_value(
-			"Admission Cycle",
-			offering.admission_cycle,
-			["status", "applications_open_from", "applications_close_at"],
-			as_dict=True,
-		)
-		opening = get_datetime(offering.applications_open_from or cycle.applications_open_from)
-		closing = get_datetime(offering.applications_close_at or cycle.applications_close_at)
-		if cycle.status == "Published" and opening <= now <= closing:
-			items.append(
-				frappe._dict(
-					name=offering.name,
-					programme=offering.programme,
-					programme_name=frappe.db.get_value("Programme", offering.programme, "programme_name"),
-					campus=frappe.db.get_value("Campus", offering.campus, "campus_name")
-					if offering.campus
-					else None,
-					fee=offering.application_fee,
-					currency=offering.currency,
-					closing=closing,
-					can_apply=offering.name not in existing_offerings,
-				)
-			)
-	return items
 
 
 def _application_card(name):

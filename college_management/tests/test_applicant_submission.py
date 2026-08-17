@@ -143,7 +143,6 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertEqual(context.applications[0].url, f"/admissions/{first_application}")
 		self.assertFalse(context.show_sidebar)
 		self.assertEqual(context.full_name, "Test Applicant")
-		self.assertFalse(context.offerings[0].can_apply)
 		home_context = frappe._dict()
 		get_applicant_home_context(home_context)
 		self.assertEqual(home_context.profile.user, first_user.name)
