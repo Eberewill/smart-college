@@ -2,6 +2,33 @@
 <svg class="icon icon-{{ size }}" aria-hidden="true"><use href="#icon-{{ name }}"></use></svg>
 {% endmacro %}
 
+{% macro portal_sidebar(active, institution) %}
+<aside class="cm-portal-sidebar" aria-label="{{ _('Applicant portal navigation') }}">
+	<div class="cm-sidebar-inner">
+		<a class="cm-school-brand" href="/applicant" aria-label="{{ institution.institution_name or _('Applicant portal home') }}">
+			<img src="{{ institution.logo or '/assets/college_management/images/college.svg' }}" alt="{{ institution.institution_name or _('College') }}">
+		</a>
+		<div class="cm-sidebar-title">{{ _("Applicant portal") }}</div>
+		<nav class="cm-portal-nav">
+			<a class="{{ 'active' if active == 'home' else '' }}" href="/applicant">{{ icon("home") }}<span>{{ _("Home") }}</span></a>
+			<a class="{{ 'active' if active == 'applications' else '' }}" href="/admissions">{{ icon("file-text") }}<span>{{ _("Applications") }}</span></a>
+			<a href="/me">{{ icon("user") }}<span>{{ _("My Account") }}</span></a>
+		</nav>
+	</div>
+</aside>
+{% endmacro %}
+
+{% macro portal_topbar(full_name, initials) %}
+<header class="cm-portal-topbar">
+	<strong>{{ _("Applicant Portal") }}</strong>
+	<a class="cm-account" href="/me">
+		<span class="cm-avatar">{{ initials }}</span>
+		<span>{{ full_name }}</span>
+		{{ icon("chevron-down", "sm") }}
+	</a>
+</header>
+{% endmacro %}
+
 {% macro detail(name, label, value, status=false, wide=false) %}
 <div class="cm-detail {{ 'cm-detail-wide' if wide else '' }}">
 	<span class="cm-detail-icon">{{ icon(name) }}</span>

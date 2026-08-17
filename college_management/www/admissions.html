@@ -1,55 +1,103 @@
 {% extends "templates/web.html" %}
+{% from "college_management/templates/includes/applicant_portal/components.html" import icon, portal_sidebar, portal_topbar %}
 
-{% block title %}{{ _("Admissions") }}{% endblock %}
+{% block title %}{{ _("My Applications") }}{% endblock %}
+{% block head_include %}{{ super() }}<link rel="stylesheet" href="/assets/college_management/css/applicant_portal.css">{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-{% block header %}
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between py-4 cm-dashboard-shell">
-	<div>
-		<div class="text-muted small text-uppercase font-weight-bold mb-2">{{ _("Applicant portal") }}</div>
-		<h1 class="h2 mt-0 mb-2">{{ _("Applications") }}</h1>
-		<p class="text-muted mb-0">{{ _("Continue an application or start a new one.") }}</p>
-	</div>
-</div>
-{% endblock %}
+{% block content %}
+<div class="cm-portal" data-portal-dashboard style="--cm-brand-primary: {{ brand_primary }}; --cm-brand-accent: {{ brand_accent }};">
+	{{ portal_sidebar("applications", institution) }}
+	<div class="cm-portal-content">
+		{{ portal_topbar(full_name, initials) }}
+		<main class="cm-portal-main cm-applications-main">
+			<header class="cm-applications-heading">
+				<div>
+					<h1>{{ _("My applications") }}</h1>
+					<p>{{ _("View and manage all admission applications linked to your account.") }}</p>
+				</div>
+				<a class="btn cm-action-button" href="#available-programmes">{{ _("Start new application") }}</a>
+			</header>
 
-{% block page_content %}
-<div data-portal-dashboard>
-<section class="mb-5 cm-dashboard-shell" aria-labelledby="your-applications">
-	<div class="d-flex align-items-end justify-content-between mb-3">
-		<div><h2 class="h4 mt-0 mb-1" id="your-applications">{{ _("Your applications") }}</h2><p class="text-muted mb-0">{{ _("Each application has its own workspace and progress.") }}</p></div>
-	</div>
-	{% if applications %}
-	<div class="table-responsive border rounded" data-applications-table>
-		<table class="table table-hover mb-0">
-			<thead><tr><th>{{ _("Application") }}</th><th>{{ _("Programme") }}</th><th>{{ _("Status") }}</th><th>{{ _("Last activity") }}</th><th class="text-right">{{ _("Action") }}</th></tr></thead>
-			<tbody>{% for application in applications %}<tr>
-				<td class="font-weight-bold">{{ application.name }}</td>
-				<td>{{ application.programme }}</td>
-				<td><span class="indicator-pill {{ 'green' if application.status == 'Submitted' else 'orange' }}">{{ application.status }}</span></td>
-				<td>{% if application.submitted_at %}{{ frappe.utils.format_datetime(application.submitted_at, "medium") }}{% else %}{{ frappe.utils.format_datetime(application.modified, "medium") }}{% endif %}</td>
-				<td class="text-right"><a class="btn btn-default btn-sm" href="{{ application.url | e }}">{{ _("Open") }}</a></td>
-			</tr>{% endfor %}</tbody>
-		</table>
-	</div>
-	{% else %}<div class="alert alert-light mb-0">{{ _("You have not started an application yet.") }}</div>{% endif %}
-</section>
+			{% if applications %}
+			<div class="cm-application-tools" aria-label="{{ _('Application filters') }}">
+				<label class="cm-search-control">
+					<span class="sr-only">{{ _("Search applications") }}</span>
+					{{ icon("search") }}
+					<input type="search" placeholder="{{ _('Search applications') }}" data-application-search>
+				</label>
+				<label class="cm-status-control">
+					<span class="sr-only">{{ _("Filter by status") }}</span>
+					{{ icon("filter") }}
+					<select data-application-status>
+						<option value="">{{ _("All statuses") }}</option>
+						<option value="draft">{{ _("Draft") }}</option>
+						<option value="submitted">{{ _("Submitted") }}</option>
+					</select>
+				</label>
+			</div>
+			<p class="cm-application-count" data-application-count data-total="{{ applications | length }}">{{ applications | length }} {{ _("application") if applications | length == 1 else _("applications") }}</p>
 
-<section class="mb-5 cm-dashboard-shell" aria-labelledby="available-programmes">
-	<div class="mb-3"><h2 class="h4 mt-0 mb-1" id="available-programmes">{{ _("Available programmes") }}</h2><p class="text-muted mb-0">{{ _("Programmes currently accepting applications.") }}</p></div>
-	{% if offerings %}
-	<div class="table-responsive border rounded">
-		<table class="table table-hover mb-0">
-			<thead><tr><th>{{ _("Programme") }}</th><th>{{ _("Campus") }}</th><th>{{ _("Application fee") }}</th><th>{{ _("Closing date") }}</th><th class="text-right">{{ _("Action") }}</th></tr></thead>
-			<tbody>{% for offering in offerings %}<tr>
-				<td><strong>{{ offering.programme_name }}</strong><div class="small text-muted">{{ offering.programme }}</div></td>
-				<td>{{ offering.campus or "—" }}</td>
-				<td>{{ offering.currency }} {{ offering.fee }}</td>
-				<td>{{ frappe.utils.format_datetime(offering.closing, "medium") }}</td>
-				<td class="text-right">{% if offering.can_apply %}<button class="btn btn-primary btn-sm" data-action="create" data-offering="{{ offering.name | e }}">{{ _("Start") }}</button>{% else %}<button class="btn btn-default btn-sm" disabled>{{ _("Started") }}</button>{% endif %}</td>
-			</tr>{% endfor %}</tbody>
-		</table>
+			<section class="cm-application-list" aria-label="{{ _('Your applications') }}">
+				{% for application in applications %}
+				<article class="cm-application-card" data-application-card data-search="{{ (application.name ~ ' ' ~ application.programme ~ ' ' ~ application.application_type ~ ' ' ~ application.academic_session) | lower | e }}" data-status="{{ application.status | lower | e }}">
+					<header class="cm-application-card-header">
+						<span class="cm-application-icon">{{ icon("file-text", "lg") }}</span>
+						<div>
+							<h2>{{ application.programme }}</h2>
+							<p>{{ application.name }}</p>
+						</div>
+						<span class="indicator-pill {{ 'green' if application.status == 'Submitted' else 'orange' }}">{{ application.status }}</span>
+					</header>
+					<div class="cm-application-metadata">
+						<div><span>{{ _("Application type") }}</span><strong>{{ application.application_type }}</strong></div>
+						<div><span>{{ _("Academic session") }}</span><strong>{{ application.academic_session }}</strong></div>
+						<div><span>{{ _("Last updated") }}</span><strong>{{ frappe.utils.format_date(application.modified) }}</strong></div>
+						<div class="cm-progress-field">
+							<span>{{ _("Application progress") }}</span>
+							<div><span class="cm-progress-track"><span style="width: {{ application.progress }}%"></span></span><strong>{{ application.progress }}% {{ _("complete") }}</strong></div>
+						</div>
+					</div>
+					<footer class="cm-application-actions">
+						<a class="btn cm-action-button" href="{{ application.url | e }}">{{ _("Continue application") if application.status == "Draft" else _("View application") }}</a>
+						<a href="{{ application.url | e }}">{{ _("View details") }}</a>
+					</footer>
+				</article>
+				{% endfor %}
+			</section>
+			<div class="cm-empty-filter" data-filter-empty hidden>{{ _("No applications match your search or status filter.") }}</div>
+			{% else %}
+			<div class="cm-empty-applications">
+				<span>{{ icon("file-text", "xl") }}</span>
+				<h2>{{ _("No applications yet") }}</h2>
+				<p>{{ _("Choose an available programme below to start your first application.") }}</p>
+			</div>
+			{% endif %}
+
+			<aside class="cm-autosave-note">
+				<span>{{ icon("info", "lg") }}</span>
+				<div><strong>{{ _("Applications are saved automatically") }}</strong><p>{{ _("You can leave and return to a draft application at any time.") }}</p></div>
+			</aside>
+
+			<section class="cm-programmes-panel" id="available-programmes" aria-labelledby="available-programmes-heading">
+				<header><h2 id="available-programmes-heading">{{ _("Available programmes") }}</h2><p>{{ _("Programmes currently accepting applications.") }}</p></header>
+				{% if offerings %}
+				<div class="table-responsive">
+					<table class="table table-hover mb-0">
+						<thead><tr><th>{{ _("Programme") }}</th><th>{{ _("Campus") }}</th><th>{{ _("Application fee") }}</th><th>{{ _("Closing date") }}</th><th class="text-right">{{ _("Action") }}</th></tr></thead>
+						<tbody>{% for offering in offerings %}<tr>
+							<td><strong>{{ offering.programme_name }}</strong><div class="small text-muted">{{ offering.programme }}</div></td>
+							<td>{{ offering.campus or "—" }}</td>
+							<td>{{ offering.currency }} {{ offering.fee }}</td>
+							<td>{{ frappe.utils.format_datetime(offering.closing, "medium") }}</td>
+							<td class="text-right">{% if offering.can_apply %}<button class="btn cm-action-button btn-sm" data-action="create" data-offering="{{ offering.name | e }}">{{ _("Start") }}</button>{% else %}<button class="btn btn-default btn-sm" disabled>{{ _("Started") }}</button>{% endif %}</td>
+						</tr>{% endfor %}</tbody>
+					</table>
+				</div>
+				{% else %}<div class="cm-empty-programmes">{{ _("There are no programmes accepting applications right now.") }}</div>{% endif %}
+			</section>
+		</main>
 	</div>
-	{% else %}<div class="alert alert-light mb-0">{{ _("There are no programmes accepting applications right now.") }}</div>{% endif %}
-</section>
 </div>
 {% endblock %}

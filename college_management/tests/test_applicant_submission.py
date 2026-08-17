@@ -138,12 +138,11 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertEqual([item.name for item in context.applications], [first_application])
 		self.assertNotIn(second_application, [item.name for item in context.applications])
 		self.assertEqual(context.applications[0].status, "Submitted")
+		self.assertEqual(context.applications[0].progress, 100)
 		self.assertTrue(context.applications[0].submitted_at)
 		self.assertEqual(context.applications[0].url, f"/admissions/{first_application}")
-		self.assertEqual(
-			[item.route for item in context.sidebar_items[0].group_items[:2]],
-			["/applicant", "/admissions"],
-		)
+		self.assertFalse(context.show_sidebar)
+		self.assertEqual(context.full_name, "Test Applicant")
 		self.assertFalse(context.offerings[0].can_apply)
 		home_context = frappe._dict()
 		get_applicant_home_context(home_context)

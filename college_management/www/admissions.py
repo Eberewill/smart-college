@@ -20,9 +20,7 @@ PROFILE_FIELDS = (
 def get_context(context):
 	profile = _get_applicant_profile()
 	context.title = "Applications"
-	context.show_sidebar = True
-	context.sidebar_items = _applicant_sidebar()
-	context.profile = frappe.get_doc("Applicant Profile", profile)
+	_set_portal_identity(context, profile)
 	application_names = frappe.get_all(
 		"Admission Application",
 		filters={"applicant_profile": profile},
@@ -32,6 +30,29 @@ def get_context(context):
 	context.applications = [_application_summary(name) for name in application_names]
 	context.offerings = _open_offerings({item.admission_programme for item in context.applications})
 	return context
+
+
+def _set_portal_identity(context, profile_name):
+	profile = frappe.get_doc("Applicant Profile", profile_name)
+	institution = frappe.db.get_value(
+		"Institution",
+		{"is_active": 1},
+		["institution_name", "logo", "primary_color", "secondary_color"],
+		as_dict=True,
+	) or frappe._dict()
+	full_name = " ".join(
+		part for part in (profile.first_name, profile.middle_name, profile.last_name) if part
+	)
+	context.body_class = "cm-applicant-portal"
+	context.show_sidebar = False
+	context.profile = profile
+	context.full_name = full_name
+	context.initials = "".join(
+		part[0].upper() for part in (profile.first_name, profile.last_name) if part
+	) or profile.first_name[0].upper()
+	context.institution = institution
+	context.brand_primary = institution.primary_color or "#07366f"
+	context.brand_accent = institution.secondary_color or "#008f89"
 
 
 def _applicant_sidebar():
@@ -58,15 +79,45 @@ def _get_applicant_profile():
 
 def _application_summary(name):
 	application = frappe.get_doc("Admission Application", name)
+	programme = frappe.db.get_value(
+		"Programme", application.programme, ["programme_name", "award_title"], as_dict=True
+	)
+	academic_session = frappe.db.get_value("Admission Cycle", application.admission_cycle, "academic_session")
+	card = _application_card(name)
 	return frappe._dict(
 		name=application.name,
 		status=application.status,
 		admission_programme=application.admission_programme,
-		programme=frappe.db.get_value("Programme", application.programme, "programme_name"),
+		programme=programme.programme_name,
+		application_type=programme.award_title,
+		academic_session=frappe.db.get_value("Academic Session", academic_session, "session_name"),
 		modified=application.modified,
 		submitted_at=application.submitted_at,
+		progress=_application_progress(card),
 		url=f"/admissions/{application.name}",
 	)
+
+
+def _application_progress(card):
+	if card.status == "Submitted":
+		return 100
+
+	completed = 0
+	for step in card.steps:
+		if step.type == "Applicant Details":
+			complete = all(not field.required or field.value for field in card.profile_fields)
+		elif step.type == "Application Fields":
+			complete = all(
+				not field.required or field.value or field.attachment for field in step.fields
+			)
+		elif step.type == "Payment":
+			complete = not card.require_payment or (
+				card.transaction and card.transaction.status == "Successful"
+			)
+		else:
+			complete = False
+		completed += bool(complete)
+	return round(completed / len(card.steps) * 100) if card.steps else 0
 
 
 def _open_offerings(existing_offerings):

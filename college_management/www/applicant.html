@@ -1,35 +1,17 @@
 {% extends "templates/web.html" %}
-{% from "college_management/templates/includes/applicant_portal/components.html" import detail, icon %}
+{% from "college_management/templates/includes/applicant_portal/components.html" import detail, icon, portal_sidebar, portal_topbar %}
 
 {% block title %}{{ _("Applicant Portal") }}{% endblock %}
+{% block head_include %}{{ super() }}<link rel="stylesheet" href="/assets/college_management/css/applicant_portal.css">{% endblock %}
 {% block navbar %}{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block content %}
 <div class="cm-portal" data-applicant-portal style="--cm-brand-primary: {{ brand_primary }}; --cm-brand-accent: {{ brand_accent }};">
-	<aside class="cm-portal-sidebar" aria-label="{{ _('Applicant portal navigation') }}">
-		<div class="cm-sidebar-inner">
-			<a class="cm-school-brand" href="/applicant" aria-label="{{ institution.institution_name or _('Applicant portal home') }}">
-				<img src="{{ institution.logo or '/assets/college_management/images/college.svg' }}" alt="{{ institution.institution_name or _('College') }}">
-			</a>
-			<div class="cm-sidebar-title">{{ _("Applicant portal") }}</div>
-			<nav class="cm-portal-nav">
-				<a class="active" href="/applicant">{{ icon("home") }}<span>{{ _("Home") }}</span></a>
-				<a href="/admissions">{{ icon("file-text") }}<span>{{ _("Applications") }}</span></a>
-				<a href="/me">{{ icon("user") }}<span>{{ _("My Account") }}</span></a>
-			</nav>
-		</div>
-	</aside>
+	{{ portal_sidebar("home", institution) }}
 
 	<div class="cm-portal-content">
-		<header class="cm-portal-topbar">
-			<strong>{{ _("Applicant Portal") }}</strong>
-			<a class="cm-account" href="/me">
-				<span class="cm-avatar">{{ initials }}</span>
-				<span>{{ full_name }}</span>
-				{{ icon("chevron-down", "sm") }}
-			</a>
-		</header>
+		{{ portal_topbar(full_name, initials) }}
 
 		<main class="cm-portal-main">
 			<section class="cm-welcome" aria-labelledby="welcome-heading">

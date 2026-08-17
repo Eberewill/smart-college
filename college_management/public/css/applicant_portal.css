@@ -1,0 +1,99 @@
+.cm-applicant-portal {
+	display: block;
+	height: auto;
+	min-height: 100vh;
+	margin: 0;
+	background: #f7f9fb;
+	color: #0d2148;
+}
+.cm-portal {
+	--cm-brand-primary: #07366f;
+	--cm-brand-accent: #008f89;
+	--cm-border: #dfe5eb;
+	--cm-muted: #61708a;
+	min-height: 100vh;
+	display: grid;
+	grid-template-columns: 14rem minmax(0, 1fr);
+	background: #f7f9fb;
+}
+.cm-portal .icon { stroke: currentColor; }
+.cm-portal-sidebar {
+	min-height: 100vh;
+	padding: 1.5rem .65rem;
+	background: var(--cm-brand-primary);
+	background: linear-gradient(160deg, var(--cm-brand-primary), color-mix(in srgb, var(--cm-brand-primary), #001a3d 35%));
+	color: #fff;
+}
+.cm-sidebar-inner { position: sticky; top: 1.5rem; }
+.cm-school-brand { display: flex; justify-content: center; margin-bottom: 1.25rem; }
+.cm-school-brand img { width: 5rem; height: 5rem; object-fit: contain; border-radius: 1rem; }
+.cm-sidebar-title { padding: .5rem 1.2rem 1rem; font-size: .9rem; opacity: .85; }
+.cm-portal-nav { display: grid; gap: .4rem; }
+.cm-portal-nav a {
+	display: grid;
+	grid-template-columns: 1.5rem minmax(0, 1fr);
+	align-items: center;
+	gap: .75rem;
+	min-height: 3rem;
+	padding: .75rem 1rem;
+	border: 0;
+	border-radius: .5rem;
+	color: #fff;
+	text-align: left;
+	text-decoration: none;
+}
+.cm-portal-nav .icon { width: 1.25rem; height: 1.25rem; justify-self: center; }
+.cm-portal-nav a:hover,
+.cm-portal-nav a:focus-visible,
+.cm-portal-nav a.active { background: rgba(255, 255, 255, .13); }
+.cm-portal-nav a:last-child { margin-top: 1rem; }
+.cm-portal-content { min-width: 0; }
+.cm-portal-topbar {
+	height: 6rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 clamp(1.25rem, 4vw, 3.5rem);
+	background: #fff;
+	border-bottom: 1px solid var(--cm-border);
+}
+.cm-portal-topbar > strong { font-size: clamp(1.35rem, 2vw, 1.8rem); }
+.cm-account { display: flex; align-items: center; gap: .75rem; color: #0d2148; text-decoration: none; }
+.cm-avatar {
+	display: grid;
+	place-items: center;
+	width: 3rem;
+	height: 3rem;
+	border-radius: 50%;
+	background: var(--cm-brand-accent);
+	color: #fff;
+}
+.cm-portal-main { width: 100%; padding: 1.5rem; }
+
+@media (max-width: 991px) {
+	.cm-portal { grid-template-columns: 1fr; }
+	.cm-portal-sidebar { min-height: auto; padding: .75rem 1rem; }
+	.cm-sidebar-inner { position: static; display: flex; align-items: center; gap: 1rem; }
+	.cm-school-brand { margin: 0; }
+	.cm-school-brand img { width: 3rem; height: 3rem; border-radius: .65rem; }
+	.cm-sidebar-title { display: none; }
+	.cm-portal-nav { display: flex; margin-left: auto; }
+	.cm-portal-nav a { min-height: 2.75rem; padding: .6rem .8rem; }
+	.cm-portal-nav a:last-child { margin: 0; }
+}
+
+@media (max-width: 767px) {
+	.cm-portal-topbar { height: 4.5rem; }
+	.cm-portal-topbar > strong { display: none; }
+	.cm-account { margin-left: auto; }
+	.cm-account > span:nth-child(2),
+	.cm-account > .icon { display: none; }
+	.cm-portal-main { padding: 1rem; }
+}
+
+@media (max-width: 575px) {
+	.cm-sidebar-inner { align-items: flex-start; }
+	.cm-portal-nav { width: 100%; justify-content: flex-end; }
+	.cm-portal-nav a { gap: .4rem; padding: .55rem .65rem; font-size: .82rem; }
+	.cm-portal-nav a:last-child { display: none; }
+}

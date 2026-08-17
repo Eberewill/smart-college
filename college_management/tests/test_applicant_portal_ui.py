@@ -6,33 +6,43 @@ APP_ROOT = Path(__file__).resolve().parents[1]
 
 
 class TestApplicantPortalUI(UnitTestCase):
-	def test_applications_page_uses_tables_instead_of_record_cards(self):
+	def test_applications_page_exposes_manageable_application_records(self):
 		template = (APP_ROOT / "www" / "admissions.html").read_text()
-		self.assertIn('data-applications-table', template)
+		script = (APP_ROOT / "www" / "admissions.js").read_text()
+		self.assertIn('data-application-card', template)
+		self.assertIn('data-application-search', template)
+		self.assertIn('data-application-status', template)
+		self.assertIn('cm-progress-track', template)
 		self.assertIn('class="table', template)
-		self.assertNotIn("cm-record-card", template)
-		self.assertNotIn("cm-programme-card", template)
+		self.assertIn('search.addEventListener("input", filterApplications)', script)
+		self.assertIn('status.addEventListener("change", filterApplications)', script)
 
 	def test_applicant_home_exposes_profile_details(self):
 		template = (APP_ROOT / "www" / "applicant.html").read_text()
+		components = (
+			APP_ROOT / "templates" / "includes" / "applicant_portal" / "components.html"
+		).read_text()
 		self.assertIn('data-applicant-portal', template)
 		self.assertIn("Applicant number", template)
 		self.assertIn("Contact email", template)
-		self.assertIn("institution.logo", template)
+		self.assertIn("institution.logo", components)
 		self.assertIn('href="/admissions"', template)
 
 	def test_applicant_home_has_responsive_component_structure(self):
 		template = (APP_ROOT / "www" / "applicant.html").read_text()
 		styles = (APP_ROOT / "www" / "applicant.css").read_text()
+		portal_styles = (APP_ROOT / "public" / "css" / "applicant_portal.css").read_text()
 		components = (
 			APP_ROOT / "templates" / "includes" / "applicant_portal" / "components.html"
 		).read_text()
 		self.assertIn("cm-dashboard-grid", template)
-		self.assertIn("cm-sidebar-inner", template)
+		self.assertIn("portal_sidebar", template)
 		self.assertIn("macro detail", components)
-		self.assertIn("grid-template-columns: 1.5rem minmax(0, 1fr)", styles)
-		self.assertNotIn("border-left-color", styles)
-		self.assertNotIn("border-bottom-color", styles)
+		self.assertIn("macro portal_sidebar", components)
+		self.assertIn("grid-template-columns: 1.5rem minmax(0, 1fr)", portal_styles)
+		self.assertNotIn("border-left-color", portal_styles)
+		self.assertNotIn("border-bottom-color", portal_styles)
+		self.assertIn("@media (max-width: 991px)", portal_styles)
 		self.assertIn("@media (max-width: 991px)", styles)
 		self.assertIn("@media (max-width: 575px)", styles)
 
