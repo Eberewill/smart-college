@@ -100,7 +100,7 @@ def _application_progress(card):
 	for step in card.steps:
 		if step.type == "Applicant Details":
 			complete = all(not field.required or field.value for field in card.profile_fields)
-		elif step.type == "Application Fields":
+		elif step.type in {"Application Fields", "Programme Selection"}:
 			complete = all(
 				not field.required or field.value or field.attachment for field in step.fields
 			)
@@ -118,9 +118,26 @@ def _application_card(name):
 	application = frappe.get_doc("Admission Application", name)
 	offering = frappe.get_doc("Admission Programme", application.admission_programme)
 	programme = frappe.db.get_value(
-		"Programme", application.programme, ["programme_name", "award_title"], as_dict=True
+		"Programme",
+		application.programme,
+		["programme_name", "award_title", "department", "duration_years"],
+		as_dict=True,
 	)
 	academic_session = frappe.db.get_value("Admission Cycle", application.admission_cycle, "academic_session")
+	department = frappe.db.get_value(
+		"Department", programme.department, ["department_name", "faculty"], as_dict=True
+	)
+	programme_selection = frappe._dict(
+		application_type=programme.award_title,
+		academic_session=frappe.db.get_value("Academic Session", academic_session, "session_name"),
+		faculty=frappe.db.get_value("Faculty", department.faculty, "faculty_name"),
+		department=department.department_name,
+		programme=programme.programme_name,
+		campus=frappe.db.get_value("Campus", offering.campus, "campus_name")
+		if offering.campus
+		else frappe._("Not specified"),
+		duration=frappe._("{0} years").format(programme.duration_years),
+	)
 	responses = {row.field_key: row for row in application.responses}
 	invoice = _linked_doc("Application Invoice", "admission_application", application.name)
 	transaction = None
@@ -159,7 +176,8 @@ def _application_card(name):
 		admission_programme=application.admission_programme,
 		programme=programme.programme_name,
 		application_type=programme.award_title,
-		academic_session=frappe.db.get_value("Academic Session", academic_session, "session_name"),
+		academic_session=programme_selection.academic_session,
+		programme_selection=programme_selection,
 		programme_code=application.programme,
 		application_fee=offering.application_fee,
 		currency=offering.currency,
@@ -188,7 +206,16 @@ def _application_steps(offering, fields):
 			for row in offering.application_steps
 		]
 
-	steps = [frappe._dict(key="details", title="Your details", type="Applicant Details")]
+	steps = [
+		frappe._dict(key="details", title="Your details", type="Applicant Details"),
+		frappe._dict(
+			key="programme",
+			title="Programme selection",
+			type="Programme Selection",
+			description="Confirm the programme and study options configured for this application.",
+			fields=[],
+		),
+	]
 	questions = [field for field in fields if field.type != "Attachment"]
 	documents = [field for field in fields if field.type == "Attachment"]
 	if questions:

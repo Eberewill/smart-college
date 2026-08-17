@@ -74,7 +74,9 @@ class AdmissionProgramme(Document):
 	def _validate_application_fields(self):
 		seen = set()
 		field_steps = {
-			row.step_key for row in self.application_steps if row.step_type == "Application Fields"
+			row.step_key
+			for row in self.application_steps
+			if row.step_type in {"Application Fields", "Programme Selection"}
 		}
 		for row in self.application_fields:
 			row.field_key = (row.field_key or "").strip().lower()
@@ -120,8 +122,14 @@ class AdmissionProgramme(Document):
 			frappe.throw(frappe._("Review & Submit must be the final application step."))
 		if self.require_payment_before_submission and types.count("Payment") != 1:
 			frappe.throw(frappe._("A payment-required application flow requires one Payment step."))
-		if types.count("Payment") > 1 or types.count("Applicant Details") > 1:
-			frappe.throw(frappe._("Applicant Details and Payment may each appear only once."))
+		if (
+			types.count("Payment") > 1
+			or types.count("Applicant Details") > 1
+			or types.count("Programme Selection") > 1
+		):
+			frappe.throw(
+				frappe._("Applicant Details, Programme Selection, and Payment may each appear only once.")
+			)
 
 	def _validate_review_stages(self):
 		seen = set()

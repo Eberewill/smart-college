@@ -58,6 +58,8 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn('data-save-status', template)
 		self.assertIn('data-action="save-exit"', template)
 		self.assertIn('cm-application-overview', template)
+		self.assertIn('step.type == "Programme Selection"', template)
+		self.assertIn('cm-programme-grid', template)
 		self.assertNotIn('cm-application-summary', template)
 		self.assertIn('portal_sidebar', template)
 

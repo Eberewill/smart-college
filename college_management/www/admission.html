@@ -50,6 +50,14 @@
 							<header><h2 tabindex="-1">{{ step.title }}</h2>{% if step.description %}<p>{{ step.description }}</p>{% endif %}</header>
 							{% if step.type == "Applicant Details" %}
 							<div class="row">{% for field in application.profile_fields %}<div class="col-12 {% if field.type != 'Small Text' %}col-md-6{% endif %}">{% include "college_management/templates/includes/applicant_profile_field.html" %}</div>{% endfor %}</div>
+							{% elif step.type == "Programme Selection" %}
+							<div class="cm-programme-grid">
+								{% for label, value in ((_("Application type"), application.programme_selection.application_type), (_("Academic session"), application.programme_selection.academic_session), (_("Faculty"), application.programme_selection.faculty), (_("Programme"), application.programme_selection.programme), (_("Campus"), application.programme_selection.campus), (_("Duration"), application.programme_selection.duration)) %}
+								<div><span>{{ label }}</span><strong>{{ value }}</strong></div>
+								{% endfor %}
+							</div>
+							{% if step.fields %}<div class="row cm-programme-fields">{% for field in step.fields %}<div class="col-12 {% if field.type not in ('Small Text', 'Attachment') %}col-md-6{% endif %}">{% include "college_management/templates/includes/application_field.html" %}</div>{% endfor %}</div>{% endif %}
+							<div class="cm-programme-confirmation">{{ icon("check-circle", "sm") }}<span><strong>{{ _("Programme selected") }}</strong><small>{{ _("This selection is managed by the institution's admission configuration.") }}</small></span></div>
 							{% elif step.type == "Application Fields" %}
 							{% if step.fields %}<div class="row">{% for field in step.fields %}<div class="col-12 {% if field.type not in ('Small Text', 'Attachment') %}col-md-6{% endif %}">{% include "college_management/templates/includes/application_field.html" %}</div>{% endfor %}</div>{% else %}<div class="alert alert-light">{{ _("No information is required in this step.") }}</div>{% endif %}
 							{% elif step.type == "Payment" %}

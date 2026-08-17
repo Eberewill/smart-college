@@ -4,7 +4,7 @@
  "fields": [
   {"fieldname": "step_key", "fieldtype": "Data", "in_list_view": 1, "label": "Step Key", "reqd": 1},
   {"fieldname": "step_title", "fieldtype": "Data", "in_list_view": 1, "label": "Step Title", "reqd": 1},
-  {"fieldname": "step_type", "fieldtype": "Select", "in_list_view": 1, "label": "Step Type", "options": "Applicant Details\nApplication Fields\nPayment\nReview & Submit", "reqd": 1},
+  {"fieldname": "step_type", "fieldtype": "Select", "in_list_view": 1, "label": "Step Type", "options": "Applicant Details\nProgramme Selection\nApplication Fields\nPayment\nReview & Submit", "reqd": 1},
   {"description": "Shown to applicants below the step title.", "fieldname": "description", "fieldtype": "Small Text", "label": "Description"}
  ],
  "links": [], "module": "College Management System", "name": "Admission Application Step", "permissions": [], "sort_field": "creation", "sort_order": "DESC", "states": []

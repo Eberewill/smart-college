@@ -118,6 +118,35 @@
 .cm-wizard-step .form-group { margin-bottom: 1rem; }
 .cm-wizard-step .form-control { min-height: 2.75rem; border-color: var(--cm-border); border-radius: .4rem; }
 .cm-wizard-step textarea.form-control { min-height: 5rem; }
+.cm-programme-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+.cm-programme-grid > div {
+	min-width: 0;
+	padding: .8rem .9rem;
+	border: 1px solid var(--cm-border);
+	border-radius: .45rem;
+	background: #f8fafb;
+}
+.cm-programme-grid span { display: block; margin-bottom: .25rem; color: var(--cm-muted); font-size: .78rem; }
+.cm-programme-grid strong { display: block; font-weight: 500; }
+.cm-programme-fields { margin-top: 1.25rem; }
+.cm-programme-confirmation {
+	display: grid;
+	grid-template-columns: 1.25rem minmax(0, 1fr);
+	gap: .65rem;
+	margin-top: 1.25rem;
+	padding: .9rem 1rem;
+	border: 1px solid color-mix(in srgb, var(--cm-brand-accent), #fff 55%);
+	border-radius: .5rem;
+	background: color-mix(in srgb, var(--cm-brand-accent), #fff 95%);
+	color: var(--cm-brand-accent);
+}
+.cm-programme-confirmation strong,
+.cm-programme-confirmation small { display: block; }
+.cm-programme-confirmation small { margin-top: .2rem; color: #38506e; }
 .cm-frappe-control .form-group { margin-bottom: 1rem; }
 .cm-frappe-control .tooltip-content { display: none; }
 .cm-step-actions {
@@ -165,5 +194,6 @@
 	.cm-application-heading h1 { font-size: 1.45rem; }
 	.cm-step-panel { padding: 1rem; }
 	.cm-step-actions { grid-template-columns: 1fr; }
+	.cm-programme-grid { grid-template-columns: 1fr; }
 	.cm-review-list > div { grid-template-columns: 1fr; gap: .25rem; }
 }

@@ -165,6 +165,11 @@ class TestApplicantSubmission(IntegrationTestCase):
 	def test_configurable_application_steps_and_profile_autosave(self):
 		steps = [
 			{"step_key": "bio", "step_title": "Personal information", "step_type": "Applicant Details"},
+			{
+				"step_key": "programme",
+				"step_title": "Programme selection",
+				"step_type": "Programme Selection",
+			},
 			{"step_key": "education", "step_title": "Education", "step_type": "Application Fields"},
 			{"step_key": "documents", "step_title": "Documents", "step_type": "Application Fields"},
 			{"step_key": "fee", "step_title": "Payment", "step_type": "Payment"},
@@ -175,6 +180,10 @@ class TestApplicantSubmission(IntegrationTestCase):
 			require_payment_before_submission=1,
 			application_steps=steps,
 			application_fields=[
+				{
+					**self._field("study_mode", "Study Mode", "Select", options="Full-time\nPart-time"),
+					"application_step": "programme",
+				},
 				{**self._field("school", "Previous School", "Data"), "application_step": "education"},
 				{
 					**self._field("result", "Result", "Attachment"),
@@ -195,8 +204,10 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertEqual([step.key for step in card.steps], [row["step_key"] for row in steps])
 		self.assertEqual([step.title for step in card.steps], [row["step_title"] for row in steps])
 		self.assertEqual([step.type for step in card.steps], [row["step_type"] for row in steps])
-		self.assertEqual(card.steps[1].fields[0].key, "school")
-		self.assertEqual(card.steps[2].fields[0].key, "result")
+		self.assertEqual(card.steps[1].fields[0].key, "study_mode")
+		self.assertEqual(card.steps[2].fields[0].key, "school")
+		self.assertEqual(card.steps[3].fields[0].key, "result")
+		self.assertEqual(card.programme_selection.programme, self.programme.programme_name)
 		self.assertTrue(card.require_payment)
 		self.assertEqual(context.application_url, f"/admissions/{application}")
 		self.assertEqual(
@@ -284,6 +295,7 @@ class TestApplicantSubmission(IntegrationTestCase):
 				[step.type for step in context.application.steps],
 				[
 					"Applicant Details",
+					"Programme Selection",
 					"Application Fields",
 					"Application Fields",
 					"Payment",
