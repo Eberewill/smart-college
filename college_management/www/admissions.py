@@ -121,24 +121,11 @@ def _application_card(name):
 	programme = frappe.db.get_value(
 		"Programme",
 		application.programme,
-		["programme_name", "award_title", "department", "duration_years"],
+		["programme_name", "award_title"],
 		as_dict=True,
 	)
 	academic_session = frappe.db.get_value("Admission Cycle", application.admission_cycle, "academic_session")
-	department = frappe.db.get_value(
-		"Department", programme.department, ["department_name", "faculty"], as_dict=True
-	)
-	programme_selection = frappe._dict(
-		application_type=programme.award_title,
-		academic_session=frappe.db.get_value("Academic Session", academic_session, "session_name"),
-		faculty=frappe.db.get_value("Faculty", department.faculty, "faculty_name"),
-		department=department.department_name,
-		programme=programme.programme_name,
-		campus=frappe.db.get_value("Campus", offering.campus, "campus_name")
-		if offering.campus
-		else frappe._("Not specified"),
-		duration=frappe._("{0} years").format(programme.duration_years),
-	)
+	academic_session_name = frappe.db.get_value("Academic Session", academic_session, "session_name")
 	responses = {row.field_key: row for row in application.responses}
 	invoice = _linked_doc("Application Invoice", "admission_application", application.name)
 	transaction = None
@@ -177,8 +164,7 @@ def _application_card(name):
 		admission_programme=application.admission_programme,
 		programme=programme.programme_name,
 		application_type=programme.award_title,
-		academic_session=programme_selection.academic_session,
-		programme_selection=programme_selection,
+		academic_session=academic_session_name,
 		programme_options=_programme_options(application.admission_programme),
 		programme_code=application.programme,
 		application_fee=offering.application_fee,

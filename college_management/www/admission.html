@@ -52,16 +52,14 @@
 							<div class="row">{% for field in application.profile_fields %}<div class="col-12 {% if field.type != 'Small Text' %}col-md-6{% endif %}">{% include "college_management/templates/includes/applicant_profile_field.html" %}</div>{% endfor %}</div>
 							{% elif step.type == "Programme Selection" %}
 							<div class="form-group cm-programme-selector">
-								<label for="{{ application.name }}-programme">{{ _("Programme") }}<span class="text-danger"> *</span></label>
-								<select class="form-control" id="{{ application.name }}-programme" data-programme-selection data-current="{{ application.admission_programme | e }}" required>
-									{% for option in application.programme_options %}<option value="{{ option.value | e }}" {% if option.value == application.admission_programme %}selected{% endif %}>{{ option.label }}</option>{% endfor %}
-								</select>
+								<label for="{{ application.name }}-programme">{{ _("Select programme") }}<span class="text-danger"> *</span></label>
+								<div class="cm-select-input">
+									<select class="form-control" id="{{ application.name }}-programme" data-programme-selection data-current="{{ application.admission_programme | e }}" required>
+										{% for option in application.programme_options %}<option value="{{ option.value | e }}" {% if option.value == application.admission_programme %}selected{% endif %}>{{ option.label }}</option>{% endfor %}
+									</select>
+									{{ icon("chevron-down", "sm") }}
+								</div>
 								<small class="form-text text-muted">{{ _("Choose from programmes currently accepting applications. Programme-specific answers are reset when this changes.") }}</small>
-							</div>
-							<div class="cm-programme-grid">
-								{% for label, value in ((_("Application type"), application.programme_selection.application_type), (_("Academic session"), application.programme_selection.academic_session), (_("Faculty"), application.programme_selection.faculty), (_("Programme"), application.programme_selection.programme), (_("Campus"), application.programme_selection.campus), (_("Duration"), application.programme_selection.duration)) %}
-								<div><span>{{ label }}</span><strong>{{ value }}</strong></div>
-								{% endfor %}
 							</div>
 							{% if step.fields %}<div class="row cm-programme-fields">{% for field in step.fields %}<div class="col-12 {% if field.type not in ('Small Text', 'Attachment') %}col-md-6{% endif %}">{% include "college_management/templates/includes/application_field.html" %}</div>{% endfor %}</div>{% endif %}
 							<div class="cm-programme-confirmation">{{ icon("check-circle", "sm") }}<span><strong>{{ _("Programme available") }}</strong><small>{{ _("Applications are currently open for this programme selection.") }}</small></span></div>

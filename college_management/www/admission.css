@@ -119,21 +119,29 @@
 .cm-wizard-step .form-control { min-height: 2.75rem; border-color: var(--cm-border); border-radius: .4rem; }
 .cm-wizard-step textarea.form-control { min-height: 5rem; }
 .cm-programme-selector { margin-bottom: 1.25rem !important; }
-.cm-programme-selector select { background-color: #fff; }
-.cm-programme-grid {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 1rem;
+.cm-select-input { position: relative; }
+.cm-programme-selector .cm-select-input select {
+	width: 100%;
+	height: 3rem;
+	padding: .65rem 2.75rem .65rem .85rem !important;
+	border: 1px solid var(--cm-border) !important;
+	border-radius: .45rem !important;
+	background: #fff !important;
+	appearance: none !important;
+	cursor: pointer;
 }
-.cm-programme-grid > div {
-	min-width: 0;
-	padding: .8rem .9rem;
-	border: 1px solid var(--cm-border);
-	border-radius: .45rem;
-	background: #f8fafb;
+.cm-programme-selector .cm-select-input select:focus {
+	border-color: var(--cm-brand-accent) !important;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--cm-brand-accent), transparent 84%);
 }
-.cm-programme-grid span { display: block; margin-bottom: .25rem; color: var(--cm-muted); font-size: .78rem; }
-.cm-programme-grid strong { display: block; font-weight: 500; }
+.cm-select-input > .icon {
+	position: absolute;
+	top: 50%;
+	right: .9rem;
+	transform: translateY(-50%);
+	color: var(--cm-muted);
+	pointer-events: none;
+}
 .cm-programme-fields { margin-top: 1.25rem; }
 .cm-programme-confirmation {
 	display: grid;
@@ -196,6 +204,5 @@
 	.cm-application-heading h1 { font-size: 1.45rem; }
 	.cm-step-panel { padding: 1rem; }
 	.cm-step-actions { grid-template-columns: 1fr; }
-	.cm-programme-grid { grid-template-columns: 1fr; }
 	.cm-review-list > div { grid-template-columns: 1fr; gap: .25rem; }
 }

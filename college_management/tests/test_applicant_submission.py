@@ -230,7 +230,7 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertEqual(card.steps[1].fields[0].key, "study_mode")
 		self.assertEqual(card.steps[2].fields[0].key, "school")
 		self.assertEqual(card.steps[3].fields[0].key, "result")
-		self.assertEqual(card.programme_selection.programme, self.programme.programme_name)
+		self.assertIn(card.admission_programme, [option.value for option in card.programme_options])
 		self.assertTrue(card.require_payment)
 		self.assertEqual(context.application_url, f"/admissions/{application}")
 		self.assertEqual(
