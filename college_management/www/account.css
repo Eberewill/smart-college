@@ -1,0 +1,83 @@
+.cm-account-main { color: #0d2148; }
+.cm-account-heading { margin-bottom: 1.25rem; }
+.cm-account-heading h1 { margin: 0 0 .35rem; font-size: clamp(1.7rem, 2.4vw, 2.15rem); color: var(--cm-brand-primary); }
+.cm-account-heading p,
+.cm-account-profile-card p,
+.cm-account-action-card p,
+.cm-account-panel header p,
+.cm-connected-app-list p,
+.cm-account-empty p { margin: 0; color: var(--cm-muted); }
+.cm-account-tabs { display: flex; gap: .4rem; margin-bottom: 1.25rem; overflow-x: auto; border-bottom: 1px solid var(--cm-border); }
+.cm-account-tabs a { display: inline-flex; align-items: center; gap: .45rem; flex: 0 0 auto; padding: .75rem 1rem; border-bottom: 2px solid transparent; color: #40516f; text-decoration: none; }
+.cm-account-tabs a.active { border-bottom-color: var(--cm-brand-accent); color: var(--cm-brand-accent); font-weight: 600; }
+.cm-account-profile-card,
+.cm-account-details,
+.cm-account-panel,
+.cm-account-action-card {
+	border: 1px solid var(--cm-border);
+	border-radius: .75rem;
+	background: #fff;
+	box-shadow: 0 2px 8px rgba(13, 33, 72, .05);
+}
+.cm-account-profile-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 1rem; padding: 1.25rem; }
+.cm-account-profile-card h2 { margin: 0 0 .15rem; color: var(--cm-brand-primary); font-size: 1.3rem; }
+.cm-account-profile-card .indicator-pill { margin-top: .55rem; }
+.cm-account-avatar { display: grid; place-items: center; width: 4rem; height: 4rem; border-radius: 50%; background: var(--cm-brand-accent); color: #fff; font-size: 1.2rem; }
+.cm-account-primary { border-color: var(--cm-brand-accent); background: var(--cm-brand-accent); color: #fff; }
+.cm-account-primary:hover,
+.cm-account-primary:focus { border-color: color-mix(in srgb, var(--cm-brand-accent), #000 12%); background: color-mix(in srgb, var(--cm-brand-accent), #000 12%); color: #fff; }
+.cm-account-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
+.cm-account-action-card { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) auto; align-items: center; gap: .85rem; padding: 1.1rem; color: #0d2148; text-decoration: none; }
+.cm-account-action-card:hover { border-color: color-mix(in srgb, var(--cm-brand-accent), #fff 45%); color: #0d2148; text-decoration: none; }
+.cm-account-action-card > span,
+.cm-account-section-icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: color-mix(in srgb, var(--cm-brand-accent), #fff 88%); color: var(--cm-brand-accent); }
+.cm-account-action-card h2 { margin: 0 0 .25rem; font-size: 1rem; color: var(--cm-brand-primary); }
+.cm-account-details { padding: 1.25rem; }
+.cm-account-details h2 { margin: 0 0 1rem; font-size: 1.15rem; color: var(--cm-brand-primary); }
+.cm-account-details dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+.cm-account-details dl > div { padding: .75rem 1rem; border-bottom: 1px solid var(--cm-border); }
+.cm-account-details dl > div:nth-child(odd) { padding-left: 0; border-right: 1px solid var(--cm-border); }
+.cm-account-details dt { color: var(--cm-muted); font-size: .8rem; font-weight: 500; }
+.cm-account-details dd { margin: .2rem 0 0; overflow-wrap: anywhere; }
+.cm-account-logout { margin-top: 1rem; text-align: right; }
+.cm-account-logout a { display: inline-flex; align-items: center; gap: .4rem; color: #9c2525; }
+.cm-account-panel { max-width: 56rem; padding: 1.25rem; }
+.cm-account-panel > header { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--cm-border); }
+.cm-account-panel h2 { margin: 0 0 .3rem; font-size: 1.25rem; color: var(--cm-brand-primary); }
+.cm-account-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.cm-account-panel label { display: grid; gap: .35rem; margin: 0; font-weight: 500; }
+.cm-account-panel label small { color: var(--cm-muted); font-weight: 400; }
+.cm-account-panel .form-control { min-height: 2.75rem; border-color: var(--cm-border); border-radius: .45rem; }
+.cm-account-panel form > footer { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--cm-border); }
+.cm-security-panel form { display: grid; gap: 1rem; max-width: 34rem; }
+.cm-checkbox-row { display: flex !important; grid-template-columns: none; align-items: flex-start; gap: .65rem !important; font-weight: 400 !important; }
+.cm-checkbox-row input { margin-top: .25rem; }
+.cm-connected-app-list { display: grid; gap: .75rem; }
+.cm-connected-app-list article { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) auto; align-items: center; gap: .85rem; padding: 1rem; border: 1px solid var(--cm-border); border-radius: .6rem; }
+.cm-connected-app-list article > span { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: #eef6f5; color: var(--cm-brand-accent); }
+.cm-connected-app-list h3,
+.cm-account-empty h3 { margin: 0 0 .2rem; font-size: 1rem; color: var(--cm-brand-primary); }
+.cm-account-empty { padding: 2.5rem 1rem; text-align: center; }
+.cm-account-empty > span { color: var(--cm-brand-accent); }
+.cm-account-empty h3 { margin-top: .75rem; }
+
+@media (max-width: 991px) {
+	.cm-account-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+	.cm-account-profile-card { grid-template-columns: auto minmax(0, 1fr); }
+	.cm-account-profile-card > .btn { grid-column: 1 / -1; width: 100%; }
+	.cm-account-form-grid,
+	.cm-account-details dl { grid-template-columns: 1fr; }
+	.cm-account-details dl > div { padding-inline: 0; border-right: 0 !important; }
+}
+
+@media (max-width: 575px) {
+	.cm-account-tabs a { padding-inline: .75rem; }
+	.cm-account-panel { padding: 1rem; }
+	.cm-account-panel form > footer { display: grid; grid-template-columns: 1fr 1fr; }
+	.cm-account-panel form > footer .btn { width: 100%; }
+	.cm-connected-app-list article { grid-template-columns: 2.75rem minmax(0, 1fr); }
+	.cm-connected-app-list article .btn { grid-column: 1 / -1; width: 100%; }
+}

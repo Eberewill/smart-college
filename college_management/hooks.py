@@ -97,6 +97,8 @@ standard_portal_menu_items = [
 ]
 
 website_route_rules = [
+	{"from_route": "/me", "to_route": "account"},
+	{"from_route": "/me/<section>", "to_route": "account"},
 	{"from_route": "/applications/<application>", "to_route": "application"},
 	{"from_route": "/admissions/<application>", "to_route": "application"},
 ]

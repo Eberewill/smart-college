@@ -41,6 +41,19 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn('respond_to_admission', script)
 		self.assertIn('@media (max-width: 767px)', styles)
 
+	def test_account_pages_share_the_applicant_portal_design(self):
+		template = (APP_ROOT / "www" / "account.html").read_text()
+		script = (APP_ROOT / "www" / "account.js").read_text()
+		styles = (APP_ROOT / "www" / "account.css").read_text()
+		self.assertIn('data-account-page', template)
+		self.assertIn('href="/me/profile"', template)
+		self.assertIn('href="/me/security"', template)
+		self.assertIn('href="/me/apps"', template)
+		self.assertIn('data-account-profile', template)
+		self.assertIn('data-password-form', template)
+		self.assertIn('cmPortalNotify.confirm', script)
+		self.assertIn('@media (max-width: 575px)', styles)
+
 	def test_applicant_home_has_responsive_component_structure(self):
 		template = (APP_ROOT / "www" / "applicant.html").read_text()
 		styles = (APP_ROOT / "www" / "applicant.css").read_text()

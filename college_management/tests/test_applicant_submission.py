@@ -28,6 +28,8 @@ from college_management.payments import (
 	paystack_webhook,
 	verify_payment,
 )
+from college_management.www.account import get_context as get_account_context
+from college_management.www.account import save_profile as save_account_profile
 from college_management.www.admissions import get_context as get_admissions_context
 from college_management.www.applicant import get_context as get_applicant_home_context
 from college_management.www.application import get_context as get_application_context
@@ -184,6 +186,17 @@ class TestApplicantSubmission(IntegrationTestCase):
 		frappe.set_user(second_user.name)
 		with self.assertRaises(frappe.PermissionError):
 			get_application_context(frappe._dict())
+		frappe.set_user(first_user.name)
+		frappe.form_dict = frappe._dict(section="profile")
+		account_context = frappe._dict()
+		get_account_context(account_context)
+		self.assertEqual(account_context.section, "profile")
+		save_account_profile({"first_name": "Updated", "last_name": "Applicant"})
+		self.assertEqual(frappe.db.get_value("User", first_user.name, "first_name"), "Updated")
+		self.assertEqual(
+			frappe.db.get_value("Applicant Profile", {"user": first_user.name}, "first_name"),
+			"Updated",
+		)
 		frappe.set_user("Administrator")
 
 	def test_configurable_application_steps_and_profile_autosave(self):

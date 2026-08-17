@@ -1,0 +1,85 @@
+{% extends "templates/web.html" %}
+{% from "college_management/templates/includes/applicant_portal/components.html" import icon, portal_notifications, portal_sidebar, portal_topbar %}
+
+{% block title %}{{ _("My Account") }}{% endblock %}
+{% block head_include %}{{ super() }}<link rel="stylesheet" href="/assets/college_management/css/applicant_portal.css?v=2"><script defer src="/assets/college_management/js/applicant_portal.js?v=2"></script>{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="cm-portal" data-account-page data-account-section="{{ section | e }}" style="--cm-brand-primary: {{ brand_primary }}; --cm-brand-accent: {{ brand_accent }};">
+	{{ portal_sidebar("account", institution) }}
+	<div class="cm-portal-content">
+		{{ portal_topbar(full_name, initials) }}
+		<main class="cm-portal-main cm-account-main">
+			<header class="cm-account-heading">
+				<h1>{{ _("My account") }}</h1>
+				<p>{{ _("Manage your profile, security settings, and connected applications.") }}</p>
+			</header>
+
+			<nav class="cm-account-tabs" aria-label="{{ _('Account sections') }}">
+				<a class="{{ 'active' if section == 'overview' else '' }}" href="/me">{{ icon("user", "sm") }} {{ _("Overview") }}</a>
+				<a class="{{ 'active' if section == 'profile' else '' }}" href="/me/profile">{{ icon("edit", "sm") }} {{ _("Profile") }}</a>
+				<a class="{{ 'active' if section == 'security' else '' }}" href="/me/security">{{ icon("lock", "sm") }} {{ _("Security") }}</a>
+				<a class="{{ 'active' if section == 'apps' else '' }}" href="/me/apps">{{ icon("globe", "sm") }} {{ _("Connected apps") }}</a>
+			</nav>
+
+			{% if section == "overview" %}
+			<section class="cm-account-profile-card">
+				<span class="cm-account-avatar">{{ initials }}</span>
+				<div><h2>{{ full_name }}</h2><p>{{ account_user.email }}</p><span class="indicator-pill green">{{ _("Active applicant") }}</span></div>
+				<a class="btn cm-account-primary" href="/me/profile">{{ _("Edit profile") }}</a>
+			</section>
+			<div class="cm-account-grid">
+				<a class="cm-account-action-card" href="/me/profile"><span>{{ icon("user", "lg") }}</span><div><h2>{{ _("Personal profile") }}</h2><p>{{ _("Update your name, contact details, language, and time zone.") }}</p></div>{{ icon("chevron-right", "sm") }}</a>
+				<a class="cm-account-action-card" href="/me/security"><span>{{ icon("lock", "lg") }}</span><div><h2>{{ _("Password and security") }}</h2><p>{{ _("Change your password and protect access to your account.") }}</p></div>{{ icon("chevron-right", "sm") }}</a>
+				<a class="cm-account-action-card" href="/me/apps"><span>{{ icon("globe", "lg") }}</span><div><h2>{{ _("Connected apps") }}</h2><p>{{ connected_apps | length }} {{ _("connected application") if connected_apps | length == 1 else _("connected applications") }}</p></div>{{ icon("chevron-right", "sm") }}</a>
+			</div>
+			<section class="cm-account-details">
+				<h2>{{ _("Account details") }}</h2>
+				<dl><div><dt>{{ _("Email address") }}</dt><dd>{{ account_user.email }}</dd></div><div><dt>{{ _("Applicant number") }}</dt><dd>{{ profile.applicant_number }}</dd></div><div><dt>{{ _("Language") }}</dt><dd>{{ account_user.language or _("System default") }}</dd></div><div><dt>{{ _("Time zone") }}</dt><dd>{{ account_user.time_zone or _("System default") }}</dd></div></dl>
+			</section>
+			<div class="cm-account-logout"><a href="/logout">{{ icon("logout", "sm") }} {{ _("Sign out") }}</a></div>
+
+			{% elif section == "profile" %}
+			<section class="cm-account-panel">
+				<header><div><h2>{{ _("Personal profile") }}</h2><p>{{ _("Keep the information used across your applicant account up to date.") }}</p></div></header>
+				<form data-account-profile>
+					<div class="cm-account-form-grid">
+						<label><span>{{ _("First name") }} *</span><input class="form-control" name="first_name" value="{{ account_user.first_name | e }}" required></label>
+						<label><span>{{ _("Middle name") }}</span><input class="form-control" name="middle_name" value="{{ (account_user.middle_name or '') | e }}"></label>
+						<label><span>{{ _("Last name") }}</span><input class="form-control" name="last_name" value="{{ (account_user.last_name or '') | e }}"></label>
+						<label><span>{{ _("Email address") }}</span><input class="form-control" value="{{ account_user.email | e }}" disabled><small>{{ _("Your sign-in email cannot be changed here.") }}</small></label>
+						<label><span>{{ _("Phone") }}</span><input class="form-control" name="phone" value="{{ (account_user.phone or profile.phone or '') | e }}" inputmode="tel"></label>
+						<label><span>{{ _("Mobile number") }}</span><input class="form-control" name="mobile_no" value="{{ (account_user.mobile_no or '') | e }}" inputmode="tel"></label>
+						<label><span>{{ _("Language") }}</span><select class="form-control" name="language"><option value="">{{ _("System default") }}</option>{% for language in languages %}<option value="{{ language.name | e }}" {% if language.name == account_user.language %}selected{% endif %}>{{ language.language_name }}</option>{% endfor %}</select></label>
+						<label><span>{{ _("Time zone") }}</span><select class="form-control" name="time_zone"><option value="">{{ _("System default") }}</option>{% for zone in time_zones %}<option value="{{ zone | e }}" {% if zone == account_user.time_zone %}selected{% endif %}>{{ zone }}</option>{% endfor %}</select></label>
+					</div>
+					<footer><a class="btn btn-default" href="/me">{{ _("Cancel") }}</a><button class="btn cm-account-primary" type="submit">{{ _("Save profile") }}</button></footer>
+				</form>
+			</section>
+
+			{% elif section == "security" %}
+			<section class="cm-account-panel cm-security-panel">
+				<header><div><h2>{{ _("Password and security") }}</h2><p>{{ _("Use a strong, unique password for your applicant account.") }}</p></div><span class="cm-account-section-icon">{{ icon("lock", "lg") }}</span></header>
+				<form data-password-form>
+					<label><span>{{ _("Current password") }}</span><input class="form-control" type="password" name="old_password" autocomplete="current-password" required></label>
+					<label><span>{{ _("New password") }}</span><input class="form-control" type="password" name="new_password" autocomplete="new-password" minlength="8" required><small>{{ _("Use at least 8 characters with a number or special character.") }}</small></label>
+					<label><span>{{ _("Confirm new password") }}</span><input class="form-control" type="password" name="confirm_password" autocomplete="new-password" minlength="8" required></label>
+					<label class="cm-checkbox-row"><input type="checkbox" name="logout_all_sessions" checked><span>{{ _("Sign out of other sessions after changing my password") }}</span></label>
+					<footer><a class="btn btn-default" href="/me">{{ _("Cancel") }}</a><button class="btn cm-account-primary" type="submit">{{ _("Update password") }}</button></footer>
+				</form>
+			</section>
+
+			{% elif section == "apps" %}
+			<section class="cm-account-panel">
+				<header><div><h2>{{ _("Connected apps") }}</h2><p>{{ _("Review applications that can access your account.") }}</p></div><span class="cm-account-section-icon">{{ icon("globe", "lg") }}</span></header>
+				{% if connected_apps %}<div class="cm-connected-app-list">{% for app in connected_apps %}<article><span>{{ icon("globe", "lg") }}</span><div><h3>{{ app.name }}</h3><p>{{ _("Connected {0}").format(frappe.utils.pretty_date(app.connected_at)) }}</p></div><button class="btn btn-default" data-revoke-app="{{ app.client | e }}" data-app-name="{{ app.name | e }}">{{ _("Revoke access") }}</button></article>{% endfor %}</div>
+				{% else %}<div class="cm-account-empty"><span>{{ icon("globe", "xl") }}</span><h3>{{ _("No connected apps") }}</h3><p>{{ _("You have not authorised any third-party applications.") }}</p></div>{% endif %}
+			</section>
+			{% endif %}
+		</main>
+	</div>
+	{{ portal_notifications() }}
+</div>
+{% endblock %}
