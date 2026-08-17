@@ -2,11 +2,24 @@ from pathlib import Path
 
 from frappe.tests import UnitTestCase
 
-
 APP_ROOT = Path(__file__).resolve().parents[1]
 
 
 class TestApplicantPortalUI(UnitTestCase):
+	def test_applications_page_uses_tables_instead_of_record_cards(self):
+		template = (APP_ROOT / "www" / "admissions.html").read_text()
+		self.assertIn('data-applications-table', template)
+		self.assertIn('class="table', template)
+		self.assertNotIn("cm-record-card", template)
+		self.assertNotIn("cm-programme-card", template)
+
+	def test_applicant_home_exposes_profile_details(self):
+		template = (APP_ROOT / "www" / "applicant.html").read_text()
+		self.assertIn('data-applicant-home', template)
+		self.assertIn("Applicant number", template)
+		self.assertIn("Contact email", template)
+		self.assertIn('href="/admissions"', template)
+
 	def test_draft_workspace_has_guided_step_rail_contract(self):
 		"""A regression must not turn the resumable workspace back into an inline form."""
 		template = (APP_ROOT / "www" / "admission.html").read_text()

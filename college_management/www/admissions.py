@@ -18,15 +18,8 @@ PROFILE_FIELDS = (
 
 
 def get_context(context):
-	if frappe.session.user == "Guest":
-		frappe.local.flags.redirect_location = "/login?redirect-to=/admissions"
-		raise frappe.Redirect
-	if "Applicant" not in frappe.get_roles():
-		frappe.throw(frappe._("An Applicant account is required."), frappe.PermissionError)
-	profile = frappe.db.get_value("Applicant Profile", {"user": frappe.session.user}, "name")
-	if not profile:
-		frappe.throw(frappe._("Your Applicant Profile is not available."), frappe.PermissionError)
-	context.title = "Admissions"
+	profile = _get_applicant_profile()
+	context.title = "Applications"
 	context.show_sidebar = True
 	context.sidebar_items = _applicant_sidebar()
 	context.profile = frappe.get_doc("Applicant Profile", profile)
@@ -41,15 +34,26 @@ def get_context(context):
 	return context
 
 
-def _applicant_sidebar(application=None):
-	links = [frappe._dict(title="Admissions", route="/admissions")]
-	if application:
-		links.append(
-			frappe._dict(title=f"Application {application.name}", route=f"/admissions/{application.name}")
-		)
+def _applicant_sidebar():
+	links = [
+		frappe._dict(title="Home", route="/applicant"),
+		frappe._dict(title="Applications", route="/admissions"),
+	]
 	if "Student" in frappe.get_roles():
 		links.append(frappe._dict(title="Student Academics", route="/student"))
 	return [frappe._dict(group_title="Applicant portal", group_items=links)]
+
+
+def _get_applicant_profile():
+	if frappe.session.user == "Guest":
+		frappe.local.flags.redirect_location = "/login?redirect-to=/applicant"
+		raise frappe.Redirect
+	if "Applicant" not in frappe.get_roles():
+		frappe.throw(frappe._("An Applicant account is required."), frappe.PermissionError)
+	profile = frappe.db.get_value("Applicant Profile", {"user": frappe.session.user}, "name")
+	if not profile:
+		frappe.throw(frappe._("Your Applicant Profile is not available."), frappe.PermissionError)
+	return profile
 
 
 def _application_summary(name):

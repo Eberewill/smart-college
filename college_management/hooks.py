@@ -90,7 +90,8 @@ after_install = "college_management.setup.install_roles"
 after_migrate = "college_management.setup.install_roles"
 
 standard_portal_menu_items = [
-	{"title": "Admissions", "route": "/admissions", "role": "Applicant"},
+	{"title": "Home", "route": "/applicant", "role": "Applicant"},
+	{"title": "Applications", "route": "/admissions", "role": "Applicant"},
 	{"title": "Student Academics", "route": "/student", "role": "Student"},
 ]
 

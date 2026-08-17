@@ -29,6 +29,7 @@ class TestAccessAndAudit(IntegrationTestCase):
 		self.assertEqual(frappe.db.get_value("Role", "Platform Super Admin", "two_factor_auth"), 1)
 		self.assertEqual(frappe.db.get_value("Role", "System Manager", "two_factor_auth"), 1)
 		self.assertEqual(frappe.db.get_value("Role", "Applicant", "desk_access"), 0)
+		self.assertEqual(frappe.db.get_value("Role", "Applicant", "home_page"), "applicant")
 		self.assertEqual(frappe.db.get_value("Role", "Student", "desk_access"), 0)
 
 	def test_foundation_changes_create_append_only_audit_events(self):

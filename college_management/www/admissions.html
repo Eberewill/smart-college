@@ -6,14 +6,8 @@
 <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between py-4 cm-dashboard-shell">
 	<div>
 		<div class="text-muted small text-uppercase font-weight-bold mb-2">{{ _("Applicant portal") }}</div>
-		<h1 class="h2 mt-0 mb-2">{{ _("Admissions") }}</h1>
-		<p class="text-muted mb-0">{{ _("Choose a programme or continue an existing application.") }}</p>
-	</div>
-	<div class="card mt-3 mt-md-0 cm-identity-card">
-		<div class="card-body py-3 px-4">
-			<div class="small text-muted">{{ _("Applicant number") }}</div>
-			<div class="font-weight-bold">{{ profile.applicant_number }}</div>
-		</div>
+		<h1 class="h2 mt-0 mb-2">{{ _("Applications") }}</h1>
+		<p class="text-muted mb-0">{{ _("Continue an application or start a new one.") }}</p>
 	</div>
 </div>
 {% endblock %}
@@ -25,21 +19,17 @@
 		<div><h2 class="h4 mt-0 mb-1" id="your-applications">{{ _("Your applications") }}</h2><p class="text-muted mb-0">{{ _("Each application has its own workspace and progress.") }}</p></div>
 	</div>
 	{% if applications %}
-	<div class="row">
-		{% for application in applications %}
-		<div class="col-12 col-lg-6 mb-3">
-			<article class="card h-100 cm-record-card">
-				<div class="card-body d-flex flex-column">
-					<div class="d-flex align-items-start justify-content-between mb-3">
-						<div><div class="small text-muted mb-1">{{ application.name }}</div><h3 class="h5 mt-0 mb-0">{{ application.programme }}</h3></div>
-						<span class="indicator-pill {{ 'green' if application.status == 'Submitted' else 'orange' }}">{{ application.status }}</span>
-					</div>
-					<p class="text-muted small mb-4">{% if application.submitted_at %}{{ _("Submitted") }} {{ frappe.utils.format_datetime(application.submitted_at, "medium") }}{% else %}{{ _("Last saved") }} {{ frappe.utils.format_datetime(application.modified, "medium") }}{% endif %}</p>
-					<a class="btn btn-primary mt-auto align-self-start" href="{{ application.url | e }}">{{ _("Open application") }}</a>
-				</div>
-			</article>
-		</div>
-		{% endfor %}
+	<div class="table-responsive border rounded" data-applications-table>
+		<table class="table table-hover mb-0">
+			<thead><tr><th>{{ _("Application") }}</th><th>{{ _("Programme") }}</th><th>{{ _("Status") }}</th><th>{{ _("Last activity") }}</th><th class="text-right">{{ _("Action") }}</th></tr></thead>
+			<tbody>{% for application in applications %}<tr>
+				<td class="font-weight-bold">{{ application.name }}</td>
+				<td>{{ application.programme }}</td>
+				<td><span class="indicator-pill {{ 'green' if application.status == 'Submitted' else 'orange' }}">{{ application.status }}</span></td>
+				<td>{% if application.submitted_at %}{{ frappe.utils.format_datetime(application.submitted_at, "medium") }}{% else %}{{ frappe.utils.format_datetime(application.modified, "medium") }}{% endif %}</td>
+				<td class="text-right"><a class="btn btn-default btn-sm" href="{{ application.url | e }}">{{ _("Open") }}</a></td>
+			</tr>{% endfor %}</tbody>
+		</table>
 	</div>
 	{% else %}<div class="alert alert-light mb-0">{{ _("You have not started an application yet.") }}</div>{% endif %}
 </section>
@@ -47,21 +37,17 @@
 <section class="mb-5 cm-dashboard-shell" aria-labelledby="available-programmes">
 	<div class="mb-3"><h2 class="h4 mt-0 mb-1" id="available-programmes">{{ _("Available programmes") }}</h2><p class="text-muted mb-0">{{ _("Programmes currently accepting applications.") }}</p></div>
 	{% if offerings %}
-	<div class="row">
-		{% for offering in offerings %}
-		<div class="col-12 col-md-6 col-xl-4 mb-3">
-			<article class="card h-100 cm-programme-card">
-				<div class="card-body d-flex flex-column">
-					<div class="small text-muted mb-2">{{ offering.programme }}{% if offering.campus %} · {{ offering.campus }}{% endif %}</div>
-					<h3 class="h5 mt-0 mb-3">{{ offering.programme_name }}</h3>
-					<div class="d-flex justify-content-between small border-top pt-3 mb-2"><span class="text-muted">{{ _("Application fee") }}</span><strong>{{ offering.currency }} {{ offering.fee }}</strong></div>
-					<div class="d-flex justify-content-between small mb-4"><span class="text-muted">{{ _("Closing date") }}</span><strong>{{ frappe.utils.format_datetime(offering.closing, "medium") }}</strong></div>
-					{% if offering.can_apply %}<button class="btn btn-primary mt-auto" data-action="create" data-offering="{{ offering.name | e }}">{{ _("Start application") }}</button>
-					{% else %}<button class="btn btn-default mt-auto" disabled>{{ _("Application already started") }}</button>{% endif %}
-				</div>
-			</article>
-		</div>
-		{% endfor %}
+	<div class="table-responsive border rounded">
+		<table class="table table-hover mb-0">
+			<thead><tr><th>{{ _("Programme") }}</th><th>{{ _("Campus") }}</th><th>{{ _("Application fee") }}</th><th>{{ _("Closing date") }}</th><th class="text-right">{{ _("Action") }}</th></tr></thead>
+			<tbody>{% for offering in offerings %}<tr>
+				<td><strong>{{ offering.programme_name }}</strong><div class="small text-muted">{{ offering.programme }}</div></td>
+				<td>{{ offering.campus or "—" }}</td>
+				<td>{{ offering.currency }} {{ offering.fee }}</td>
+				<td>{{ frappe.utils.format_datetime(offering.closing, "medium") }}</td>
+				<td class="text-right">{% if offering.can_apply %}<button class="btn btn-primary btn-sm" data-action="create" data-offering="{{ offering.name | e }}">{{ _("Start") }}</button>{% else %}<button class="btn btn-default btn-sm" disabled>{{ _("Started") }}</button>{% endif %}</td>
+			</tr>{% endfor %}</tbody>
+		</table>
 	</div>
 	{% else %}<div class="alert alert-light mb-0">{{ _("There are no programmes accepting applications right now.") }}</div>{% endif %}
 </section>

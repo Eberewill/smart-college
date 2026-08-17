@@ -11,7 +11,7 @@ ROLE_DEFINITIONS = {
 	"Lecturer": {"desk_access": 1},
 	"Auditor": {"desk_access": 1},
 	"Student": {"desk_access": 0},
-	"Applicant": {"desk_access": 0},
+	"Applicant": {"desk_access": 0, "home_page": "applicant"},
 }
 PRIVILEGED_MFA_ROLES = {"System Manager", "Platform Super Admin", "Institution Super Admin"}
 
@@ -24,6 +24,8 @@ def install_roles():
 				"Role", role_name, "two_factor_auth"
 			):
 				frappe.db.set_value("Role", role_name, "two_factor_auth", 1)
+			if values.get("home_page") and not frappe.db.get_value("Role", role_name, "home_page"):
+				frappe.db.set_value("Role", role_name, "home_page", values["home_page"])
 			continue
 
 		frappe.get_doc({"doctype": "Role", "role_name": role_name, **values}).insert(ignore_permissions=True)

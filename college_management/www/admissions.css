@@ -1,17 +1,16 @@
 .cm-dashboard-shell {
 	max-width: 68rem;
 }
-.cm-identity-card {
-	min-width: 12rem;
-}
 .cm-dashboard-shell h1,
 .cm-dashboard-shell h2,
-.cm-dashboard-shell h3,
-.cm-identity-card {
+.cm-dashboard-shell h3 {
 	overflow-wrap: anywhere;
 }
-@media (max-width: 575px) {
-	.cm-identity-card {
-		width: 100%;
-	}
+.cm-dashboard-shell th {
+	background: var(--subtle-fg);
+	font-weight: 500;
+	white-space: nowrap;
+}
+.cm-dashboard-shell td {
+	vertical-align: middle;
 }

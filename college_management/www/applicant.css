@@ -1,0 +1,17 @@
+.cm-applicant-shell {
+	max-width: 68rem;
+}
+.cm-applicant-shell th {
+	background: var(--subtle-fg);
+	font-weight: 500;
+	white-space: nowrap;
+}
+.cm-applicant-shell td {
+	overflow-wrap: anywhere;
+}
+@media (max-width: 767px) {
+	.cm-applicant-shell th,
+	.cm-applicant-shell td {
+		min-width: 9rem;
+	}
+}

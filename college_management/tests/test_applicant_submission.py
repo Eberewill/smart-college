@@ -29,6 +29,7 @@ from college_management.payments import (
 )
 from college_management.www.admission import get_context as get_application_context
 from college_management.www.admissions import get_context, save_applicant_profile
+from college_management.www.applicant import get_context as get_applicant_home_context
 
 
 class TestApplicantSubmission(IntegrationTestCase):
@@ -139,15 +140,23 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertEqual(context.applications[0].status, "Submitted")
 		self.assertTrue(context.applications[0].submitted_at)
 		self.assertEqual(context.applications[0].url, f"/admissions/{first_application}")
-		self.assertEqual(context.sidebar_items[0].group_items[0].route, "/admissions")
+		self.assertEqual(
+			[item.route for item in context.sidebar_items[0].group_items[:2]],
+			["/applicant", "/admissions"],
+		)
 		self.assertFalse(context.offerings[0].can_apply)
+		home_context = frappe._dict()
+		get_applicant_home_context(home_context)
+		self.assertEqual(home_context.profile.user, first_user.name)
+		self.assertEqual(home_context.application_count, 1)
+		self.assertEqual(home_context.draft_count, 0)
 		frappe.form_dict = frappe._dict(application=first_application)
 		application_context = frappe._dict()
 		get_application_context(application_context)
 		self.assertEqual(application_context.application.fields[0].value, "Applicant")
 		self.assertEqual(
-			application_context.sidebar_items[0].group_items[1].route,
-			f"/admissions/{first_application}",
+			[item.route for item in application_context.sidebar_items[0].group_items[:2]],
+			["/applicant", "/admissions"],
 		)
 		frappe.set_user(second_user.name)
 		with self.assertRaises(frappe.PermissionError):

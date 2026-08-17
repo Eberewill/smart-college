@@ -52,9 +52,11 @@ and review sequence as applicable.
 
 ## User interfaces
 
-Applicants use `/admissions` as their dashboard. Each application opens in its own owner-protected
-workspace at `/admissions/<application-id>`. The portal is available only to signed-in users with
-the Applicant role and resolves every record from the current user's Applicant Profile. It provides:
+Applicants land on `/applicant`, where they can review their profile details and application
+summary. The Applications navigation item opens `/admissions`, which lists current applications
+and available programmes in tables. Each application opens in its own owner-protected workspace at
+`/admissions/<application-id>`. The portal is available only to signed-in users with the Applicant
+role and resolves every record from the current user's Applicant Profile. It provides:
 
 - currently open, published programmes and their application deadlines and fees;
 - programme-configured application steps and dynamic fields, with a safe default sequence;
@@ -90,7 +92,7 @@ server-governed lifecycle actions described above; they do not bypass permission
 ## Operator smoke test
 
 1. Add at least one Review Stage to a Draft Admission Programme, then publish its cycle.
-2. Sign in as an Applicant, open `/admissions`, start or open the application's dedicated page,
+2. Sign in as an Applicant, open Applications from `/applicant`, start or open the application's dedicated page,
    verify autosave across steps, and submit the application.
 3. Open the submitted Admission Application in Desk and assign its first stage to a staff user with
    the configured role.
