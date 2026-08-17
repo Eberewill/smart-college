@@ -1,0 +1,13 @@
+{% macro icon(name, size="md") %}
+<svg class="icon icon-{{ size }}" aria-hidden="true"><use href="#icon-{{ name }}"></use></svg>
+{% endmacro %}
+
+{% macro detail(name, label, value, status=false, wide=false) %}
+<div class="cm-detail {{ 'cm-detail-wide' if wide else '' }}">
+	<span class="cm-detail-icon">{{ icon(name) }}</span>
+	<span class="cm-detail-copy">
+		<span class="cm-detail-label">{{ _(label) }}</span>
+		{% if status %}<span class="indicator-pill green">{{ value }}</span>{% else %}<strong>{{ value }}</strong>{% endif %}
+	</span>
+</div>
+{% endmacro %}

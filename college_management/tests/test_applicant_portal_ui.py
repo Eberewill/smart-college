@@ -15,10 +15,22 @@ class TestApplicantPortalUI(UnitTestCase):
 
 	def test_applicant_home_exposes_profile_details(self):
 		template = (APP_ROOT / "www" / "applicant.html").read_text()
-		self.assertIn('data-applicant-home', template)
+		self.assertIn('data-applicant-portal', template)
 		self.assertIn("Applicant number", template)
 		self.assertIn("Contact email", template)
+		self.assertIn("institution.logo", template)
 		self.assertIn('href="/admissions"', template)
+
+	def test_applicant_home_has_responsive_component_structure(self):
+		template = (APP_ROOT / "www" / "applicant.html").read_text()
+		styles = (APP_ROOT / "www" / "applicant.css").read_text()
+		components = (
+			APP_ROOT / "templates" / "includes" / "applicant_portal" / "components.html"
+		).read_text()
+		self.assertIn("cm-dashboard-grid", template)
+		self.assertIn("macro detail", components)
+		self.assertIn("@media (max-width: 991px)", styles)
+		self.assertIn("@media (max-width: 575px)", styles)
 
 	def test_draft_workspace_has_guided_step_rail_contract(self):
 		"""A regression must not turn the resumable workspace back into an inline form."""

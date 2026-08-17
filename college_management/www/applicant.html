@@ -1,40 +1,88 @@
 {% extends "templates/web.html" %}
+{% from "college_management/templates/includes/applicant_portal/components.html" import detail, icon %}
 
-{% block title %}{{ _("Applicant Home") }}{% endblock %}
+{% block title %}{{ _("Applicant Portal") }}{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-{% block header %}
-<div class="py-4 cm-applicant-shell" data-applicant-home>
-	<div class="text-muted small text-uppercase font-weight-bold mb-2">{{ _("Applicant portal") }}</div>
-	<h1 class="h2 mt-0 mb-2">{{ _("Welcome, {0}").format(profile.first_name) }}</h1>
-	<p class="text-muted mb-0">{{ _("Manage your applicant profile and admission applications.") }}</p>
-</div>
-{% endblock %}
+{% block content %}
+<div class="cm-portal" data-applicant-portal style="--cm-brand-primary: {{ brand_primary }}; --cm-brand-accent: {{ brand_accent }};">
+	<aside class="cm-portal-sidebar" aria-label="{{ _('Applicant portal navigation') }}">
+		<a class="cm-school-brand" href="/applicant" aria-label="{{ institution.institution_name or _('Applicant portal home') }}">
+			<img src="{{ institution.logo or '/assets/college_management/images/college.svg' }}" alt="{{ institution.institution_name or _('College') }}">
+		</a>
+		<div class="cm-sidebar-title">{{ _("Applicant portal") }}</div>
+		<nav class="cm-portal-nav">
+			<a class="active" href="/applicant">{{ icon("home") }}<span>{{ _("Home") }}</span></a>
+			<a href="/admissions">{{ icon("file-text") }}<span>{{ _("Applications") }}</span></a>
+			<a href="/me">{{ icon("user") }}<span>{{ _("My Account") }}</span></a>
+		</nav>
+	</aside>
 
-{% block page_content %}
-<div class="cm-applicant-shell mb-5">
-	<section class="mb-5" aria-labelledby="profile-details">
-		<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3">
-			<div><h2 class="h4 mt-0 mb-1" id="profile-details">{{ _("Your details") }}</h2><p class="text-muted mb-0">{{ _("Information linked to your applicant account.") }}</p></div>
-			<a class="btn btn-default mt-3 mt-md-0" href="/admissions">{{ _("View applications") }}</a>
-		</div>
-		<div class="table-responsive">
-			<table class="table table-bordered mb-0">
-				<tbody>
-					<tr><th scope="row">{{ _("Applicant number") }}</th><td>{{ profile.applicant_number }}</td><th scope="row">{{ _("Status") }}</th><td><span class="indicator-pill green">{{ profile.status }}</span></td></tr>
-					<tr><th scope="row">{{ _("Full name") }}</th><td>{{ full_name }}</td><th scope="row">{{ _("Contact email") }}</th><td>{{ profile.contact_email }}</td></tr>
-					<tr><th scope="row">{{ _("Phone") }}</th><td>{{ profile.phone or _("Not provided") }}</td><th scope="row">{{ _("Date of birth") }}</th><td>{{ frappe.utils.format_date(profile.date_of_birth) if profile.date_of_birth else _("Not provided") }}</td></tr>
-					<tr><th scope="row">{{ _("Nationality") }}</th><td>{{ profile.nationality or _("Not provided") }}</td><th scope="row">{{ _("State of origin") }}</th><td>{{ profile.state_of_origin or _("Not provided") }}</td></tr>
-					<tr><th scope="row">{{ _("Address") }}</th><td colspan="3">{{ profile.address or _("Not provided") }}</td></tr>
-				</tbody>
-			</table>
-		</div>
-	</section>
-	<section aria-labelledby="application-summary">
-		<h2 class="h4 mt-0 mb-3" id="application-summary">{{ _("Application summary") }}</h2>
-		<div class="row">
-			<div class="col-6 col-md-3 mb-3"><div class="border rounded p-3"><div class="small text-muted">{{ _("Total applications") }}</div><div class="h3 mb-0">{{ application_count }}</div></div></div>
-			<div class="col-6 col-md-3 mb-3"><div class="border rounded p-3"><div class="small text-muted">{{ _("Draft applications") }}</div><div class="h3 mb-0">{{ draft_count }}</div></div></div>
-		</div>
-	</section>
+	<div class="cm-portal-content">
+		<header class="cm-portal-topbar">
+			<strong>{{ _("Applicant Portal") }}</strong>
+			<a class="cm-account" href="/me">
+				<span class="cm-avatar">{{ initials }}</span>
+				<span>{{ full_name }}</span>
+				{{ icon("chevron-down", "sm") }}
+			</a>
+		</header>
+
+		<main class="cm-portal-main">
+			<section class="cm-welcome" aria-labelledby="welcome-heading">
+				<div class="cm-welcome-copy">
+					<span class="cm-wave" aria-hidden="true">👋</span>
+					<div>
+						<h1 id="welcome-heading">{{ _("Welcome, {0}").format(full_name) }}</h1>
+						<p>{{ _("Manage your applicant profile and admission applications.") }}</p>
+						<a class="btn cm-primary-button" href="/admissions">{{ _("View applications") }} {{ icon("arrow-right") }}</a>
+					</div>
+				</div>
+				<div class="cm-welcome-art" aria-hidden="true">
+					<span class="cm-art-orbit"></span>
+					<span class="cm-art-cap">{{ icon("graduation-cap", "xl") }}</span>
+					<span class="cm-art-document">{{ icon("file-text", "lg") }}</span>
+				</div>
+			</section>
+
+			<div class="cm-dashboard-grid">
+				<section class="cm-panel cm-details-panel" aria-labelledby="profile-details">
+					<h2 id="profile-details">{{ _("Your details") }}</h2>
+					<p>{{ _("Information linked to your applicant account.") }}</p>
+					<div class="cm-details-grid">
+						{{ detail("hash", "Applicant number", profile.applicant_number) }}
+						{{ detail("shield-check", "Status", profile.status, true) }}
+						{{ detail("user", "Full name", full_name) }}
+						{{ detail("mail", "Contact email", profile.contact_email) }}
+						{{ detail("phone", "Phone", profile.phone or _("Not provided")) }}
+						{{ detail("calendar", "Date of birth", frappe.utils.format_date(profile.date_of_birth) if profile.date_of_birth else _("Not provided")) }}
+						{{ detail("globe", "Nationality", profile.nationality or _("Not provided")) }}
+						{{ detail("map-pin", "State of origin", profile.state_of_origin or _("Not provided")) }}
+						{{ detail("home", "Address", profile.address or _("Not provided"), false, true) }}
+					</div>
+				</section>
+
+				<div class="cm-dashboard-side">
+					<section class="cm-panel" aria-labelledby="application-summary">
+						<h2 id="application-summary">{{ _("Application summary") }}</h2>
+						<div class="cm-summary-grid">
+							<div><span>{{ _("Total applications") }}</span><strong>{{ application_count }}</strong></div>
+							<div><span>{{ _("Draft applications") }}</span><strong>{{ draft_count }}</strong></div>
+						</div>
+					</section>
+
+					<section class="cm-panel cm-profile-prompt" aria-labelledby="profile-prompt">
+						<span class="cm-prompt-icon">{{ icon("user", "lg") }}</span>
+						<div>
+							<h2 id="profile-prompt">{{ _("Complete your profile") if missing_profile_fields else _("Profile complete") }}</h2>
+							<p>{% if missing_profile_fields %}{{ _("Add missing personal details before submitting your application.") }}{% else %}{{ _("Your personal details are ready for your applications.") }}{% endif %}</p>
+							<a class="btn cm-primary-button" href="{{ profile_action_url }}">{{ _("Update profile") if missing_profile_fields else _("View applications") }}</a>
+						</div>
+					</section>
+				</div>
+			</div>
+		</main>
+	</div>
 </div>
 {% endblock %}
