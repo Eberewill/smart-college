@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="College">
+  <rect width="64" height="64" rx="18" fill="#878c96"/>
+  <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M9 24 32 13l23 11-23 11L9 24Zm9 7v12c8 6 20 6 28 0V31M55 25v15"/>
+</svg>

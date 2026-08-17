@@ -1,0 +1,26 @@
+{
+ "app": "college_management",
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon_type": "App",
+ "idx": 10,
+ "label": "College",
+ "link": "/desk/college-management",
+ "link_type": "External",
+ "logo_url": "/assets/college_management/images/college.svg",
+ "name": "College",
+ "parent_icon": "",
+ "restrict_removal": 0,
+ "roles": [
+  {"role": "System Manager"},
+  {"role": "Institution Super Admin"},
+  {"role": "Admissions Officer"},
+  {"role": "Registry Officer"},
+  {"role": "Finance Officer"},
+  {"role": "Examination Officer"},
+  {"role": "Academic Approver"},
+  {"role": "Lecturer"},
+  {"role": "Auditor"}
+ ],
+ "standard": 1
+}
