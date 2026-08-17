@@ -1,4 +1,7 @@
 .cm-applicant-portal {
+	display: block;
+	height: auto;
+	min-height: 100vh;
 	margin: 0;
 	background: #f7f9fb;
 	color: #0d2148;
@@ -17,13 +20,15 @@
 	stroke: currentColor;
 }
 .cm-portal-sidebar {
-	position: sticky;
-	top: 0;
-	height: 100vh;
+	min-height: 100vh;
 	padding: 1.5rem .65rem;
 	background: var(--cm-brand-primary);
 	background: linear-gradient(160deg, var(--cm-brand-primary), color-mix(in srgb, var(--cm-brand-primary), #001a3d 35%));
 	color: #fff;
+}
+.cm-sidebar-inner {
+	position: sticky;
+	top: 1.5rem;
 }
 .cm-school-brand {
 	display: flex;
@@ -46,21 +51,27 @@
 	gap: .4rem;
 }
 .cm-portal-nav a {
-	display: flex;
+	display: grid;
+	grid-template-columns: 1.5rem minmax(0, 1fr);
 	align-items: center;
-	gap: .8rem;
+	gap: .75rem;
 	min-height: 3rem;
-	padding: .75rem 1.2rem;
-	border-left: 4px solid transparent;
+	padding: .75rem 1rem;
+	border: 0;
 	border-radius: .5rem;
 	color: #fff;
+	text-align: left;
 	text-decoration: none;
+}
+.cm-portal-nav .icon {
+	width: 1.25rem;
+	height: 1.25rem;
+	justify-self: center;
 }
 .cm-portal-nav a:hover,
 .cm-portal-nav a:focus-visible,
 .cm-portal-nav a.active {
 	background: rgba(255, 255, 255, .13);
-	border-left-color: #13d6ca;
 }
 .cm-portal-nav a:last-child {
 	margin-top: 1rem;
@@ -97,9 +108,8 @@
 	color: #fff;
 }
 .cm-portal-main {
-	max-width: 92rem;
-	margin: 0 auto;
-	padding: 2rem clamp(1.25rem, 3vw, 3rem) 3rem;
+	width: 100%;
+	padding: 1.5rem;
 }
 .cm-welcome,
 .cm-panel {
@@ -288,19 +298,20 @@
 @media (max-width: 991px) {
 	.cm-portal { grid-template-columns: 1fr; }
 	.cm-portal-sidebar {
+		min-height: auto;
+		padding: .75rem 1rem;
+	}
+	.cm-sidebar-inner {
 		position: static;
-		height: auto;
 		display: flex;
 		align-items: center;
 		gap: 1rem;
-		padding: .75rem 1rem;
 	}
 	.cm-school-brand { margin: 0; }
 	.cm-school-brand img { width: 3rem; height: 3rem; border-radius: .65rem; }
 	.cm-sidebar-title { display: none; }
 	.cm-portal-nav { display: flex; margin-left: auto; }
-	.cm-portal-nav a { min-height: 2.75rem; padding: .6rem .8rem; border-left: 0; border-bottom: 3px solid transparent; }
-	.cm-portal-nav a.active { border-bottom-color: #13d6ca; }
+	.cm-portal-nav a { min-height: 2.75rem; padding: .6rem .8rem; }
 	.cm-portal-nav a:last-child { margin: 0; }
 	.cm-dashboard-grid { grid-template-columns: 1fr; }
 }
@@ -321,7 +332,7 @@
 }
 
 @media (max-width: 575px) {
-	.cm-portal-sidebar { align-items: flex-start; }
+	.cm-sidebar-inner { align-items: flex-start; }
 	.cm-portal-nav { width: 100%; justify-content: flex-end; }
 	.cm-portal-nav a { gap: .4rem; padding: .55rem .65rem; font-size: .82rem; }
 	.cm-portal-nav a:last-child { display: none; }

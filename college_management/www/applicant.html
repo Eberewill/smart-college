@@ -8,15 +8,17 @@
 {% block content %}
 <div class="cm-portal" data-applicant-portal style="--cm-brand-primary: {{ brand_primary }}; --cm-brand-accent: {{ brand_accent }};">
 	<aside class="cm-portal-sidebar" aria-label="{{ _('Applicant portal navigation') }}">
-		<a class="cm-school-brand" href="/applicant" aria-label="{{ institution.institution_name or _('Applicant portal home') }}">
-			<img src="{{ institution.logo or '/assets/college_management/images/college.svg' }}" alt="{{ institution.institution_name or _('College') }}">
-		</a>
-		<div class="cm-sidebar-title">{{ _("Applicant portal") }}</div>
-		<nav class="cm-portal-nav">
-			<a class="active" href="/applicant">{{ icon("home") }}<span>{{ _("Home") }}</span></a>
-			<a href="/admissions">{{ icon("file-text") }}<span>{{ _("Applications") }}</span></a>
-			<a href="/me">{{ icon("user") }}<span>{{ _("My Account") }}</span></a>
-		</nav>
+		<div class="cm-sidebar-inner">
+			<a class="cm-school-brand" href="/applicant" aria-label="{{ institution.institution_name or _('Applicant portal home') }}">
+				<img src="{{ institution.logo or '/assets/college_management/images/college.svg' }}" alt="{{ institution.institution_name or _('College') }}">
+			</a>
+			<div class="cm-sidebar-title">{{ _("Applicant portal") }}</div>
+			<nav class="cm-portal-nav">
+				<a class="active" href="/applicant">{{ icon("home") }}<span>{{ _("Home") }}</span></a>
+				<a href="/admissions">{{ icon("file-text") }}<span>{{ _("Applications") }}</span></a>
+				<a href="/me">{{ icon("user") }}<span>{{ _("My Account") }}</span></a>
+			</nav>
+		</div>
 	</aside>
 
 	<div class="cm-portal-content">

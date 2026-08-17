@@ -28,7 +28,11 @@ class TestApplicantPortalUI(UnitTestCase):
 			APP_ROOT / "templates" / "includes" / "applicant_portal" / "components.html"
 		).read_text()
 		self.assertIn("cm-dashboard-grid", template)
+		self.assertIn("cm-sidebar-inner", template)
 		self.assertIn("macro detail", components)
+		self.assertIn("grid-template-columns: 1.5rem minmax(0, 1fr)", styles)
+		self.assertNotIn("border-left-color", styles)
+		self.assertNotIn("border-bottom-color", styles)
 		self.assertIn("@media (max-width: 991px)", styles)
 		self.assertIn("@media (max-width: 575px)", styles)
 
