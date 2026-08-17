@@ -71,16 +71,6 @@
 						</section>
 						{% endfor %}
 					</div>
-
-					<aside class="cm-application-summary">
-						<h2>{{ _("Application summary") }}</h2>
-						<dl>
-							<div><dt>{{ _("Application type") }}</dt><dd>{{ application.application_type or application.programme }}</dd></div>
-							<div><dt>{{ _("Academic session") }}</dt><dd>{{ application.academic_session }}</dd></div>
-							<div><dt>{{ _("Current section") }}</dt><dd data-current-section>{{ application.steps[0].title }}</dd></div>
-						</dl>
-						<div class="cm-summary-note">{{ icon("info", "sm") }}<span>{{ _("Your progress is saved automatically.") }}</span></div>
-					</aside>
 				</div>
 			</form>
 			{% else %}
