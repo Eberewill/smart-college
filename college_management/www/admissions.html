@@ -27,7 +27,7 @@
 			<section class="cm-decision-list" aria-label="{{ _('Your admission decisions') }}">
 				{% for decision in decisions %}
 				<article class="cm-decision-card cm-decision-{{ 'offer' if decision.outcome == 'Admitted' else 'unsuccessful' }}">
-					<span class="cm-decision-icon">{{ icon("check-circle" if decision.outcome == "Admitted" else "x-circle", "lg") }}</span>
+					<span class="cm-decision-icon">{{ icon("check" if decision.outcome == "Admitted" else "x", "lg") }}</span>
 					<div class="cm-decision-content">
 						<header>
 							<div>
@@ -61,7 +61,7 @@
 			</section>
 			{% else %}
 			<section class="cm-no-decisions">
-				<span>{{ icon("check-circle", "xl") }}</span>
+				<span>{{ icon("check", "xl") }}</span>
 				<h2>{{ _("No admission decisions yet") }}</h2>
 				<p>{{ _("Your admission outcomes will appear here after your applications have been reviewed.") }}</p>
 				<a class="btn cm-decision-primary" href="/applications">{{ _("View applications") }}</a>
