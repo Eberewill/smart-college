@@ -231,6 +231,10 @@ function show_step(form, index) {
 	if (progress) progress.textContent = __("Step {0} of {1}", [index + 1, steps.length]);
 	const progressBar = form.querySelector("[data-step-progress-bar]");
 	if (progressBar) progressBar.style.width = `${((index + 1) / steps.length) * 100}%`;
+	const progressPercent = form.querySelector("[data-progress-percent]");
+	if (progressPercent) progressPercent.textContent = `${Math.round(((index + 1) / steps.length) * 100)}% ${__("complete")}`;
+	const currentSection = form.querySelector("[data-current-section]");
+	if (currentSection) currentSection.textContent = steps[index].querySelector("h2")?.textContent.trim() || "";
 	update_review(form);
 	steps[index].querySelector("h2")?.focus({ preventScroll: true });
 }

@@ -4,11 +4,11 @@
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: 1.5rem;
-	margin-bottom: 2rem;
+	margin-bottom: 1.5rem;
 }
 .cm-applications-heading h1 {
 	margin: 0 0 .4rem;
-	font-size: clamp(1.8rem, 3vw, 2.5rem);
+	font-size: clamp(1.6rem, 2.2vw, 2rem);
 	color: var(--cm-brand-primary);
 }
 .cm-applications-heading p,
@@ -28,7 +28,7 @@
 .cm-application-tools {
 	display: flex;
 	gap: 1rem;
-	margin-bottom: 1.5rem;
+	margin-bottom: 1rem;
 }
 .cm-search-control,
 .cm-status-control {
@@ -57,7 +57,7 @@
 	color: #0d2148;
 	outline: 0;
 }
-.cm-application-count { margin-bottom: 1.25rem; }
+.cm-application-count { margin-bottom: 1rem; }
 .cm-application-list { display: grid; gap: 1rem; }
 .cm-application-card,
 .cm-empty-applications {

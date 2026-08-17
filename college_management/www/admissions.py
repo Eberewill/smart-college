@@ -77,18 +77,14 @@ def _get_applicant_profile():
 
 def _application_summary(name):
 	application = frappe.get_doc("Admission Application", name)
-	programme = frappe.db.get_value(
-		"Programme", application.programme, ["programme_name", "award_title"], as_dict=True
-	)
-	academic_session = frappe.db.get_value("Admission Cycle", application.admission_cycle, "academic_session")
 	card = _application_card(name)
 	return frappe._dict(
 		name=application.name,
 		status=application.status,
 		admission_programme=application.admission_programme,
-		programme=programme.programme_name,
-		application_type=programme.award_title,
-		academic_session=frappe.db.get_value("Academic Session", academic_session, "session_name"),
+		programme=card.programme,
+		application_type=card.application_type,
+		academic_session=card.academic_session,
 		modified=application.modified,
 		submitted_at=application.submitted_at,
 		progress=_application_progress(card),
@@ -121,6 +117,10 @@ def _application_progress(card):
 def _application_card(name):
 	application = frappe.get_doc("Admission Application", name)
 	offering = frappe.get_doc("Admission Programme", application.admission_programme)
+	programme = frappe.db.get_value(
+		"Programme", application.programme, ["programme_name", "award_title"], as_dict=True
+	)
+	academic_session = frappe.db.get_value("Admission Cycle", application.admission_cycle, "academic_session")
 	responses = {row.field_key: row for row in application.responses}
 	invoice = _linked_doc("Application Invoice", "admission_application", application.name)
 	transaction = None
@@ -157,7 +157,9 @@ def _application_card(name):
 		status=application.status,
 		submitted_at=application.submitted_at,
 		admission_programme=application.admission_programme,
-		programme=frappe.db.get_value("Programme", application.programme, "programme_name"),
+		programme=programme.programme_name,
+		application_type=programme.award_title,
+		academic_session=frappe.db.get_value("Academic Session", academic_session, "session_name"),
 		programme_code=application.programme,
 		application_fee=offering.application_fee,
 		currency=offering.currency,

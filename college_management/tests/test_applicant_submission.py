@@ -155,10 +155,8 @@ class TestApplicantSubmission(IntegrationTestCase):
 		application_context = frappe._dict()
 		get_application_context(application_context)
 		self.assertEqual(application_context.application.fields[0].value, "Applicant")
-		self.assertEqual(
-			[item.route for item in application_context.sidebar_items[0].group_items[:2]],
-			["/applicant", "/admissions"],
-		)
+		self.assertFalse(application_context.show_sidebar)
+		self.assertEqual(application_context.full_name, "Test Applicant")
 		frappe.set_user(second_user.name)
 		with self.assertRaises(frappe.PermissionError):
 			get_application_context(frappe._dict())

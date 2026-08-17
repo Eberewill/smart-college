@@ -57,6 +57,9 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn('aria-current="{{ \'step\' if loop.first else \'false\' }}"', template)
 		self.assertIn('data-save-status', template)
 		self.assertIn('data-action="save-exit"', template)
+		self.assertIn('cm-application-summary', template)
+		self.assertIn('portal_sidebar', template)
+		self.assertIn('data-current-section', template)
 
 	def test_workspace_styles_support_desktop_rail_and_mobile_progress_strip(self):
 		"""A regression must not hide navigation or make it unusable on small screens."""
@@ -65,6 +68,7 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn('.cm-step-navigation [data-step-state="complete"]', styles)
 		self.assertIn('@media (max-width: 991px)', styles)
 		self.assertIn('overflow-x: auto', styles)
+		self.assertIn('grid-template-columns: 15rem minmax(0, 1fr) 17rem', styles)
 
 	def test_completed_step_marker_receives_the_same_state_as_its_label(self):
 		"""Changing a step must expose its completion state to the marker selector."""
