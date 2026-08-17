@@ -115,7 +115,9 @@ class AdmissionApplication(Document):
 		if previous and previous.applicant_profile != self.applicant_profile:
 			frappe.throw(frappe._("Applicant Profile cannot be changed after creation."))
 		if previous and previous.admission_programme != self.admission_programme:
-			frappe.throw(frappe._("Admission Programme cannot be changed after creation."))
+			if frappe.db.exists("Application Invoice", {"admission_application": self.name}):
+				frappe.throw(frappe._("The programme cannot be changed after an invoice is created."))
+			self.set("responses", [])
 		if self.owner and self.owner != profile.user:
 			frappe.throw(frappe._("Application ownership must match its Applicant Profile."))
 
@@ -278,6 +280,21 @@ def create_application(admission_programme):
 		}
 	).insert()
 	return {"application": doc.name, "status": doc.status}
+
+
+@frappe.whitelist(methods=["POST"])
+def change_application_programme(application, admission_programme):
+	doc = frappe.get_doc("Admission Application", application)
+	doc.check_permission("write")
+	if doc.status != "Draft":
+		frappe.throw(frappe._("Only a Draft application can change programme."))
+	doc.admission_programme = admission_programme
+	doc.save()
+	return {
+		"application": doc.name,
+		"admission_programme": doc.admission_programme,
+		"programme": doc.programme,
+	}
 
 
 @frappe.whitelist(methods=["POST"])

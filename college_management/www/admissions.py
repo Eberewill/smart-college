@@ -1,4 +1,5 @@
 import frappe
+from frappe.utils import get_datetime, now_datetime
 
 no_cache = 1
 
@@ -178,6 +179,7 @@ def _application_card(name):
 		application_type=programme.award_title,
 		academic_session=programme_selection.academic_session,
 		programme_selection=programme_selection,
+		programme_options=_programme_options(application.admission_programme),
 		programme_code=application.programme,
 		application_fee=offering.application_fee,
 		currency=offering.currency,
@@ -191,6 +193,50 @@ def _application_card(name):
 		letter=letter,
 		student=student,
 	)
+
+
+def _programme_options(current_offering):
+	now = now_datetime()
+	options = []
+	for name in frappe.get_all(
+		"Admission Programme",
+		filters={"is_enabled": 1},
+		pluck="name",
+		order_by="creation desc",
+	):
+		offering = frappe.get_doc("Admission Programme", name)
+		cycle = frappe.db.get_value(
+			"Admission Cycle",
+			offering.admission_cycle,
+			["status", "academic_session", "applications_open_from", "applications_close_at"],
+			as_dict=True,
+		)
+		opening = get_datetime(offering.applications_open_from or cycle.applications_open_from)
+		closing = get_datetime(offering.applications_close_at or cycle.applications_close_at)
+		if name != current_offering and (
+			cycle.status != "Published" or not opening <= now <= closing
+		):
+			continue
+		programme = frappe.db.get_value(
+			"Programme", offering.programme, ["programme_name", "award_title"], as_dict=True
+		)
+		campus = (
+			frappe.db.get_value("Campus", offering.campus, "campus_name")
+			if offering.campus
+			else frappe._("No campus specified")
+		)
+		options.append(
+			frappe._dict(
+				value=offering.name,
+				label=frappe._("{0} — {1} — {2}").format(
+					programme.programme_name,
+					campus,
+					frappe.db.get_value("Academic Session", cycle.academic_session, "session_name"),
+				),
+				application_type=programme.award_title,
+			)
+		)
+	return options
 
 
 def _application_steps(offering, fields):

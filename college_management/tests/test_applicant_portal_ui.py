@@ -60,6 +60,7 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn('cm-application-overview', template)
 		self.assertIn('step.type == "Programme Selection"', template)
 		self.assertIn('cm-programme-grid', template)
+		self.assertIn('data-programme-selection', template)
 		self.assertNotIn('cm-application-summary', template)
 		self.assertIn('portal_sidebar', template)
 

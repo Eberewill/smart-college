@@ -17,6 +17,7 @@ from college_management.admissions import (
 	respond_to_admission,
 )
 from college_management.college_management_system.doctype.admission_application.admission_application import (
+	change_application_programme,
 	create_application,
 	save_application_responses,
 	submit_application,
@@ -111,6 +112,28 @@ class TestApplicantSubmission(IntegrationTestCase):
 			self.assertFalse(application.has_permission("read"))
 		finally:
 			frappe.set_user("Administrator")
+
+	def test_applicant_can_change_programme_before_submission(self):
+		first_offering = self._published_offering(
+			application_fields=[self._field("old_answer", "Old Answer", "Data")]
+		)
+		self.suffix = frappe.generate_hash(length=6).upper()
+		second_offering = self._published_offering(
+			application_fields=[self._field("new_answer", "New Answer", "Data")]
+		)
+		user, _ = self._applicant()
+		frappe.set_user(user.name)
+		application = create_application(first_offering.name)["application"]
+		save_application_responses(
+			application, [{"field_key": "old_answer", "response_value": "Discard me"}]
+		)
+		result = change_application_programme(application, second_offering.name)
+		doc = frappe.get_doc("Admission Application", application)
+		self.assertEqual(result["admission_programme"], second_offering.name)
+		self.assertEqual(doc.admission_programme, second_offering.name)
+		self.assertEqual(doc.programme, second_offering.programme)
+		self.assertFalse(doc.responses)
+		frappe.set_user("Administrator")
 
 	def test_portal_context_and_response_action_are_owner_scoped(self):
 		offering = self._published_offering(

@@ -118,6 +118,8 @@
 .cm-wizard-step .form-group { margin-bottom: 1rem; }
 .cm-wizard-step .form-control { min-height: 2.75rem; border-color: var(--cm-border); border-radius: .4rem; }
 .cm-wizard-step textarea.form-control { min-height: 5rem; }
+.cm-programme-selector { margin-bottom: 1.25rem !important; }
+.cm-programme-selector select { background-color: #fff; }
 .cm-programme-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));

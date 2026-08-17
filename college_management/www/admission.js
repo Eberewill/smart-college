@@ -10,6 +10,10 @@ document.addEventListener("input", (event) => {
 });
 document.addEventListener("change", (event) => {
 	const form = event.target.closest("[data-application-form]");
+	if (form && event.target.matches("[data-programme-selection]")) {
+		change_programme(event.target);
+		return;
+	}
 	if (form && !event.target.matches("[data-control-value]")) {
 		schedule_save(form, event.target.type === "file" ? 0 : 800);
 	}
@@ -154,6 +158,30 @@ function persist_application(form) {
 	const save = (saveQueues.get(form) || Promise.resolve()).catch(() => {}).then(() => save_application_now(form));
 	saveQueues.set(form, save);
 	return save;
+}
+
+async function change_programme(select) {
+	const current = select.dataset.current;
+	if (!select.value || select.value === current) return;
+	if (!window.confirm(__("Changing programme will clear programme-specific answers. Continue?"))) {
+		select.value = current;
+		return;
+	}
+	const form = select.closest("[data-application-form]");
+	select.disabled = true;
+	set_save_status(form, __("Saving…"));
+	try {
+		await call(
+			"college_management.college_management_system.doctype.admission_application.admission_application.change_application_programme",
+			{ application: form.dataset.applicationForm, admission_programme: select.value }
+		);
+		window.location.reload();
+	} catch (error) {
+		select.value = current;
+		select.disabled = false;
+		set_save_status(form, __("Changes not saved"), true);
+		show_portal_error(error.message || __("The programme could not be changed."));
+	}
 }
 
 async function save_application_now(form) {
