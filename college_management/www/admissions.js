@@ -1,26 +1,31 @@
 frappe.ready(() => {
-	const search = document.querySelector("[data-application-search]");
-	const status = document.querySelector("[data-application-status]");
-	const cards = [...document.querySelectorAll("[data-application-card]")];
-	const count = document.querySelector("[data-application-count]");
-	const empty = document.querySelector("[data-filter-empty]");
-	if (!search || !status || !count || !empty) return;
-
-	const filterApplications = () => {
-		const query = search.value.trim().toLowerCase();
-		const selectedStatus = status.value;
-		let visible = 0;
-		cards.forEach((card) => {
-			const matches =
-				(!query || card.dataset.search.includes(query)) &&
-				(!selectedStatus || card.dataset.status === selectedStatus);
-			card.hidden = !matches;
-			visible += matches;
+	document.addEventListener("click", async (event) => {
+		const button = event.target.closest("[data-admission-response]");
+		if (!button || button.disabled) return;
+		const response = button.dataset.admissionResponse;
+		const confirmed = await window.cmPortalNotify.confirm({
+			state: response === "Accepted" ? "success" : "warning",
+			title: response === "Accepted" ? __("Accept admission offer?") : __("Decline admission offer?"),
+			message: __("Confirm that you want to {0} this offer.", [response.toLowerCase()]),
+			confirmLabel: response === "Accepted" ? __("Accept offer") : __("Decline offer"),
 		});
-		count.textContent = `${visible} ${visible === 1 ? __("application") : __("applications")}`;
-		empty.hidden = visible !== 0;
-	};
-
-	search.addEventListener("input", filterApplications);
-	status.addEventListener("change", filterApplications);
+		if (!confirmed) return;
+		button.disabled = true;
+		try {
+			await frappe.call({
+				method: "college_management.admissions.respond_to_admission",
+				args: { letter: button.dataset.letter, response },
+				type: "POST",
+				freeze: true,
+			});
+			window.location.reload();
+		} catch (error) {
+			button.disabled = false;
+			window.cmPortalNotify.show({
+				state: "error",
+				title: __("Response unsuccessful"),
+				message: error.message || __("Your admission response could not be saved."),
+			});
+		}
+	});
 });

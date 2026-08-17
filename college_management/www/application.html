@@ -15,7 +15,7 @@
 			{% if application.status == "Draft" %}
 			<form data-application-form="{{ application.name | e }}" data-portal-application>
 				<section class="cm-application-overview">
-					<a class="cm-back-link" href="/admissions">{{ icon("arrow-left", "sm") }} {{ _("Back to applications") }}</a>
+					<a class="cm-back-link" href="/applications">{{ icon("arrow-left", "sm") }} {{ _("Back to applications") }}</a>
 					<header class="cm-application-heading">
 						<h1>{{ application.application_type or application.programme }} {{ _("admission application") }}</h1>
 						<div class="cm-application-meta">
@@ -88,14 +88,13 @@
 				</div>
 			</form>
 			{% else %}
-			<a class="cm-back-link" href="/admissions">{{ icon("arrow-left", "sm") }} {{ _("Back to applications") }}</a>
+			<a class="cm-back-link" href="/applications">{{ icon("arrow-left", "sm") }} {{ _("Back to applications") }}</a>
 			<header class="cm-application-heading"><div><h1>{{ application.programme }} {{ _("application") }}</h1><div class="cm-application-identity"><span>{{ application.name }}</span><span class="indicator-pill green">{{ application.status }}</span></div></div></header>
 			<div class="row mt-4" data-submitted-workspace>
 				<div class="col-12 col-lg-8"><div class="card mb-3"><div class="card-body p-3 p-md-4"><h2 class="h4 mt-0">{{ _("Submitted application") }}</h2>{% if application.submitted_at %}<p class="text-muted">{{ _("Submitted") }} {{ frappe.utils.format_datetime(application.submitted_at, "medium") }}</p>{% endif %}<dl class="cm-review-list">{% for field in application.fields %}<div><dt>{{ field.label }}</dt><dd>{% if field.type == "Attachment" and field.attachment %}<a href="{{ field.attachment | e }}" target="_blank" rel="noopener">{{ _("View uploaded document") }}</a>{% elif field.type == "Check" %}{{ _("Yes") if field.value == "1" else _("No") }}{% else %}{{ field.value or _("Not provided") }}{% endif %}</dd></div>{% endfor %}</dl></div></div></div>
 				<div class="col-12 col-lg-4">
 					<div class="card mb-3"><div class="card-body"><h2 class="h5 mt-0">{{ _("Application fee") }}</h2>{% if not application.application_fee %}<p class="text-muted mb-0">{{ _("No application fee is required.") }}</p>{% elif application.invoice and application.invoice.status == "Paid" %}<div class="alert alert-success mb-0">{{ _("Payment verified") }}</div>{% elif not application.invoice %}<button class="btn cm-primary-action" data-action="invoice" data-application="{{ application.name | e }}">{{ _("Create invoice") }}</button>{% else %}<p>{{ application.invoice.currency }} {{ application.invoice.amount }} · {{ application.invoice.status }}</p><button class="btn cm-primary-action" data-action="pay" data-invoice="{{ application.invoice.name | e }}">{{ _("Pay securely") }}</button>{% endif %}</div></div>
-					<div class="card mb-3"><div class="card-body"><h2 class="h5 mt-0">{{ _("Admission decision") }}</h2>{% if application.decision %}<span class="indicator-pill {{ 'green' if application.decision.outcome == 'Admitted' else 'red' }}">{{ application.decision.outcome }}</span><p class="mt-3 mb-0">{{ application.decision.decision_reason }}</p>{% else %}<p class="text-muted mb-0">{{ _("Awaiting final decision.") }}</p>{% endif %}</div></div>
-					{% if application.letter %}<div class="card mb-3"><div class="card-body"><h2 class="h5 mt-0">{{ _("Admission letter") }}</h2><p>{{ application.letter.letter_number }} · {{ application.letter.acceptance_status }}</p><a class="btn btn-default mb-2" target="_blank" rel="noopener" href="/printview?doctype=Admission%20Letter&name={{ application.letter.name | e }}">{{ _("View letter") }}</a>{% if application.letter.acceptance_status == "Awaiting Response" %}<div><button class="btn cm-primary-action mr-2" data-action="respond" data-letter="{{ application.letter.name | e }}" data-response="Accepted">{{ _("Accept offer") }}</button><button class="btn btn-default" data-action="respond" data-letter="{{ application.letter.name | e }}" data-response="Declined">{{ _("Decline") }}</button></div>{% endif %}</div></div>{% endif %}
+					<div class="card mb-3"><div class="card-body"><h2 class="h5 mt-0">{{ _("Admission status") }}</h2>{% if application.decision %}<p>{{ _("A decision is available for this application.") }}</p><a class="btn cm-primary-action" href="/admissions">{{ _("View admission decision") }}</a>{% else %}<p class="text-muted mb-0">{{ _("Awaiting final decision.") }}</p>{% endif %}</div></div>
 					{% if application.student %}<div class="alert alert-success"><strong>{{ _("Student onboarding complete") }}</strong><br>{{ _("Student number") }}: {{ application.student.student_number }}</div>{% endif %}
 				</div>
 			</div>

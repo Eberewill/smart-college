@@ -28,9 +28,10 @@ from college_management.payments import (
 	paystack_webhook,
 	verify_payment,
 )
-from college_management.www.admission import get_context as get_application_context
-from college_management.www.admissions import get_context, save_applicant_profile
+from college_management.www.admissions import get_context as get_admissions_context
 from college_management.www.applicant import get_context as get_applicant_home_context
+from college_management.www.application import get_context as get_application_context
+from college_management.www.applications import get_context, save_applicant_profile
 
 
 class TestApplicantSubmission(IntegrationTestCase):
@@ -163,7 +164,7 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertEqual(context.applications[0].status, "Submitted")
 		self.assertEqual(context.applications[0].progress, 100)
 		self.assertTrue(context.applications[0].submitted_at)
-		self.assertEqual(context.applications[0].url, f"/admissions/{first_application}")
+		self.assertEqual(context.applications[0].url, f"/applications/{first_application}")
 		self.assertFalse(context.show_sidebar)
 		self.assertEqual(context.full_name, "Test Applicant")
 		home_context = frappe._dict()
@@ -173,7 +174,7 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertEqual(home_context.application_count, 1)
 		self.assertEqual(home_context.draft_count, 0)
 		self.assertIn("date_of_birth", home_context.missing_profile_fields)
-		self.assertEqual(home_context.profile_action_url, "/admissions")
+		self.assertEqual(home_context.profile_action_url, "/applications")
 		frappe.form_dict = frappe._dict(application=first_application)
 		application_context = frappe._dict()
 		get_application_context(application_context)
@@ -232,7 +233,7 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertEqual(card.steps[3].fields[0].key, "result")
 		self.assertIn(card.admission_programme, [option.value for option in card.programme_options])
 		self.assertTrue(card.require_payment)
-		self.assertEqual(context.application_url, f"/admissions/{application}")
+		self.assertEqual(context.application_url, f"/applications/{application}")
 		self.assertEqual(
 			{field.key for field in card.profile_fields},
 			{
@@ -525,6 +526,12 @@ class TestApplicantSubmission(IntegrationTestCase):
 		self.assertTrue(applicant_decision.has_permission("read"))
 		applicant_decision.apply_fieldlevel_read_permissions()
 		self.assertFalse(applicant_decision.get("review_summary"))
+		admissions_context = frappe._dict()
+		get_admissions_context(admissions_context)
+		self.assertEqual(admissions_context.decisions[0].application, application)
+		self.assertEqual(admissions_context.decisions[0].outcome, "Admitted")
+		self.assertEqual(admissions_context.offer_count, 1)
+		self.assertEqual(admissions_context.unsuccessful_count, 0)
 		self.assertEqual(respond_to_admission(letter, "Accepted")["status"], "Accepted")
 		with self.assertRaises(frappe.ValidationError):
 			respond_to_admission(letter, "Declined")

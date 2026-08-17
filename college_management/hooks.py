@@ -91,11 +91,15 @@ after_migrate = "college_management.setup.install_roles"
 
 standard_portal_menu_items = [
 	{"title": "Home", "route": "/applicant", "role": "Applicant"},
-	{"title": "Applications", "route": "/admissions", "role": "Applicant"},
+	{"title": "Applications", "route": "/applications", "role": "Applicant"},
+	{"title": "Admissions", "route": "/admissions", "role": "Applicant"},
 	{"title": "Student Academics", "route": "/student", "role": "Student"},
 ]
 
-website_route_rules = [{"from_route": "/admissions/<application>", "to_route": "admission"}]
+website_route_rules = [
+	{"from_route": "/applications/<application>", "to_route": "application"},
+	{"from_route": "/admissions/<application>", "to_route": "application"},
+]
 
 # Uninstallation
 # ------------

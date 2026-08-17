@@ -118,7 +118,7 @@ async function run_action(button) {
 	} else if (action === "save-exit") {
 		const form = button.closest("[data-application-form]");
 		await persist_application(form);
-		window.location.assign("/admissions");
+		window.location.assign("/applications");
 		return;
 	} else if (action === "invoice") {
 		await call("college_management.payments.create_application_invoice", { application: button.dataset.application });
@@ -128,17 +128,6 @@ async function run_action(button) {
 		return;
 	} else if (action === "verify") {
 		await call("college_management.payments.verify_payment", { reference: button.dataset.reference });
-	} else if (action === "respond") {
-		if (!(await window.cmPortalNotify.confirm({
-			state: "warning",
-			title: __("Confirm admission response"),
-			message: __("Confirm that you want to {0} this offer?", [button.dataset.response.toLowerCase()]),
-			confirmLabel: button.dataset.response,
-		}))) {
-			button.disabled = false;
-			return;
-		}
-		await call("college_management.admissions.respond_to_admission", { letter: button.dataset.letter, response: button.dataset.response });
 	}
 	window.location.reload();
 }
@@ -199,7 +188,7 @@ async function save_application_now(form) {
 	set_save_status(form, __("Saving…"));
 	const profile = {};
 	for (const field of form.querySelectorAll("[data-profile-key]")) profile[field.dataset.profileKey] = field.value;
-	await call("college_management.www.admissions.save_applicant_profile", { values: profile });
+	await call("college_management.www.applications.save_applicant_profile", { values: profile });
 	const responses = [];
 	for (const field of form.querySelectorAll("[data-key]")) {
 		const response = { field_key: field.dataset.key };

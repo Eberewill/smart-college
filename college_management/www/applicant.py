@@ -1,6 +1,6 @@
 import frappe
 
-from college_management.www.admissions import _get_applicant_profile, _set_portal_identity
+from college_management.www.applications import _get_applicant_profile, _set_portal_identity
 
 no_cache = 1
 
@@ -25,5 +25,5 @@ def get_context(context):
 	context.application_count = len(applications)
 	context.draft_count = sum(application.status == "Draft" for application in applications)
 	context.missing_profile_fields = missing_profile_fields
-	context.profile_action_url = f"/admissions/{draft.name}" if draft else "/admissions"
+	context.profile_action_url = f"/applications/{draft.name}" if draft else "/applications"
 	return context

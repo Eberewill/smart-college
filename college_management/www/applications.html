@@ -1,0 +1,79 @@
+{% extends "templates/web.html" %}
+{% from "college_management/templates/includes/applicant_portal/components.html" import icon, portal_notifications, portal_sidebar, portal_topbar %}
+
+{% block title %}{{ _("My Applications") }}{% endblock %}
+{% block head_include %}{{ super() }}<link rel="stylesheet" href="/assets/college_management/css/applicant_portal.css?v=2"><script defer src="/assets/college_management/js/applicant_portal.js?v=2"></script>{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="cm-portal" data-portal-dashboard style="--cm-brand-primary: {{ brand_primary }}; --cm-brand-accent: {{ brand_accent }};">
+	{{ portal_sidebar("applications", institution) }}
+	<div class="cm-portal-content">
+		{{ portal_topbar(full_name, initials) }}
+		<main class="cm-portal-main cm-applications-main">
+			<header class="cm-applications-heading">
+				<div>
+					<h1>{{ _("My applications") }}</h1>
+					<p>{{ _("View and manage all admission applications linked to your account.") }}</p>
+				</div>
+			</header>
+
+			{% if applications %}
+			<div class="cm-application-tools" aria-label="{{ _('Application filters') }}">
+				<label class="cm-search-control">
+					<span class="sr-only">{{ _("Search applications") }}</span>
+					{{ icon("search") }}
+					<input type="search" placeholder="{{ _('Search applications') }}" data-application-search>
+				</label>
+				<label class="cm-status-control">
+					<span class="sr-only">{{ _("Filter by status") }}</span>
+					{{ icon("filter") }}
+					<select data-application-status>
+						<option value="">{{ _("All statuses") }}</option>
+						<option value="draft">{{ _("Draft") }}</option>
+						<option value="submitted">{{ _("Submitted") }}</option>
+					</select>
+				</label>
+			</div>
+			<p class="cm-application-count" data-application-count data-total="{{ applications | length }}">{{ applications | length }} {{ _("application") if applications | length == 1 else _("applications") }}</p>
+
+			<section class="cm-application-list" aria-label="{{ _('Your applications') }}">
+				{% for application in applications %}
+				<article class="cm-application-card" data-application-card data-search="{{ (application.name ~ ' ' ~ application.programme ~ ' ' ~ application.application_type ~ ' ' ~ application.academic_session) | lower | e }}" data-status="{{ application.status | lower | e }}">
+					<header class="cm-application-card-header">
+						<span class="cm-application-icon">{{ icon("file-text", "lg") }}</span>
+						<div>
+							<h2>{{ application.programme }}</h2>
+							<p>{{ application.name }}</p>
+						</div>
+						<span class="indicator-pill {{ 'green' if application.status == 'Submitted' else 'orange' }}">{{ application.status }}</span>
+					</header>
+					<div class="cm-application-metadata">
+						<div><span>{{ _("Application type") }}</span><strong>{{ application.application_type }}</strong></div>
+						<div><span>{{ _("Academic session") }}</span><strong>{{ application.academic_session }}</strong></div>
+						<div><span>{{ _("Last updated") }}</span><strong>{{ frappe.utils.format_date(application.modified) }}</strong></div>
+						<div class="cm-progress-field">
+							<span>{{ _("Application progress") }}</span>
+							<div><span class="cm-progress-track"><span style="width: {{ application.progress }}%"></span></span><strong>{{ application.progress }}% {{ _("complete") }}</strong></div>
+						</div>
+					</div>
+					<footer class="cm-application-actions">
+						<a class="btn cm-action-button" href="{{ application.url | e }}">{{ _("Continue application") if application.status == "Draft" else _("View details") }}</a>
+					</footer>
+				</article>
+				{% endfor %}
+			</section>
+			<div class="cm-empty-filter" data-filter-empty hidden>{{ _("No applications match your search or status filter.") }}</div>
+			{% else %}
+			<div class="cm-empty-applications">
+				<span>{{ icon("file-text", "xl") }}</span>
+				<h2>{{ _("No applications yet") }}</h2>
+				<p>{{ _("No admission applications are linked to your account.") }}</p>
+			</div>
+			{% endif %}
+		</main>
+	</div>
+	{{ portal_notifications() }}
+</div>
+{% endblock %}

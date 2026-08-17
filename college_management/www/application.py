@@ -1,6 +1,6 @@
 import frappe
 
-from college_management.www.admissions import (
+from college_management.www.applications import (
 	_application_card,
 	_get_applicant_profile,
 	_set_portal_identity,
@@ -18,7 +18,7 @@ def get_context(context):
 	if application.applicant_profile != profile:
 		frappe.throw(frappe._("You cannot access this application."), frappe.PermissionError)
 	context.application = _application_card(application.name)
-	context.application_url = f"/admissions/{application.name}"
+	context.application_url = f"/applications/{application.name}"
 	_set_portal_identity(context, profile)
 	context.title = f"{context.application.programme} · {application.name}"
 	return context

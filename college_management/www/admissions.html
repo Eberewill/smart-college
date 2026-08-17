@@ -1,77 +1,74 @@
 {% extends "templates/web.html" %}
 {% from "college_management/templates/includes/applicant_portal/components.html" import icon, portal_notifications, portal_sidebar, portal_topbar %}
 
-{% block title %}{{ _("My Applications") }}{% endblock %}
+{% block title %}{{ _("Admission Decisions") }}{% endblock %}
 {% block head_include %}{{ super() }}<link rel="stylesheet" href="/assets/college_management/css/applicant_portal.css?v=2"><script defer src="/assets/college_management/js/applicant_portal.js?v=2"></script>{% endblock %}
 {% block navbar %}{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block content %}
-<div class="cm-portal" data-portal-dashboard style="--cm-brand-primary: {{ brand_primary }}; --cm-brand-accent: {{ brand_accent }};">
-	{{ portal_sidebar("applications", institution) }}
+<div class="cm-portal" data-admission-decisions style="--cm-brand-primary: {{ brand_primary }}; --cm-brand-accent: {{ brand_accent }};">
+	{{ portal_sidebar("admissions", institution) }}
 	<div class="cm-portal-content">
 		{{ portal_topbar(full_name, initials) }}
-		<main class="cm-portal-main cm-applications-main">
-			<header class="cm-applications-heading">
-				<div>
-					<h1>{{ _("My applications") }}</h1>
-					<p>{{ _("View and manage all admission applications linked to your account.") }}</p>
-				</div>
+		<main class="cm-portal-main cm-admissions-main">
+			<header class="cm-admissions-heading">
+				<h1>{{ _("Admission decisions") }}</h1>
+				<p>{{ _("View admission outcomes and respond to offers linked to your applications.") }}</p>
 			</header>
 
-			{% if applications %}
-			<div class="cm-application-tools" aria-label="{{ _('Application filters') }}">
-				<label class="cm-search-control">
-					<span class="sr-only">{{ _("Search applications") }}</span>
-					{{ icon("search") }}
-					<input type="search" placeholder="{{ _('Search applications') }}" data-application-search>
-				</label>
-				<label class="cm-status-control">
-					<span class="sr-only">{{ _("Filter by status") }}</span>
-					{{ icon("filter") }}
-					<select data-application-status>
-						<option value="">{{ _("All statuses") }}</option>
-						<option value="draft">{{ _("Draft") }}</option>
-						<option value="submitted">{{ _("Submitted") }}</option>
-					</select>
-				</label>
+			<div class="cm-decision-summary" aria-label="{{ _('Admission decision summary') }}">
+				<div><span class="cm-summary-icon">{{ icon("file-text") }}</span><strong>{{ decisions | length }}</strong><span>{{ _("decision") if decisions | length == 1 else _("decisions") }}</span></div>
+				<div><span class="cm-summary-icon cm-summary-success">{{ icon("check") }}</span><strong>{{ offer_count }}</strong><span>{{ _("offer received") if offer_count == 1 else _("offers received") }}</span></div>
+				<div><span class="cm-summary-icon cm-summary-error">{{ icon("x") }}</span><strong>{{ unsuccessful_count }}</strong><span>{{ _("unsuccessful") }}</span></div>
 			</div>
-			<p class="cm-application-count" data-application-count data-total="{{ applications | length }}">{{ applications | length }} {{ _("application") if applications | length == 1 else _("applications") }}</p>
 
-			<section class="cm-application-list" aria-label="{{ _('Your applications') }}">
-				{% for application in applications %}
-				<article class="cm-application-card" data-application-card data-search="{{ (application.name ~ ' ' ~ application.programme ~ ' ' ~ application.application_type ~ ' ' ~ application.academic_session) | lower | e }}" data-status="{{ application.status | lower | e }}">
-					<header class="cm-application-card-header">
-						<span class="cm-application-icon">{{ icon("file-text", "lg") }}</span>
-						<div>
-							<h2>{{ application.programme }}</h2>
-							<p>{{ application.name }}</p>
-						</div>
-						<span class="indicator-pill {{ 'green' if application.status == 'Submitted' else 'orange' }}">{{ application.status }}</span>
-					</header>
-					<div class="cm-application-metadata">
-						<div><span>{{ _("Application type") }}</span><strong>{{ application.application_type }}</strong></div>
-						<div><span>{{ _("Academic session") }}</span><strong>{{ application.academic_session }}</strong></div>
-						<div><span>{{ _("Last updated") }}</span><strong>{{ frappe.utils.format_date(application.modified) }}</strong></div>
-						<div class="cm-progress-field">
-							<span>{{ _("Application progress") }}</span>
-							<div><span class="cm-progress-track"><span style="width: {{ application.progress }}%"></span></span><strong>{{ application.progress }}% {{ _("complete") }}</strong></div>
-						</div>
+			{% if decisions %}
+			<section class="cm-decision-list" aria-label="{{ _('Your admission decisions') }}">
+				{% for decision in decisions %}
+				<article class="cm-decision-card cm-decision-{{ 'offer' if decision.outcome == 'Admitted' else 'unsuccessful' }}">
+					<span class="cm-decision-icon">{{ icon("check-circle" if decision.outcome == "Admitted" else "x-circle", "lg") }}</span>
+					<div class="cm-decision-content">
+						<header>
+							<div>
+								<h2>{{ _("Congratulations! You have received an offer") if decision.outcome == "Admitted" else _("Application outcome") }}</h2>
+								<strong>{{ decision.programme }}</strong>
+								<a href="{{ decision.application_url | e }}">{{ decision.application }}</a>
+							</div>
+							<span class="cm-decision-status">{{ _("Admission offered") if decision.outcome == "Admitted" else _("Unsuccessful") }}</span>
+						</header>
+						<dl>
+							<div><dt>{{ _("Academic session") }}</dt><dd>{{ decision.academic_session }}</dd></div>
+							<div><dt>{{ _("Application type") }}</dt><dd>{{ decision.application_type }}</dd></div>
+							{% if decision.letter %}<div><dt>{{ _("Response deadline") }}</dt><dd>{{ frappe.utils.format_date(decision.letter.acceptance_deadline) }}</dd></div>{% else %}<div><dt>{{ _("Decision date") }}</dt><dd>{{ frappe.utils.format_date(decision.decided_at) }}</dd></div>{% endif %}
+						</dl>
+						<p>{{ decision.reason }}</p>
 					</div>
-					<footer class="cm-application-actions">
-						<a class="btn cm-action-button" href="{{ application.url | e }}">{{ _("Continue application") if application.status == "Draft" else _("View details") }}</a>
-					</footer>
+					<div class="cm-decision-actions">
+						{% if decision.outcome == "Admitted" and decision.letter %}
+							{% if decision.letter.acceptance_status == "Awaiting Response" %}
+							<button class="btn cm-decision-primary" data-admission-response="Accepted" data-letter="{{ decision.letter.name | e }}">{{ _("Accept offer") }}</button>
+							{% else %}<span class="cm-response-state">{{ _("Response: {0}").format(decision.letter.acceptance_status) }}</span>{% endif %}
+							<a class="btn cm-decision-secondary" target="_blank" rel="noopener" href="{{ decision.letter_url | e }}">{{ icon("download", "sm") }} {{ _("Download admission letter") }}</a>
+							{% if decision.letter.acceptance_status == "Awaiting Response" %}<button class="cm-decision-link" data-admission-response="Declined" data-letter="{{ decision.letter.name | e }}">{{ _("Decline offer") }}</button>{% endif %}
+						{% else %}
+							<a class="btn cm-decision-secondary" href="{{ decision.application_url | e }}">{{ icon("file-text", "sm") }} {{ _("View decision details") }}</a>
+							{% if admissions_email %}<a class="cm-decision-link cm-contact-link" href="mailto:{{ admissions_email | e }}">{{ _("Contact admissions") }}</a>{% endif %}
+						{% endif %}
+					</div>
 				</article>
 				{% endfor %}
 			</section>
-			<div class="cm-empty-filter" data-filter-empty hidden>{{ _("No applications match your search or status filter.") }}</div>
 			{% else %}
-			<div class="cm-empty-applications">
-				<span>{{ icon("file-text", "xl") }}</span>
-				<h2>{{ _("No applications yet") }}</h2>
-				<p>{{ _("No admission applications are linked to your account.") }}</p>
-			</div>
+			<section class="cm-no-decisions">
+				<span>{{ icon("check-circle", "xl") }}</span>
+				<h2>{{ _("No admission decisions yet") }}</h2>
+				<p>{{ _("Your admission outcomes will appear here after your applications have been reviewed.") }}</p>
+				<a class="btn cm-decision-primary" href="/applications">{{ _("View applications") }}</a>
+			</section>
 			{% endif %}
+
+			<div class="cm-decision-help">{{ icon("info", "lg") }}<div><strong>{{ _("Need help understanding a decision?") }}</strong><span>{{ _("The admissions team can answer questions about your outcome and next steps.") }}</span></div></div>
 		</main>
 	</div>
 	{{ portal_notifications() }}
