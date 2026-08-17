@@ -1,8 +1,8 @@
 {% extends "templates/web.html" %}
-{% from "college_management/templates/includes/applicant_portal/components.html" import detail, icon, portal_sidebar, portal_topbar %}
+{% from "college_management/templates/includes/applicant_portal/components.html" import detail, icon, portal_notifications, portal_sidebar, portal_topbar %}
 
 {% block title %}{{ _("Applicant Portal") }}{% endblock %}
-{% block head_include %}{{ super() }}<link rel="stylesheet" href="/assets/college_management/css/applicant_portal.css">{% endblock %}
+{% block head_include %}{{ super() }}<link rel="stylesheet" href="/assets/college_management/css/applicant_portal.css?v=2"><script defer src="/assets/college_management/js/applicant_portal.js?v=2"></script>{% endblock %}
 {% block navbar %}{% endblock %}
 {% block footer %}{% endblock %}
 
@@ -68,5 +68,6 @@
 			</div>
 		</main>
 	</div>
+	{{ portal_notifications() }}
 </div>
 {% endblock %}

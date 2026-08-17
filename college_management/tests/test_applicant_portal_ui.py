@@ -41,6 +41,7 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn("portal_sidebar", template)
 		self.assertIn("macro detail", components)
 		self.assertIn("macro portal_sidebar", components)
+		self.assertIn("macro portal_notifications", components)
 		self.assertIn("grid-template-columns: 1.5rem minmax(0, 1fr)", portal_styles)
 		self.assertNotIn("border-left-color", portal_styles)
 		self.assertNotIn("border-bottom-color", portal_styles)
@@ -77,3 +78,4 @@ class TestApplicantPortalUI(UnitTestCase):
 		"""Changing a step must expose its completion state to the marker selector."""
 		script = (APP_ROOT / "www" / "admission.js").read_text()
 		self.assertIn("button.dataset.stepState = complete", script)
+		self.assertNotIn("window.confirm", script)

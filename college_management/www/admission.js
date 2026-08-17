@@ -129,7 +129,12 @@ async function run_action(button) {
 	} else if (action === "verify") {
 		await call("college_management.payments.verify_payment", { reference: button.dataset.reference });
 	} else if (action === "respond") {
-		if (!window.confirm(__("Confirm that you want to {0} this offer?", [button.dataset.response.toLowerCase()]))) {
+		if (!(await window.cmPortalNotify.confirm({
+			state: "warning",
+			title: __("Confirm admission response"),
+			message: __("Confirm that you want to {0} this offer?", [button.dataset.response.toLowerCase()]),
+			confirmLabel: button.dataset.response,
+		}))) {
 			button.disabled = false;
 			return;
 		}
@@ -163,7 +168,12 @@ function persist_application(form) {
 async function change_programme(select) {
 	const current = select.dataset.current;
 	if (!select.value || select.value === current) return;
-	if (!window.confirm(__("Changing programme will clear programme-specific answers. Continue?"))) {
+	if (!(await window.cmPortalNotify.confirm({
+		state: "warning",
+		title: __("Change programme?"),
+		message: __("Changing programme will clear programme-specific answers."),
+		confirmLabel: __("Change programme"),
+	}))) {
 		select.value = current;
 		return;
 	}
@@ -291,10 +301,8 @@ function set_save_status(form, message, error = false) {
 }
 
 function show_portal_error(message) {
-	const alert = document.querySelector("[data-portal-error]");
-	if (!alert) return;
-	alert.textContent = message;
-	alert.classList.toggle("d-none", !message);
+	if (!message) return;
+	window.cmPortalNotify?.show({ state: "error", title: __("Action unsuccessful"), message });
 }
 
 async function upload_file(file, application) {

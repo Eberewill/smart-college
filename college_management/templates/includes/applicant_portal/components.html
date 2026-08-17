@@ -29,6 +29,19 @@
 </header>
 {% endmacro %}
 
+{% macro portal_notifications() %}
+<div class="cm-notification-stack" data-portal-notifications aria-live="polite" aria-atomic="true"></div>
+<dialog class="cm-notification-dialog" data-portal-confirm data-state="warning" aria-labelledby="cm-notification-title" aria-describedby="cm-notification-message">
+	<form method="dialog">
+		<div class="cm-notification-body">
+			<span class="cm-notification-icon" aria-hidden="true">{{ icon("alert-circle") }}</span>
+			<div><h2 id="cm-notification-title" data-notification-title></h2><p id="cm-notification-message" data-notification-message></p></div>
+		</div>
+		<footer><button class="btn btn-default" value="cancel" data-notification-cancel>{{ _("Cancel") }}</button><button class="btn cm-notification-confirm" value="confirm" data-notification-confirm>{{ _("Continue") }}</button></footer>
+	</form>
+</dialog>
+{% endmacro %}
+
 {% macro detail(name, label, value, status=false, wide=false) %}
 <div class="cm-detail {{ 'cm-detail-wide' if wide else '' }}">
 	<span class="cm-detail-icon">{{ icon(name) }}</span>
