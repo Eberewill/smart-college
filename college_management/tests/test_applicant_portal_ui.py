@@ -12,6 +12,8 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn('data-application-card', template)
 		self.assertIn('data-application-search', template)
 		self.assertIn('data-application-status', template)
+		self.assertIn('data-new-application', template)
+		self.assertIn('data-new-application-form', template)
 		self.assertIn('cm-progress-track', template)
 		self.assertNotIn('Available programmes', template)
 		self.assertNotIn('Applications are saved automatically', template)

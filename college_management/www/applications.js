@@ -1,4 +1,27 @@
 frappe.ready(() => {
+	const newApplicationButton = document.querySelector("[data-new-application]");
+	const newApplicationDialog = document.querySelector("[data-new-application-dialog]");
+	const newApplicationForm = document.querySelector("[data-new-application-form]");
+	newApplicationButton?.addEventListener("click", () => newApplicationDialog.showModal());
+	document.querySelector("[data-new-application-cancel]")?.addEventListener("click", () => newApplicationDialog.close());
+	newApplicationForm?.addEventListener("submit", async (event) => {
+		event.preventDefault();
+		const button = newApplicationForm.querySelector('[type="submit"]');
+		button.disabled = true;
+		try {
+			const response = await frappe.call({
+				method: "college_management.college_management_system.doctype.admission_application.admission_application.create_application",
+				args: { admission_programme: new FormData(newApplicationForm).get("admission_programme") },
+				type: "POST",
+				freeze: true,
+			});
+			window.location.assign(`/applications/${encodeURIComponent(response.message.application)}`);
+		} catch (error) {
+			window.cmPortalNotify?.show({ state: "error", title: __("Application not started"), message: error.message || __("Please try again.") });
+			button.disabled = false;
+		}
+	});
+
 	const search = document.querySelector("[data-application-search]");
 	const status = document.querySelector("[data-application-status]");
 	const cards = [...document.querySelectorAll("[data-application-card]")];

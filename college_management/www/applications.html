@@ -17,6 +17,7 @@
 					<h1>{{ _("My applications") }}</h1>
 					<p>{{ _("View and manage all admission applications linked to your account.") }}</p>
 				</div>
+				<button class="btn cm-action-button" type="button" data-new-application>{{ _("New application") }}</button>
 			</header>
 
 			{% if applications %}
@@ -75,5 +76,13 @@
 		</main>
 	</div>
 	{{ portal_notifications() }}
+	<dialog class="cm-new-application-dialog" data-new-application-dialog aria-labelledby="new-application-title">
+		<form method="dialog" data-new-application-form>
+			<header><h2 id="new-application-title">{{ _("Start a new application") }}</h2><p>{{ _("Select the programme you want to apply for.") }}</p></header>
+			<label><span>{{ _("Programme") }} *</span><select class="form-control" name="admission_programme" required><option value="">{{ _("Select a programme") }}</option>{% for offering in offerings %}<option value="{{ offering.value | e }}">{{ offering.label }}</option>{% endfor %}</select></label>
+			{% if not offerings %}<p class="cm-no-open-programmes">{{ _("There are no programmes accepting applications right now.") }}</p>{% endif %}
+			<footer><button class="btn btn-default" value="cancel" type="button" data-new-application-cancel>{{ _("Cancel") }}</button><button class="btn cm-action-button" type="submit" {% if not offerings %}disabled{% endif %}>{{ _("Start application") }}</button></footer>
+		</form>
+	</dialog>
 </div>
 {% endblock %}

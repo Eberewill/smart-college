@@ -106,6 +106,22 @@
 .cm-empty-applications { padding: 3rem 1.5rem; text-align: center; }
 .cm-empty-applications > span { color: var(--cm-brand-accent); }
 .cm-empty-filter { padding: 1.5rem; color: var(--cm-muted); text-align: center; }
+.cm-new-application-dialog {
+	width: min(32rem, calc(100% - 2rem));
+	padding: 0;
+	border: 0;
+	border-radius: .8rem;
+	box-shadow: 0 1.5rem 4rem rgba(6, 24, 51, .24);
+}
+.cm-new-application-dialog::backdrop { background: rgba(6, 24, 51, .55); backdrop-filter: blur(2px); }
+.cm-new-application-dialog form { margin: 0; padding: 1.5rem; }
+.cm-new-application-dialog header { margin-bottom: 1.25rem; }
+.cm-new-application-dialog h2 { margin: 0 0 .35rem; font-size: 1.3rem; color: var(--cm-brand-primary); }
+.cm-new-application-dialog p { margin: 0; color: var(--cm-muted); }
+.cm-new-application-dialog label { display: grid; gap: .45rem; margin: 0; color: #0d2148; }
+.cm-new-application-dialog .form-control { min-height: 2.8rem; }
+.cm-new-application-dialog footer { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 1.5rem; }
+.cm-new-application-dialog .cm-no-open-programmes { margin-top: .75rem; color: #b66a06; }
 
 @media (max-width: 991px) {
 	.cm-application-metadata { grid-template-columns: repeat(2, 1fr); row-gap: 1rem; }
@@ -127,4 +143,6 @@
 	.cm-application-metadata > div:last-child { border-bottom: 0; }
 	.cm-application-actions { align-items: stretch; flex-direction: column; gap: .75rem; }
 	.cm-application-actions .btn { width: 100%; }
+	.cm-new-application-dialog footer { display: grid; grid-template-columns: 1fr 1fr; }
+	.cm-new-application-dialog footer .btn { width: 100%; }
 }

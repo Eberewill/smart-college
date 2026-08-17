@@ -28,6 +28,7 @@ def get_context(context):
 		order_by="creation desc",
 	)
 	context.applications = [_application_summary(name) for name in application_names]
+	context.offerings = _programme_options(None)
 	return context
 
 
