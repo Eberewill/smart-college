@@ -3,26 +3,33 @@
 .cm-application-main h2,
 .cm-application-main dt,
 .cm-application-main dd { overflow-wrap: anywhere; }
+.cm-application-overview {
+	margin-bottom: 1.25rem;
+	padding: 1.25rem 1.4rem;
+	border: 1px solid var(--cm-border);
+	border-radius: .75rem;
+	background: #fff;
+	box-shadow: 0 2px 8px rgba(13, 33, 72, .04);
+}
 .cm-back-link {
 	display: inline-flex;
 	align-items: center;
 	gap: .4rem;
-	margin-bottom: 1rem;
+	margin-bottom: .85rem;
 	color: var(--cm-brand-accent);
 	text-decoration: none;
 }
 .cm-application-heading {
-	display: flex;
-	align-items: flex-end;
-	justify-content: space-between;
-	gap: 1.5rem;
-	margin-bottom: 1.5rem;
+	margin-bottom: 1.25rem;
 }
 .cm-application-heading h1 {
-	margin: 0 0 .5rem;
-	font-size: clamp(1.65rem, 2.4vw, 2.2rem);
+	max-width: 64rem;
+	margin: 0 0 .7rem;
+	font-size: clamp(1.45rem, 2vw, 1.85rem);
+	line-height: 1.25;
 	color: var(--cm-brand-primary);
 }
+.cm-application-meta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .cm-application-identity { display: flex; align-items: center; gap: .75rem; color: var(--cm-muted); }
 .cm-save-status { display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap; }
 .cm-application-progress {
@@ -30,7 +37,7 @@
 	grid-template-columns: auto minmax(8rem, 1fr) auto;
 	align-items: center;
 	gap: 1rem;
-	margin-bottom: 1.5rem;
+	margin: 0;
 }
 .cm-application-progress .progress { height: .55rem; margin: 0; border-radius: 999px; background: #e4e9ee; }
 .cm-application-progress .progress-bar { border-radius: inherit; background: var(--cm-brand-accent); }
@@ -144,8 +151,9 @@
 }
 
 @media (max-width: 767px) {
-	.cm-application-heading { display: block; }
-	.cm-save-status { margin-top: 1rem; }
+	.cm-application-overview { padding: 1rem; }
+	.cm-application-meta { display: block; }
+	.cm-save-status { margin-top: .75rem; }
 	.cm-application-progress { grid-template-columns: 1fr auto; }
 	.cm-application-progress .progress { grid-column: 1 / -1; grid-row: 2; }
 	.cm-step-actions { display: grid; grid-template-columns: 1fr 1fr; }

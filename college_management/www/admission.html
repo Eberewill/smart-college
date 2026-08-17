@@ -15,19 +15,21 @@
 			<div class="alert alert-danger d-none" role="alert" aria-live="assertive" data-portal-error></div>
 			{% if application.status == "Draft" %}
 			<form data-application-form="{{ application.name | e }}" data-portal-application>
-				<a class="cm-back-link" href="/admissions">{{ icon("arrow-left", "sm") }} {{ _("Back to applications") }}</a>
-				<header class="cm-application-heading">
-					<div>
+				<section class="cm-application-overview">
+					<a class="cm-back-link" href="/admissions">{{ icon("arrow-left", "sm") }} {{ _("Back to applications") }}</a>
+					<header class="cm-application-heading">
 						<h1>{{ application.application_type or application.programme }} {{ _("admission application") }}</h1>
-						<div class="cm-application-identity"><span>{{ application.name }}</span><span class="indicator-pill orange">{{ application.status }}</span></div>
+						<div class="cm-application-meta">
+							<div class="cm-application-identity"><span>{{ application.name }}</span><span class="indicator-pill orange">{{ application.status }}</span></div>
+							<span class="cm-save-status text-success" data-save-status role="status" aria-live="polite">{{ icon("check-circle", "sm") }} {{ _("All changes saved") }}</span>
+						</div>
+					</header>
+					<div class="cm-application-progress">
+						<span>{{ _("Application progress") }}</span>
+						<div class="progress" aria-hidden="true"><div class="progress-bar" data-step-progress-bar style="width: {{ (100 / (application.steps | length)) | round }}%"></div></div>
+						<strong data-progress-percent>{{ (100 / (application.steps | length)) | round | int }}% {{ _("complete") }}</strong>
 					</div>
-					<span class="cm-save-status text-success" data-save-status role="status" aria-live="polite">{{ icon("check-circle", "sm") }} {{ _("All changes saved") }}</span>
-				</header>
-				<div class="cm-application-progress">
-					<span>{{ _("Application progress") }}</span>
-					<div class="progress" aria-hidden="true"><div class="progress-bar" data-step-progress-bar style="width: {{ (100 / (application.steps | length)) | round }}%"></div></div>
-					<strong data-progress-percent>{{ (100 / (application.steps | length)) | round | int }}% {{ _("complete") }}</strong>
-				</div>
+				</section>
 
 				<div class="cm-application-layout">
 					<aside class="cm-step-rail">

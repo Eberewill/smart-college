@@ -57,6 +57,7 @@ class TestApplicantPortalUI(UnitTestCase):
 		self.assertIn('aria-current="{{ \'step\' if loop.first else \'false\' }}"', template)
 		self.assertIn('data-save-status', template)
 		self.assertIn('data-action="save-exit"', template)
+		self.assertIn('cm-application-overview', template)
 		self.assertNotIn('cm-application-summary', template)
 		self.assertIn('portal_sidebar', template)
 
